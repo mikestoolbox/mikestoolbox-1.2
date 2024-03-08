@@ -1,0 +1,228 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       PerlRegex.class
+//
+//  Synopsis:   Class definitions for objects that represent regular
+//              expressions
+//----------------------------------------------------------------------------
+
+#ifndef PCRE_INCLUDE_FILE
+#define PCRE_INCLUDE_FILE <pcre.h>
+#endif
+
+#include PCRE_INCLUDE_FILE
+
+namespace mikestoolbox {
+
+const uintsys REGEX_COMPARE_EQUAL            = 0;
+const uintsys REGEX_COMPARE_NOT_EQUAL        = 1;
+const uintsys REGEX_COMPARE_LESS             = 2;
+const uintsys REGEX_COMPARE_LESS_OR_EQUAL    = 3;
+const uintsys REGEX_COMPARE_GREATER          = 4;
+const uintsys REGEX_COMPARE_GREATER_OR_EQUAL = 5;
+
+class PerlRegexOptions;
+class PerlRegexMatches;
+
+//+---------------------------------------------------------------------------
+//  Class:      PerlRegex
+//
+//  Synopsis:   A class that allows us to use Perl-style regular expressions
+//----------------------------------------------------------------------------
+
+class PerlRegexData;
+
+class PerlRegex : public SharedResource
+{
+public:
+
+    PerlRegex (const String& str_Pattern, const PerlRegexOptions& options);
+    PerlRegex (const String& str_Pattern);
+    PerlRegex (const char* pz_Pattern, const PerlRegexOptions& options);
+    PerlRegex (const char* pz_Pattern);
+
+    intsys         Match         (const String& str,
+                                  const PerlRegexOptions& options,
+                                  PerlRegexMatches& matches) const;
+
+    intsys         Match         (const uchar* ps, uintsys u_Length,
+                                  const PerlRegexOptions& options,
+                                  PerlRegexMatches& matches) const;
+
+    intsys         Match         (const char* ps, uintsys u_Length,
+                                  const PerlRegexOptions& options,
+                                  PerlRegexMatches& matches) const;
+
+    const char*    Error         () const;
+    int            ErrorOffset   () const;
+
+    void           Swap          (PerlRegex& regex);
+
+                   operator bool () const;  // validity check
+
+protected:
+
+    const PerlRegexData* ViewData   () const;
+          PerlRegexData* ModifyData ();
+
+private:
+
+    PerlRegexData* MakeNewSharedData () const;
+};
+
+class PerlRegexData : public SharedData
+{
+friend class PerlRegex;
+
+public:
+
+private:
+
+    PerlRegexData ();
+    ~PerlRegexData ();
+
+    pcre*       pcre_;
+    pcre_extra* pcre_extra_;
+    const char* pz_CompileError_;
+    int         n_CompileErrorOffset_;
+
+    PerlRegexData (const PerlRegexData&);
+    PerlRegexData& operator= (const PerlRegexData&);
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      PerlRegexOptions
+//
+//  Synopsis:   Various options for compiling and matching
+//----------------------------------------------------------------------------
+
+class PerlRegexOptions
+{
+friend class PerlRegex;
+
+public:
+
+    PerlRegexOptions ();
+
+    // compile-time options
+
+    PerlRegexOptions&   AnchoredPattern      (bool b=true);
+    PerlRegexOptions&   CaseSensitive        (bool b=true);
+    PerlRegexOptions&   DollarMatchesNewline (bool b=true);
+    PerlRegexOptions&   DotMatchesAnyChar    (bool b=true);
+    PerlRegexOptions&   ExtendedPattern      (bool b=true);
+    PerlRegexOptions&   FirstLineMatching    (bool b=true);
+    PerlRegexOptions&   GreedyMatching       (bool b=true);
+    PerlRegexOptions&   MultilineMatching    (bool b=true);
+    PerlRegexOptions&   StudyPattern         (bool b=true);
+    PerlRegexOptions&   UTF8Mode             (bool b=true);
+
+    // compile and match options
+
+    PerlRegexOptions&   NewlineIsCR          ();
+    PerlRegexOptions&   NewlineIsCRLF        ();
+    PerlRegexOptions&   NewlineIsLF          ();
+    PerlRegexOptions&   NewlineIsAny         ();
+
+    // match options
+
+    PerlRegexOptions&   AnchoredMatching     (bool b=true);
+    PerlRegexOptions&   StartingOffset       (intsys n_Offset);
+
+private:
+
+    bool   b_AnchoredMatch_;
+    bool   b_AnchoredPattern_;
+    bool   b_CaseSensitive_;
+    bool   b_DollarNewline_;
+    bool   b_DotAll_;
+    bool   b_Extended_;
+    bool   b_FirstLine_;
+    bool   b_Greedy_;
+    bool   b_Multiline_;
+    bool   b_Study_;
+    bool   b_UTF8_;
+
+    int    n_Newline_;
+
+    intsys n_Offset_;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      PerlRegexMatches
+//
+//  Synopsis:   Keeps track of matching sub-patterns
+//----------------------------------------------------------------------------
+
+class PerlRegexMatches
+{
+friend class PerlRegex;
+
+public:
+
+    PerlRegexMatches ();
+
+    const String      GetMatch        (uintsys u_Index) const;
+    uintsys           GetMatchLength  (uintsys u_Index) const;
+
+    const StringList  GetMatches      () const;
+
+private:
+
+    const char* ps_;                    // the matched string
+    int         an_Substrings_[303];    // room for 100 substrings (100+1)*3
+    int         n_NumSubstrings_;
+
+    PerlRegexMatches (const PerlRegexMatches&);             // no copying
+    PerlRegexMatches& operator= (const PerlRegexMatches&);  // no assignment
+};
+
+} // namespace mikestoolbox
+
+namespace std {
+
+template<>
+void swap<mikestoolbox::PerlRegex> (mikestoolbox::PerlRegex& regex1,
+                                    mikestoolbox::PerlRegex& regex2);
+
+} // namespace std
+

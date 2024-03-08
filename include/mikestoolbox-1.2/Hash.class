@@ -1,0 +1,426 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       Hash.class
+//
+//  Synopsis:   Class definitions for objects that provide fast access to
+//              values based on a given key
+//              V = value type, K = key type
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+#define TTC template<typename CONTAINER>
+#define TTT template<typename T>
+
+//+---------------------------------------------------------------------------
+//  Class:       FowlerNollVoHash32
+//
+//  Synopsis:   A class that hashes data into a uint32 using the Fowler-
+//              Noll-Vo algorithm (32 bit version)
+//----------------------------------------------------------------------------
+
+class FowlerNollVoHash32
+{
+public:
+
+        typedef uint32 HashInt;
+
+        static HashInt  ComputeHash (const uchar* ps, uintsys u_NumBytes);
+        static HashInt  ComputeHash (const String& str);
+        static HashInt  ComputeHash (const char* pz);
+    TTT static HashInt  ComputeHash (const T* p);
+    TTT static HashInt  ComputeHash (const T& t);
+};
+
+#ifndef DefaultHasher
+#define DefaultHasher FowlerNollVoHash32
+#endif
+
+template<typename K, typename V, typename H=DefaultHasher> class Hash;
+template<typename K, typename V, typename H=DefaultHasher> class HashStorage;
+template<typename K, typename V, typename H=DefaultHasher> class HashRef;
+template<typename K, typename V, typename H=DefaultHasher> class HashIter;
+template<typename K, typename V, typename H=DefaultHasher> class HashChangeIter;
+
+//+---------------------------------------------------------------------------
+//  Class:      HashItem
+//
+//  Synopsis:   A class that contains a key-value pair
+//              K = key type, V = value type
+//----------------------------------------------------------------------------
+
+template<typename K, typename V, typename H>
+class HashItem
+{
+friend class Hash<K,V,H>;
+friend class HashStorage<K,V,H>;
+friend class HashRef<K,V,H>;
+friend class HashIter<K,V,H>;
+friend class HashChangeIter<K,V,H>;
+
+public:
+
+    typedef Hash<K,V,H>         HashType;
+    typedef HashItem<K,V,H>     Item;
+    typedef typename H::HashInt HashInt;
+
+    HashItem (const Item&);
+    HashItem (const K& key, const V& value, HashInt u_KeyHash);
+
+    const K&   Key      () const;
+    const V&   Value    () const;
+    V&         Value    ();
+    HashInt    KeyHash  () const;
+
+private:
+
+    void SetValue_ (const V& value);
+
+    K       key_;
+    V       value_;
+    HashInt u_KeyHash_;
+    Item*   p_Next_;
+
+    Item& operator= (const Item&);
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      HashRef
+//
+//  Synopsis:   A class that provides access to a key-value pair
+//              K = key type, V = value type
+//----------------------------------------------------------------------------
+
+template<typename K, typename V, typename H>
+class HashRef
+{
+friend class Hash<K,V,H>;
+
+public:
+
+    typedef Hash<K,V,H>     HashType;
+    typedef HashRef<K,V,H>  Ref;
+
+            operator const V    () const;
+    V*      operator->          ();
+
+    Ref&    operator=           (const V& value);
+    Ref&    operator=           (const Ref& ref);
+
+    template<typename U>
+    bool    operator==          (const U& value) const;
+    bool    operator==          (const V& value) const;
+
+    template<typename U>
+    bool    operator!=          (const U& value) const;
+    bool    operator!=          (const V& value) const;
+
+private:
+
+    HashRef (HashType& hash, const K& key);
+
+    HashType&   hash_;
+    const K&    key_;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      HashStorage
+//
+//  Synopsis:   Storage for items in a Hash
+//              K = key type, V = value type
+//----------------------------------------------------------------------------
+
+template<typename K, typename V, typename H>
+class HashStorage : public SharedData
+{
+friend class Hash<K,V,H>;
+friend class HashIter<K,V,H>;
+friend class HashChangeIter<K,V,H>;
+
+public:
+
+    typedef HashStorage<K,V,H>   Storage;
+    typedef HashItem<K,V,H>      Item;
+
+    HashStorage (const Storage& storage);
+    HashStorage ();
+    ~HashStorage ();
+
+private:
+
+    void    Destroy_    ();
+
+    Item**  pp_Buckets_;
+    uintsys u_NumBuckets_;
+    uintsys u_HashMask_;
+    uintsys u_NumItems_;
+
+    Storage& operator= (const Storage&);
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      Hash
+//
+//  Synopsis:   A class that provides fast access to key-value pairs
+//              K = key type, V = value type
+//----------------------------------------------------------------------------
+
+template<typename K, typename V, typename H>
+class Hash : public SharedResource
+{
+friend class HashIter<K,V,H>;
+friend class HashChangeIter<K,V,H>;
+
+public:
+
+    typedef K                     KeyType;
+    typedef V                     ValueType;
+    typedef Hash<K,V,H>           HashType;
+    typedef HashIter<K,V,H>       Iter;
+    typedef HashChangeIter<K,V,H> ChangeIter;
+    typedef HashItem<K,V,H>       Item;
+    typedef HashRef<K,V,H>        Ref;
+
+TTC explicit Hash (const CONTAINER& c);
+             Hash ();
+
+    const Iter          Begin       () const;
+    const ChangeIter    Begin       ();
+
+    void                Clear       ();
+
+    bool                Contains    (const K& key, const V& value) const;
+
+    uintsys             Delete      (const List<K>& list_Keys);
+    bool                Delete      (const K& key);
+
+    bool                Exists      (const K& key) const;
+
+    bool                Find        (const K& key, V& value) const;
+
+    const V             Get         (const K& key) const;
+    const V             Get         (const K& key, const V& v_Default);
+
+    TTC void            Import      (const CONTAINER& c, ImportOptions opts);
+    TTC void            Import      (const CONTAINER& c);
+
+    bool                IsEmpty     () const;
+
+    const List<K>       Keys        () const;
+
+    uintsys             NumItems    () const;
+
+    void                Reserve     (uintsys u_NumItems);
+
+    void                Set         (const K& key, const V& value);
+
+    const List<K>       SortedKeys  () const;
+
+    const List<V>       Values      () const;
+
+    const V             operator[]  (const K& key) const;
+    V&                  operator[]  (const K& key);
+
+    const V             operator()  (const K& key) const;
+    Ref                 operator()  (const K& key);
+
+    TTC HashType&       operator=   (const CONTAINER& c);
+
+    TTC HashType&       operator+=  (const CONTAINER& c);
+
+    bool                operator==  (const HashType& hash) const;
+    bool                operator!=  (const HashType& hash) const;
+
+    void                Swap        (HashType& hash);
+
+    double              Efficiency  () const;
+    const StringList    Debug       () const;
+
+protected:
+
+    typedef HashStorage<K,V,H> Storage;
+
+    const Storage*  ViewData    () const;
+          Storage*  ModifyData  ();
+
+private:
+
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts, MikesToolboxSimpleContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts, MikesToolboxKeyValueContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts, StandardCPlusPlusSimpleContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts, StandardCPlusPlusKeyValueContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts, UnknownTypeOfContainer);
+
+    static void AddKeyValue_ (HashType& hash, const K& key, const V& value, ImportOptions options);
+
+    const Item* FindItem_          (const K& key) const;
+    Item*       FindItem_          (const K& key);
+    Item*       CreateItem_        (const K& key, const V& value, uintsys u_KeyHash=0);
+    uintsys     OptimumNumBuckets_ (uintsys u_NumItems);
+    void        Resize_            (uintsys u_NumItems);
+
+    Storage* MakeCopyOfSharedData_ (const SharedData* p_OldData) const;
+    Storage* MakeEmptySharedData_  () const;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      HashChangeIter
+//
+//  Synopsis:   A class that iterates through the contents of a Hash
+//              K = key type, V = value type
+//----------------------------------------------------------------------------
+
+template <typename K, typename V, typename H>
+class HashChangeIter
+{
+friend class Hash<K,V,H>;
+friend class HashIter<K,V,H>;
+
+public:
+
+    typedef Hash<K,V,H>           HashType;
+    typedef HashStorage<K,V,H>    Storage;
+    typedef HashChangeIter<K,V,H> ChangeIter;
+    typedef HashIter<K,V,H>       Iter;
+    typedef HashItem<K,V,H>       Item;
+
+    HashChangeIter (HashType& hash, const K& key);
+    HashChangeIter (HashType& hash);
+
+    void        MoveTo      (const K& key);
+
+    const K&    Key         () const;
+    V&          Value       () const;
+
+    ChangeIter&       operator++  ();
+    const ChangeIter  operator++  (int);
+
+    ChangeIter&       operator=   (const ChangeIter& iter);
+
+    bool              operator==  (const ChangeIter& iter) const;
+    bool              operator==  (const Iter& iter) const;
+
+    bool              operator!=  (const ChangeIter& iter) const;
+    bool              operator!=  (const Iter& iter) const;
+
+    Item*             operator->  () const;
+
+    operator bool () const;
+
+private:
+
+    HashType&   hash_;
+    Item*       p_Item_;
+    uintsys     u_Bucket_;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      HashIter
+//
+//  Synopsis:   A class that iterates through the contents of a Hash
+//              K = key type, V = value type
+//----------------------------------------------------------------------------
+
+template <typename K, typename V, typename H>
+class HashIter
+{
+friend class Hash<K,V,H>;
+
+public:
+
+    typedef Hash<K,V,H>           HashType;
+    typedef HashStorage<K,V,H>    Storage;
+    typedef HashChangeIter<K,V,H> ChangeIter;
+    typedef HashIter<K,V,H>       Iter;
+    typedef HashItem<K,V,H>       Item;
+
+    HashIter (const HashType& hash, const K& key);
+    HashIter (const HashType& hash);
+    HashIter (const ChangeIter& iter);
+
+    void            MoveTo      (const K& key);
+
+    const K&        Key         () const;
+    const V&        Value       () const;
+
+    Iter&           operator++  ();
+    const Iter      operator++  (int);
+
+    Iter&           operator=   (const Iter& iter);
+    Iter&           operator=   (const ChangeIter& iter);
+
+    bool            operator==  (const Iter& iter) const;
+    bool            operator==  (const ChangeIter& iter) const;
+
+    bool            operator!=  (const Iter& iter) const;
+    bool            operator!=  (const ChangeIter& iter) const;
+
+    const Item*     operator->  () const;
+
+    operator bool () const;
+
+private:
+
+    HashType    hash_;
+    const Item* p_Item_;
+    uintsys     u_Bucket_;
+};
+
+template<typename K, typename V, typename H>
+void swap (Hash<K,V,H>& hash1, Hash<K,V,H>& hash2);
+
+typedef Hash<String,String>               StringHash;
+typedef HashChangeIter<String,String>     StringHashChangeIter;
+typedef HashIter<String,String>           StringHashIter;
+
+typedef Hash<String,StringList>           StringListHash;
+typedef HashChangeIter<String,StringList> StringListHashChangeIter;
+typedef HashIter<String,StringList>       StringListHashIter;
+
+template<typename K, typename V>
+Hash<V,K> InvertHash (const Hash<K,V>& hash);
+
+#undef TTC
+#undef TTT
+
+} // namespace mikestoolbox
+

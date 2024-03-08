@@ -1,0 +1,138 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       Mutex.class
+//
+//  Synopsis:   Definition of Mutex class for threaded applications
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+class Mutex
+{
+friend class Condition;
+
+public:
+
+    Mutex ();
+    virtual ~Mutex ();
+
+    virtual void    Lock        () const;
+    virtual bool    TryLock     () const;
+    virtual void    Unlock      () const;
+
+protected:
+
+    Mutex (int);  // for RecursiveMutex
+
+    void    Lock_       () const;
+    bool    TryLock_    () const;
+    void    Unlock_     () const;
+
+private:
+
+#ifdef SINGLE_THREADED
+    bool            b_Recursive_;
+    mutable uintsys u_LockCount_;
+#else
+#ifdef PLATFORM_WINDOWS
+    HANDLE mutex_;
+#endif
+
+#ifdef PLATFORM_UNIX
+    mutable pthread_mutex_t mutex_;
+    pthread_mutexattr_t     attrs_;
+    bool                    b_Recursive_;
+#endif
+#endif
+
+    // no copying or assignment
+    Mutex (const Mutex&);
+    Mutex& operator= (const Mutex&);
+};
+
+class RecursiveMutex : public Mutex
+{
+public:
+
+    RecursiveMutex ();
+
+private:
+
+    RecursiveMutex (const RecursiveMutex&);
+    RecursiveMutex& operator= (const RecursiveMutex&);
+};
+
+class MutexLocker
+{
+public:
+
+    MutexLocker (const Mutex& mutex);
+    ~MutexLocker ();
+
+private:
+
+    const Mutex& mutex_;
+
+    MutexLocker (const MutexLocker&);
+    MutexLocker& operator= (const MutexLocker&);
+};
+
+class MutexTryLocker
+{
+public:
+
+    MutexTryLocker (const Mutex& mutex);
+    ~MutexTryLocker ();
+
+    bool    IsLocked    () const;
+
+private:
+
+    const Mutex& mutex_;
+    bool         b_IsLocked_;
+
+    MutexTryLocker (const MutexTryLocker&);
+    MutexTryLocker& operator= (const MutexTryLocker&);
+};
+
+} // namespace mikestoolbox
+

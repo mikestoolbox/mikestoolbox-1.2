@@ -1,0 +1,530 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       String.class
+//
+//  Synopsis:   Class definitions for objects that reference and manipulate
+//              character strings
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+//+---------------------------------------------------------------------------
+//  Class:      String
+//
+//  Synopsis:   A class that allows us to easily manipulate strings of bytes
+//----------------------------------------------------------------------------
+
+class String
+{
+friend class SubString;
+friend class StringList;
+friend class StringIter;
+
+public:
+
+    typedef SharedMemory<HeapMemory> Memory;
+
+                          String           (const String& str);
+                          String           (const String& str1, const String& str2);
+                          String           (const String& str1, const String& str2,
+                                            const String& str3);
+                          String           (const String& str1, const String& str2, 
+                                            const String& str3, const String& str4);
+                          String           (const SubString& substr);
+    explicit              String           (const StringIter& iter);
+    explicit              String           (const std::string& s);
+                          String           (const uchar* ps, uintsys u_NumBytes);
+                          String           (const char* ps, uintsys u_NumBytes);
+                          String           (const char* pz);
+    explicit              String           (const void* p);
+                          String           (uchar uc, Repeat repeat);
+    explicit              String           (uchar uc);
+                          String           (uchar uc1, uchar uc2);
+                          String           (uchar uc1, uchar uc2, uchar uc3);
+                          String           (uchar uc1, uchar uc2, uchar uc3, uchar uc4);
+                          String           (char c, Repeat repeat);
+    explicit              String           (char c);
+                          String           (char c1, char c2);
+                          String           (char c1, char c2, char c3);
+                          String           (char c1, char c2, char c3, char c4);
+    explicit              String           (double d, DoubleFormat format=DoubleFormat());
+    explicit              String           (float  f, DoubleFormat format=DoubleFormat());
+    explicit              String           (int64 n);
+    explicit              String           (int32 n);
+    explicit              String           (int16 n);
+    explicit              String           (uint64 u);
+    explicit              String           (uint32 u);
+    explicit              String           (uint16 u);
+    explicit              String           (Preallocate amount);
+                          String           ();
+
+    uchar*                Allocate         (uintsys u_NumBytes);
+
+    void                  Append           (const String& str);
+    void                  Append           (const String& str1, const String& str2);
+    void                  Append           (const String& str1, const String& str2,
+                                            const String& str3);
+    void                  Append           (const String& str1, const String& str2,
+                                            const String& str3, const String& str4);
+    void                  Append           (const StringIter& iter);
+    void                  Append           (const StringList& strl);
+    void                  Append           (const std::string& s);
+    void                  Append           (const char*  pz);
+    void                  Append           (const char*  ps,  uintsys u_Length);
+    void                  Append           (const uchar* puc, uintsys u_Length);
+    void                  Append           (const void*  p);
+    void                  Append           (char  c);
+    void                  Append           (char  c, Repeat repeat);
+    void                  Append           (char c1, char c2);
+    void                  Append           (char c1, char c2, char c3);
+    void                  Append           (char c1, char c2, char c3, char c4);
+    void                  Append           (float  f, DoubleFormat format=DoubleFormat());
+    void                  Append           (double d, DoubleFormat format=DoubleFormat());
+    void                  Append           (uchar uc);
+    void                  Append           (uchar uc,  Repeat repeat);
+    void                  Append           (uchar uc1, uchar uc2);
+    void                  Append           (uchar uc1, uchar uc2, uchar uc3);
+    void                  Append           (uchar uc1, uchar uc2, uchar uc3, uchar uc4);
+    void                  Append           (int64 n);
+    void                  Append           (int32 n);
+    void                  Append           (int16 n);
+    void                  Append           (uint64 u);
+    void                  Append           (uint32 u);
+    void                  Append           (uint16 u);
+
+    void                  AppendUTF8       (uintsys u_Char);
+    void                  AppendUTF16      (uintsys u_Char);
+    void                  AppendUTF32      (uintsys u_Char);
+
+    void                  AppendUint8      (uintsys u); // big-endian
+    void                  AppendUint16     (uintsys u); // big-endian
+    void                  AppendUint24     (uintsys u); // big-endian
+    void                  AppendUint32     (uintsys u); // big-endian
+
+    void                  AppendHexByte    (uchar uc);
+    void                  AppendHexBytes   (uchar uc1, uchar uc2);
+
+    // the following ASN.1 methods will succeed as long as the tag number can
+    // be represented in 28 bits and the length can be represented in 31 bits
+
+    bool                  AppendAsn1Tag    (uchar uc_TagClass, uintsys u_TagNumber,
+                                            bool  b_Constructed);
+    bool                  AppendAsn1Length (uintsys u_Length);
+
+    double                AsDouble         () const;
+    float                 AsFloat          () const;
+    intsys                AsInt            () const;
+    uintsys               AsUint           () const;
+
+    const String          AsLowerCase      () const;
+    const String          AsUpperCase      () const;
+
+    const String          Base64Decode     () const;
+
+    const String          Base64Encode     () const;
+    const String          Base64Encode     (uintsys u_LineLength, const char* pz_EOL="\n") const;
+
+    const StringIter      Begin            () const;
+
+    uchar                 ByteAt           (const Index& offset) const;
+    ByteRef               ByteAt           (const Index& offset);
+
+    bool                  ByteCompare      (const String& str_Other, uintsys& u_Matches,
+                                            uintsys& u_Mismatches) const;
+    bool                  ByteCompareEqual (const String& str_Other) const;
+
+    const char*           C                () const;  // expose String data as C string
+
+    char                  CharAt           (const Index& index) const;
+    CharRef               CharAt           (const Index& index);
+
+    void                  Clear            ();
+
+    intsys                Compare          (const String& str, bool b_Case=true) const;
+    intsys                Compare          (const char* pz,    bool b_Case=true) const;
+    intsys                Compare          (char c,            bool b_Case=true) const;
+
+    void                  Complement       ();  // invert bits of each byte (1's complement)
+
+    bool                  Contains         (const String& str, const Index& offset=0,
+                                            bool b_Case=true) const;
+    bool                  Contains         (const char* pz, const Index& offset=0,
+                                            bool b_Case=true) const;
+    bool                  Contains         (char c, const Index& offset=0,
+                                            bool b_Case=true) const;
+
+    uintsys               CopyTo           (char* ps_Buffer, uintsys u_Capacity) const;
+
+    uintsys               Count            (char c) const;
+    uintsys               Count            (uchar uc) const;
+
+    void                  Destroy          ();  // overwrite data and Clear
+
+    const StringIter      End              () const;
+
+    bool                  EndsWith         (const String& str, bool b_Case=true) const;
+    bool                  EndsWith         (const char* pz,    bool b_Case=true) const;
+    bool                  EndsWith         (char c,            bool b_Case=true) const;
+
+    void                  Erase            (const Index& offset, uintsys u_NumChars=1);
+    void                  EraseEnd         (uintsys u_NumChars=1);
+    void                  EraseFront       (uintsys u_NumChars=1);
+
+    StringIter            FindFirst        (const String& str, const Index& offset=0,
+                                            bool b_Case=true) const;
+    StringIter            FindFirst        (const char* pz, const Index& offset=0,
+                                            bool b_Case=true) const;
+    StringIter            FindFirst        (char c, const Index& offset=0,
+                                            bool b_Case=true) const;
+
+    StringIter            FindLast         (const String& str, const Index& offset=-1,
+                                            bool b_Case=true) const;
+    StringIter            FindLast         (const char* pz, const Index& offset=-1,
+                                            bool b_Case=true) const;
+    StringIter            FindLast         (char c, const Index& offset=-1,
+                                            bool b_Case=true) const;
+
+    char                  FirstChar        () const;
+    uchar                 FirstByte        () const;
+
+    SubString             Head             (uintsys u_NumChars);
+    const String          Head             (uintsys u_NumChars) const;
+
+    const String          Hex              () const;
+    const String          HEX              () const;
+
+    void                  IgnoreCase       (bool b_Ignore=true);
+
+    void                  IncrementASCII   ();
+    void                  IncrementBase10  ();
+    void                  IncrementBase16  ();
+    void                  IncrementBase36  ();
+    void                  IncrementBinary  ();
+
+    void                  Insert           (const String& str, const Index& offset);
+    void                  Insert           (const char* pz, const Index& offset);
+    void                  Insert           (char c, const Index& offset);
+
+    bool                  IsCaseSensitive  () const;
+
+    bool                  IsEmpty          () const;
+
+    bool                  IsValidUTF8      () const;
+    bool                  IsValidUTF16     () const;
+    bool                  IsValidUTF32     () const;
+
+    char                  LastChar         () const;
+    uchar                 LastByte         () const;
+
+    uintsys               Length           () const;
+
+    const StringList      LineBreak        () const;
+
+    const StringIter      Match            (const String& str_Pattern) const;
+    const StringIter      Match            (const char* pz_Pattern) const;
+
+    const StringIter      Match            (const PerlRegex& rex_Pattern,
+                                            const PerlRegexOptions& options,
+                                            PerlRegexMatches& matches) const;
+
+    const StringIter      Match            (const PerlRegex& rex_Pattern,
+                                            PerlRegexMatches& matches) const;
+
+    const StringIter      Match            (const PerlRegex& rex_Pattern,
+                                            const PerlRegexOptions& options) const;
+
+    const StringIter      Match            (const PerlRegex& rex_Pattern) const;
+
+    void                  PadEnd           (uintsys u_Length, char c=' ');
+    void                  PadFront         (uintsys u_Length, char c=' ');
+
+    const char*           PointerToFirstChar  () const;
+    const uchar*          PointerToFirstByte  () const;
+
+    void                  Prepend          (const String& str);
+    void                  Prepend          (const char* pz);
+    void                  Prepend          (char  c);
+    void                  Prepend          (char  c, Repeat repeat);
+
+    bool                  Read             (std::istream& is, uintsys u_MaxChars=0);
+    bool                  ReadLine         (std::istream& is, uintsys u_MaxChars=0);
+
+    intsys                Replace          (const PerlRegex& rex_Pattern,
+                                            const String& str_Replace,
+                                            bool  b_GlobalSearchReplace=false,
+                                            intsys n_Offset=0);
+    intsys                Replace          (const PerlRegex& rex_Pattern,
+                                            const String& str_Replace,
+                                            StringList& strl_Substrings,
+                                            bool  b_GlobalSearchReplace=false,
+                                            intsys n_Offset=0);
+    intsys                Replace          (const PerlRegex& rex_Pattern,
+                                            const char* pz_Replace,
+                                            bool  b_GlobalSearchReplace=false,
+                                            intsys n_Offset=0);
+    intsys                Replace          (const PerlRegex& rex_Pattern,
+                                            const char* pz_Replace,
+                                            StringList& strl_Substrings,
+                                            bool  b_GlobalSearchReplace=false,
+                                            intsys n_Offset=0);
+    intsys                Replace          (const String& str_Pattern,
+                                            const String& str_Replace,
+                                            bool  b_GlobalSearchReplace=false,
+                                            intsys n_Offset=0, bool b_Case=true);
+    intsys                Replace          (const String& str_Pattern,
+                                            const String& str_Replace,
+                                            StringList& strl_Substrings,
+                                            bool  b_GlobalSearchReplace=false,
+                                            intsys n_Offset=0, bool b_Case=true);
+    intsys                Replace          (const char* pz_Pattern,
+                                            const String& str_Replace,
+                                            bool  b_GlobalSearchReplace=false,
+                                            intsys n_Offset=0, bool b_Case=true);
+    intsys                Replace          (const char* pz_Pattern,
+                                            const String& str_Replace,
+                                            StringList& strl_Substrings,
+                                            bool  b_GlobalSearchReplace=false,
+                                            intsys n_Offset=0, bool b_Case=true);
+    intsys                Replace          (const char* pz_Pattern,
+                                            const char* pz_Replace,
+                                            bool  b_GlobalSearchReplace=false,
+                                            intsys n_Offset=0, bool b_Case=true);
+    intsys                Replace          (const char* pz_Pattern,
+                                            const char* pz_Replace,
+                                            StringList& strl_Substrings,
+                                            bool  b_GlobalSearchReplace=false,
+                                            intsys n_Offset=0, bool b_Case=true);
+
+    void                  Reserve          (uintsys u_NumChars);
+
+    String&               Reverse          ();
+
+    const String          Sanitize         () const;
+
+    const String          Segment          (const Index& offset, uintsys u_NumBytes) const;
+    SubString             Segment          (const Index& offset, uintsys u_NumBytes);
+
+    const StringList      ShellParse       (ParseError& error) const;
+
+    const StringList      Split            (const String& str_Pattern, uintsys u_MaxStrings=0,
+                                            bool  b_Case=true) const;
+    const StringList      Split            (const char* pz_Pattern, uintsys u_MaxStrings=0,
+                                            bool  b_Case=true) const;
+    const StringList      Split            (char  c_SplitChar, uintsys u_MaxStrings=0,
+                                            bool  b_Case=true) const;
+    const StringList      Split            (uintsys u_MaxStrings=0) const;
+
+    bool                  StartsWith       (const String& str, bool b_Case=true) const;
+    bool                  StartsWith       (const char* pz,    bool b_Case=true) const;
+    bool                  StartsWith       (char c,            bool b_Case=true) const;
+
+    void                  StripLeadingZeros ();
+
+    void                  Swap             (String& str);
+
+    SubString             Tail             (uintsys u_NumChars);
+    const String          Tail             (uintsys u_NumChars) const;
+
+    void                  Truncate         (uintsys u_Length);
+
+    bool                  Write            (std::ostream& os, bool b_FlushOutput=true) const;
+
+    void                  AND              (const String& str);
+    void                  OR               (const String& str);
+    void                  NOT              ();
+    void                  XOR              (const String& str);
+    void                  NAND             (const String& str);
+    void                  NOR              (const String& str);
+    void                  XNOR             (const String& str);
+
+//  const String          MD5              () const;
+//  const String          SHA1             () const;
+//  const String          SHA224           () const;
+//  const String          SHA256           () const;
+//  const String          SHA384           () const;
+//  const String          SHA512           () const;
+
+    String&               operator=        (const String& str);
+    String&               operator=        (const StringIter& iter);
+    String&               operator=        (const SubString& substr);
+    String&               operator=        (const std::string& s);
+    String&               operator=        (const char* pz);
+    String&               operator=        (uchar uc);
+    String&               operator=        (char c);
+    String&               operator=        (double d);
+    String&               operator=        (float f);
+    String&               operator=        (int64 n);
+    String&               operator=        (int32 n);
+    String&               operator=        (int16 n);
+    String&               operator=        (uint64 u);
+    String&               operator=        (uint32 u);
+    String&               operator=        (uint16 u);
+
+    String&               operator+=       (const String& str);
+    String&               operator+=       (const StringIter& iter);
+    String&               operator+=       (const StringList& strl);
+    String&               operator+=       (const std::string& s);
+    String&               operator+=       (const char* pz);
+    String&               operator+=       (const void* p);
+    String&               operator+=       (uchar uc);
+    String&               operator+=       (char c);
+    String&               operator+=       (double d);
+    String&               operator+=       (float f);
+    String&               operator+=       (int64 n);
+    String&               operator+=       (int32 n);
+    String&               operator+=       (int16 n);
+    String&               operator+=       (uint64 u);
+    String&               operator+=       (uint32 u);
+    String&               operator+=       (uint16 u);
+
+    const String          operator+        (const String& str) const;
+    const String          operator+        (const StringIter& iter) const;
+    const String          operator+        (const std::string& s) const;
+    const String          operator+        (const char* pz) const;
+    const String          operator+        (const void* p) const;
+    const String          operator+        (uchar uc) const;
+    const String          operator+        (char c) const;
+    const String          operator+        (double d) const;
+    const String          operator+        (float f) const;
+    const String          operator+        (int64 n) const;
+    const String          operator+        (int32 n) const;
+    const String          operator+        (int16 n) const;
+    const String          operator+        (uint64 u) const;
+    const String          operator+        (uint32 u) const;
+    const String          operator+        (uint16 u) const;
+
+    char                  operator[]       (const Index& index) const;
+    CharRef               operator[]       (const Index& index);
+
+    bool                  operator==       (const String& str) const;
+    bool                  operator!=       (const String& str) const;
+    bool                  operator<        (const String& str) const;
+    bool                  operator<=       (const String& str) const;
+    bool                  operator>        (const String& str) const;
+    bool                  operator>=       (const String& str) const;
+
+    bool                  operator==       (const char* pz) const;
+    bool                  operator!=       (const char* pz) const;
+    bool                  operator<        (const char* pz) const;
+    bool                  operator<=       (const char* pz) const;
+    bool                  operator>        (const char* pz) const;
+    bool                  operator>=       (const char* pz) const;
+
+    bool                  operator==       (char c) const;
+    bool                  operator!=       (char c) const;
+    bool                  operator<        (char c) const;
+    bool                  operator<=       (char c) const;
+    bool                  operator>        (char c) const;
+    bool                  operator>=       (char c) const;
+
+private:
+
+    uchar*  PointerToFirstByteMod_ ();
+    uchar*  PointerToLastByteMod_  ();
+
+    Memory mem_;
+    bool   b_IgnoreCase_;
+
+    // don't allow boolean test
+    operator bool () const;
+
+    String (uchar uc, uint16 u_CAUSE_AMBIGUITY____USE_REPEAT_CLASS);
+    String (char c,   uint16 u_CAUSE_AMBIGUITY____USE_REPEAT_CLASS);
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      SubString
+//
+//  Synopsis:   A class that allows for reading/writing a segment of a String
+//----------------------------------------------------------------------------
+
+class SubString
+{
+friend class String;
+
+public:
+
+    const char*         Start        () const;
+    uintsys             Length       () const;
+
+    String              AsLowerCase  () const;
+    String              AsUpperCase  () const;
+
+    SubString&          operator=    (const String& str_Replace);
+    SubString&          operator=    (const char* pz_Replace);
+    SubString&          operator=    (const SubString& substr_Replace);
+
+    bool                operator==   (const String& str) const;
+    bool                operator==   (const char* pz) const;
+    bool                operator!=   (const String& str) const;
+    bool                operator!=   (const char* pz) const;
+
+private:
+
+    String& str_Reference_;
+    uintsys u_Offset_;
+    uintsys u_Length_;
+
+    SubString (String& str_Reference, uintsys u_Offset, uintsys u_Length);
+
+    SubString (); // not allowed
+};
+
+String Latin1ToUTF8 (const String& str);
+String UTF16ToUTF8  (const String& str);
+String UTF32ToUTF8  (const String& str);
+bool   Interpolate  (const String& str_Pattern, const StringList& strl_Substrings,
+                     String& str_Result);
+
+std::ostream& operator<< (std::ostream& os, const String& str);
+std::ostream& operator<< (std::ostream& os, const SubString& str);
+std::istream& operator>> (std::istream& is, String& str);
+
+} // namespace mikestoolbox
+
+namespace std {
+
+template<>
+void swap<mikestoolbox::String> (mikestoolbox::String& str1, mikestoolbox::String& str2);
+
+} // namespace std
+

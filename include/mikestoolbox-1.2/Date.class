@@ -1,0 +1,154 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       Date.class
+//
+//  Synopsis:   Definition of Date class which represents a date and time
+//              in Coordinated Universal Time (UTC) between Jan 1, 0001
+//              and Dec 31, 9999
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+class DateParts;
+
+//+---------------------------------------------------------------------------
+//  Class:      Date
+//
+//  Synopsis:   A class that represents a date and time in UTC
+//----------------------------------------------------------------------------
+
+class Date
+{
+friend class DateParts;
+
+public:
+
+    Date (uintsys u_Year, uintsys u_Month, uintsys u_Day, uintsys u_Hour=0,
+          uintsys u_Minute=0, uintsys u_Second=0);
+    Date (const DateParts& parts);
+    Date (time_t date);
+    Date (const struct tm* p_Time);
+    Date (const struct timeval* p_Time);
+#ifdef PLATFORM_WINDOWS
+    Date (const FILETIME* p_Time);
+    Date (const LPSYSTEMTIME p_Time);
+#endif
+    Date ();
+
+    static Date   Now                     ();
+
+    uintsys       Year                    () const;  // starting with 1 A.D.
+    uintsys       Month                   () const;  // 1-12
+    uintsys       Day                     () const;  // 1-31
+    uintsys       Hour                    () const;  // 0-23
+    uintsys       Minute                  () const;  // 0-59
+    uintsys       Second                  () const;  // 0-59
+
+    uintsys       DayOfWeek               () const;  // 0-6, 0=Sunday
+
+    bool          IsSunday                () const;
+    bool          IsMonday                () const;
+    bool          IsTuesday               () const;
+    bool          IsWednesday             () const;
+    bool          IsThursday              () const;
+    bool          IsFriday                () const;
+    bool          IsSaturday              () const;
+
+    void          SetYear                 (uintsys u_Year);
+    void          SetMonth                (uintsys u_Month);
+    void          SetDay                  (uintsys u_Day);
+    void          SetHour                 (uintsys u_Hour);
+    void          SetMinute               (uintsys u_Minute);
+    void          SetSecond               (uintsys u_Second);
+
+    void          AddYears                (intsys n_Years);
+    void          AddMonths               (intsys n_Months);
+    void          AddDays                 (intsys n_Days);
+    void          AddHours                (intsys n_Hours);
+    void          AddMinutes              (intsys n_Minutes);
+    void          AddSeconds              (double d_Seconds);
+
+    intsys        DaysMoreThan            (const Date& date_Other) const;
+    double        SecondsMoreThan         (const Date& date_Other) const;
+
+//  String        Format                  (const String& str_Format) const;
+    String        FormatGeneralizedTime   () const;
+    String        FormatHTTP              () const;
+    String        FormatRFC2822           () const;
+    String        FormatUTCTime           () const;
+
+    bool          FromGeneralizedTime     (const String& str_Date);
+    bool          FromHTTP                (const String& str_Date);
+    bool          FromRFC2822             (const String& str_Date);
+    bool          FromUTCTime             (const String& str_Date);
+
+    void          Swap                    (Date& date);
+
+    bool          operator==              (const Date& date) const;
+    bool          operator!=              (const Date& date) const;
+    bool          operator<               (const Date& date) const;
+    bool          operator<=              (const Date& date) const;
+    bool          operator>               (const Date& date) const;
+    bool          operator>=              (const Date& date) const;
+
+    Date&         operator=               (const DateParts& parts);
+
+private:
+
+    double        operator- (const Date&);    // confusing as to the units
+
+    uintsys u_Days_;    // days starting with Jan 1, 1 A.D.
+    uintsys u_Millis_;  // milliseconds since midnight
+
+    static const uintsys u_SecondsPerDay_;
+    static const Date    date_UNIX_Epoch_;   // midnight on January 1, 1970
+};
+
+} // namespace mikestoolbox
+
+namespace std {
+
+template<>
+void swap<mikestoolbox::Date> (mikestoolbox::Date& date1, mikestoolbox::Date& date2);
+
+} // namespace std
+

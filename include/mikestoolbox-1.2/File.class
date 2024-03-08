@@ -1,0 +1,114 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       File.class
+//
+//  Synopsis:   The File class which works with files on disk
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+const int FILE_CREATE_OK        = 1<<0;
+const int FILE_REPLACE_EXISTING = 1<<1;
+const int FILE_COPY_ALLOWED     = 1<<2;
+
+StringList ReadDirectory (const String& str_Directory);
+StringList ReadDirectory (const char* pz_Directory);
+bool       MakeDirectory (const String& str_Directory);
+String     GetDirectory  ();
+bool       SetDirectory  (const String& str_Directory);
+
+//+---------------------------------------------------------------------------
+//  Class:      File
+//
+//  Synopsis:   A class used to deal with disk files in a portable manner.
+//----------------------------------------------------------------------------
+
+class File
+{
+public:
+
+    File (const String& str_Name);
+
+    String        Name            () const;
+    String        BaseName        () const;
+    String        Directory       () const;
+
+    bool          Append          (const StringList& strl_Lines,
+                                   int n_Flags= FILE_CREATE_OK);
+    bool          Append          (const String& str_Contents,
+                                   int n_Flags= FILE_CREATE_OK);
+    bool          CopyTo          (File& file, int n_Flags=0) const;
+    Date          DateModified    () const;
+    bool          Delete          ();
+    bool          DeleteRecursive ();
+    bool          Exists          () const;
+    StringList    Head            (uintsys u_NumLines) const;
+    bool          IsDirectory     () const;
+    bool          IsExecutable    () const;
+    bool          IsReadable      () const;
+    bool          IsRegular       () const;
+    bool          IsWritable      () const;
+    bool          Read            (StringList& strl_Lines) const;
+    bool          Read            (String& str_Contents) const;
+    bool          Rename          (const String& str_NewName, int n_Flags=0);
+    uintsys       Size            () const;
+    StringList    Tail            (uintsys u_NumLines) const;
+    bool          Write           (const StringList& strl_Lines, int n_Flags=
+                                   FILE_CREATE_OK|FILE_REPLACE_EXISTING);
+    bool          Write           (const String& str_Contents, int n_Flags=
+                                   FILE_CREATE_OK|FILE_REPLACE_EXISTING);
+
+    File&         operator=       (const String& str_Filename);
+
+private:
+
+    File ();
+
+#ifdef PLATFORM_WINDOWS
+    WindowsString str_Name_;
+#else
+    String        str_Name_;
+#endif
+};
+
+} // namespace mikestoolbox
+

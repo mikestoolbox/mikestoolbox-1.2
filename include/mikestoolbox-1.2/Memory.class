@@ -1,0 +1,202 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       Memory.class
+//
+//  Synopsis:   Class definitions for objects that represent memory
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+//+---------------------------------------------------------------------------
+//  Class:      HeapMemory
+//
+//  Synopsis:   A class that represents memory on the heap
+//----------------------------------------------------------------------------
+
+#define TCM  template<class MEM>
+#define TCM2 template<class MEM2>
+
+class HeapMemory
+{
+public:
+
+             HeapMemory (const HeapMemory& mem);
+    TCM2     HeapMemory (const MEM2& mem);
+             HeapMemory (const char* pz);
+             HeapMemory ();
+    explicit HeapMemory (Preallocate amount);
+             ~HeapMemory ();
+
+    uintsys             Length              () const;
+    const char*         PointerToFirstChar  () const;
+    const uchar*        PointerToFirstByte  () const;
+
+    uchar*              Allocate            (uintsys u_NumBytes);
+    void                Append              (const HeapMemory& mem);
+    TCM2 void           Append              (const MEM2& mem);
+    void                Append              (const uchar* ps, uintsys u_Length);
+    void                Clear               ();
+    void                Destroy             ();
+    uchar*              EditInPlace         ();
+    void                Erase               (const Index& offset, uintsys u_NumBytes);
+    void                EraseEnd            (uintsys u_NumBytes);
+    void                EraseFront          (uintsys u_NumBytes);
+    uchar*              Expand              (uintsys u_NumCharsBefore,
+                                             uintsys u_NumCharsAfter);
+    void                Prepend             (const HeapMemory& mem);
+    TCM2 void           Prepend             (const MEM2& mem);
+    void                Reserve             (uintsys u_NumBytes);
+    void                Swap                (HeapMemory& mem);
+
+    TCM2 HeapMemory&    operator=           (const MEM2& mem);
+    HeapMemory&         operator=           (const HeapMemory& mem);
+    HeapMemory&         operator=           (const char* pz);
+
+    TCM2 bool           operator==          (const MEM2& mem) const;
+    bool                operator==          (const HeapMemory& mem) const;
+
+    TCM2 bool           operator<           (const MEM2& mem) const;
+    bool                operator<           (const HeapMemory& mem) const;
+
+private:
+
+    void                NullTerminate_      ();
+
+    uchar*  p_Memory_;
+    uintsys u_Offset_;
+    uintsys u_Length_;
+    uintsys u_Capacity_;
+
+    static uchar* Allocate_ (uintsys u_NumBytes, uintsys& u_Capacity);
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      SharedMemory
+//
+//  Synopsis:   A class that represents reference-counted memory
+//
+//  Notes:      Hardwire SharedResource/SharedData logic for speed
+//----------------------------------------------------------------------------
+
+TCM class SharedMemory
+{
+    typedef SharedMemory<MEM> Type;
+
+    class Data
+    {
+    friend class SharedMemory<MEM>;;
+
+    private:
+
+        Data (const Data& data);
+        Data ();
+        Data (int); // for shared empty string
+
+        uintsys    IncrementRefs   ();
+        uintsys    DecrementRefs   ();
+
+    private:
+
+        MEM      mem_;
+        RefCount refs_;
+        bool     b_CountRefs_;
+
+        Data& operator= (const Data& data);
+    };
+
+public:
+
+             SharedMemory (const Type& mem);
+    TCM2     SharedMemory (const MEM2& mem);
+             SharedMemory (const char* pz);
+    explicit SharedMemory (Preallocate amount);
+             SharedMemory ();
+             ~SharedMemory ();
+
+    uintsys             Length              () const;
+    const char*         PointerToFirstChar  () const;
+    const uchar*        PointerToFirstByte  () const;
+
+    uchar*              Allocate            (uintsys u_NumBytes);
+    void                Append              (const Type& mem);
+    TCM2 void           Append              (const MEM2& mem);
+    void                Append              (const uchar* ps, uintsys u_Length);
+    void                Clear               ();
+    void                Destroy             ();
+    uchar*              EditInPlace         ();
+    void                Erase               (const Index& offset, uintsys u_NumBytes);
+    void                EraseEnd            (uintsys u_NumBytes);
+    void                EraseFront          (uintsys u_NumBytes);
+    uchar*              Expand              (uintsys u_NumCharsBefore, uintsys u_NumCharsAfter);
+    void                Prepend             (const Type& mem);
+    TCM2 void           Prepend             (const MEM2& mem);
+    void                Reserve             (uintsys u_NumBytes);
+    void                Swap                (Type& mem);
+
+    SharedMemory&      operator=           (const Type& mem);
+    TCM2 SharedMemory& operator=           (const MEM2& mem);
+    SharedMemory&      operator=           (const char* pz);
+
+    bool                operator==          (const Type& mem) const;
+    TCM2 bool           operator==          (const MEM2& mem) const;
+    bool                operator<           (const Type& mem) const;
+    TCM2 bool           operator<           (const MEM2& mem) const;
+
+private:
+
+    uintsys             References_         () const;
+
+    uintsys             IncrementRefs_      () const;
+    uintsys             DecrementRefs_      () const;
+
+    Data*               ModifyData_         ();
+
+    Data* p_Data_;
+
+    static Data data_Empty_;
+};
+
+#undef TCM
+#undef TCM2
+
+} // namespace mikestoolbox
+

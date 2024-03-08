@@ -1,0 +1,101 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       SimpleThread.class
+//
+//  Synopsis:   Definition of SimpleThread class which runs a function in
+//              its own thread
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+//+---------------------------------------------------------------------------
+//  Class:      SimpleThread
+//
+//  Synopsis:   A Thread class that runs an arbitrary function
+//----------------------------------------------------------------------------
+
+class SimpleThread : public Thread
+{
+public:
+
+    typedef void* (*ThreadFunctionVoidStarWithArg) (void* p_Arg);
+    typedef void  (*ThreadFunctionVoidWithArg)     (void* p_Arg);
+    typedef int   (*ThreadFunctionIntWithArg)      (void* p_Arg);
+    typedef void* (*ThreadFunctionVoidStar)        ();
+    typedef void  (*ThreadFunctionVoid)            ();
+    typedef int   (*ThreadFunctionInt)             ();
+
+    SimpleThread (ThreadFunctionVoidStarWithArg func, void* p_Arg);
+    SimpleThread (ThreadFunctionVoidWithArg     func, void* p_Arg);
+    SimpleThread (ThreadFunctionIntWithArg      func, void* p_Arg);
+    SimpleThread (ThreadFunctionVoidStar        func);
+    SimpleThread (ThreadFunctionVoid            func);
+    SimpleThread (ThreadFunctionInt             func);
+
+private:
+
+    enum FunctionType {
+        VOID_STAR_FUNCTION_WITH_ARG,
+        VOID_FUNCTION_WITH_ARG,
+        INT_FUNCTION_WITH_ARG,
+        VOID_STAR_FUNCTION,
+        VOID_FUNCTION,
+        INT_FUNCTION
+    };
+
+    virtual intsys Main_ ();
+
+    ThreadFunctionVoidStarWithArg func_VoidStarWithArg_;
+    ThreadFunctionVoidWithArg     func_VoidWithArg_;
+    ThreadFunctionIntWithArg      func_IntWithArg_;
+    ThreadFunctionVoidStar        func_VoidStar_;
+    ThreadFunctionVoid            func_Void_;
+    ThreadFunctionInt             func_Int_;
+    FunctionType                  type_;
+    void*                         p_Arg_;
+
+    SimpleThread (const SimpleThread&);
+    SimpleThread& operator= (const SimpleThread&);
+};
+
+} // namespace mikestoolbox
+

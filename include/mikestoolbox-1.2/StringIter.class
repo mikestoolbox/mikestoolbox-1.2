@@ -1,0 +1,207 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       StringIter.class
+//
+//  Synopsis:   Class definitions for objects that iterate through a String
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+//+---------------------------------------------------------------------------
+//  Class:      StringIter
+//
+//  Synopsis:   A class that iterates through the characters in a String
+//----------------------------------------------------------------------------
+
+class StringIter
+{
+public:
+
+    typedef StringIter Type;
+
+    StringIter (const String& str, const Index& offset);
+    StringIter (const String& str);
+    StringIter (const StringIter& iter, const uchar* ps, uintsys u_Length);
+    StringIter ();
+
+    void             SetBigEndian        ();
+    void             SetLittleEndian     ();
+
+    bool             IsValid             () const;
+
+    uintsys          Capacity            () const;
+
+    bool             Extract             (uintsys u_NumBytes, String& str,
+                                          ParseError& error);
+    bool             Extract             (String& str);
+
+    bool             ExtractByte         (uchar& uc,  ParseError& error);
+    bool             ExtractUint8        (uintsys& u, ParseError& error);
+
+    bool             ExtractUint16       (uintsys& u, ParseError& error);
+    bool             ExtractUint16BE     (uintsys& u, ParseError& error);
+    bool             ExtractUint16LE     (uintsys& u, ParseError& error);
+
+    bool             ExtractUint24       (uintsys& u, ParseError& error);
+    bool             ExtractUint24BE     (uintsys& u, ParseError& error);
+    bool             ExtractUint24LE     (uintsys& u, ParseError& error);
+
+    bool             ExtractUint32       (uintsys& u, ParseError& error);
+    bool             ExtractUint32BE     (uintsys& u, ParseError& error);
+    bool             ExtractUint32LE     (uintsys& u, ParseError& error);
+
+    uintsys          Length              () const;
+
+    intsys           Match               (const PerlRegex& regex,
+                                          PerlRegexMatches& matches) const;
+
+    void             MoveTo              (const Index& offset);
+
+    uintsys          Offset              () const;
+
+    bool             ParseAsn1           (StringIter& next,       ParseError& error);
+    bool             ParseAsn1           (uchar&   uc_TagClass,   uintsys& u_TagNumber,
+                                          bool&    b_Constructed, intsys& n_Length,
+                                                                  ParseError& error);
+    bool             ParseAsn1Tag        (uchar&   uc_TagClass,   uintsys& u_TagNumber,
+                                          bool&    b_Constructed, ParseError& error);
+    bool             ParseAsn1Length     (intsys&  n_Length,      ParseError& error);
+
+    bool             ParseNumber         (uintsys  u_Digits,      uintsys& u_Number,
+                                                                  ParseError& error);
+    bool             ParseNumber         (uintsys& u_Number,      ParseError& error);
+    bool             ParseHexNibble      (uchar&   uc_Nibble,     ParseError& error);
+    bool             ParseHexByte        (uchar&   uc_Byte,       ParseError& error);
+
+    bool             ParseUTF8Char       (uintsys& u_CodePoint,   ParseError& error);
+    bool             ParseUTF16Char      (uintsys& u_CodePoint,   ParseError& error);
+    bool             ParseUTF32Char      (uintsys& u_CodePoint,   ParseError& error);
+
+    const uchar*     Pointer             () const;
+
+    bool             SkipChar            (char c, ParseError& error);
+
+    void             Swap                (Type& iter);
+
+    void             Truncate            (uintsys u_Length);
+
+    Type&            operator++          ();
+    const Type       operator++          (int);
+
+    Type&            operator+=          (uintsys u_NumBytes);
+
+    Type&            operator--          ();
+    const Type       operator--          (int);
+
+    Type&            operator-=          (uintsys u_NumBytes);
+
+    uchar            operator*           () const;
+
+    uchar            operator[]          (uintsys u_Index) const;
+
+    Type&            operator=           (const String& str);
+
+    bool             operator==          (const Type& iter) const;
+    bool             operator!=          (const Type& iter) const;
+
+    bool             operator==          (const String& str) const;
+    bool             operator!=          (const String& str) const;
+
+                     operator bool       () const;
+                     operator String     () const;
+
+private:
+
+    String       str_;
+    const uchar* p_Start_;
+    const uchar* p_End_;
+    const uchar* p_Char_;
+
+    bool             ExtractUTF8Char1_   (uintsys& u_CodePoint, ParseError& error);
+    bool             ExtractUTF8Char2_   (uintsys& u_CodePoint, ParseError& error);
+    bool             ExtractUTF8Char3_   (uintsys& u_CodePoint, ParseError& error);
+    bool             ExtractUTF8Char4_   (uintsys& u_CodePoint, ParseError& error);
+
+    bool (StringIter::* pmf_ExtractUint16_) (uintsys& u, ParseError& error);
+    bool (StringIter::* pmf_ExtractUint24_) (uintsys& u, ParseError& error);
+    bool (StringIter::* pmf_ExtractUint32_) (uintsys& u, ParseError& error);
+
+    bool operator<  (intsys) const;
+    bool operator<= (intsys) const;
+    bool operator>  (intsys) const;
+    bool operator>= (intsys) const;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      StringBitIter
+//
+//  Synopsis:   A class that extracts bits from a String
+//----------------------------------------------------------------------------
+
+class StringBitIter
+{
+public:
+
+    StringBitIter (const String& str);
+
+    void    SetBigEndian    ();
+    void    SetLittleEndian ();
+
+    bool    ExtractBits     (uintsys u_NumBits, uintsys& u, ParseError& error);
+
+            operator bool   () const;
+
+private:
+
+    bool ExtractBitsBigEndian_    (uintsys u_NumBits, uintsys& u, ParseError& error);
+    bool ExtractBitsLittleEndian_ (uintsys u_NumBits, uintsys& u, ParseError& error);
+
+    StringIter iter_;
+    uintsys    u_BitOffset_;
+
+    bool (StringBitIter::* pmf_ExtractBits_) (uintsys u_NumBits, uintsys& u, ParseError& error);
+};
+
+std::ostream& operator<< (std::ostream& os, const StringIter& iter);
+
+} // namespace mikestoolbox
+

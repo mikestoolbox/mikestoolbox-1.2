@@ -1,0 +1,148 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       BerkeleySocket.class
+//
+//  Synopsis:   Class definitions for objects that work with the Berkeley
+//              sockets interface
+//----------------------------------------------------------------------------
+
+#ifdef PLATFORM_WINDOWS
+
+#ifndef SHUT_RD
+#define SHUT_RD   SD_RECEIVE
+#define SHUT_WR   SD_SEND
+#define SHUT_RDWR SD_BOTH
+#endif
+
+#else
+
+typedef int SOCKET;
+#define INVALID_SOCKET (-1)
+
+#endif
+
+namespace mikestoolbox {
+
+void StartupWindowsSockets ();
+
+//+---------------------------------------------------------------------------
+//  Class:      BerkeleySocket
+//
+//  Synopsis:   A class that makes it easy to deal with Berkeley sockets
+//----------------------------------------------------------------------------
+
+class BerkeleySocket
+{
+public:
+
+    BerkeleySocket (SOCKET h);
+    BerkeleySocket ();
+    ~BerkeleySocket ();
+
+    bool        CreateSocket            (int n_Family, int n_Type, int n_Protocol);
+    bool        CreateTCPSocket         (int n_Family);
+    bool        CreateUDPSocket         (int n_Family);
+
+    SOCKET      GetHandle               () const;
+
+    bool        Bind                    (const SocketAddress& addr);
+    bool        Connect                 (const SocketAddress& addr);
+    bool        Listen                  (uint u_Backlog);
+    SOCKET      Accept                  (SocketAddress& addr);
+    bool        Shutdown                (int n_How);
+    bool        Close                   ();
+
+    bool        ReuseAddress            (bool b_Reuse=true);
+    bool        ReusePort               (bool b_Reuse=true);
+    bool        Unblock                 ();
+
+    bool        GetPeerName             (SocketAddress& addr) const;
+    bool        GetSockName             (SocketAddress& addr) const;
+
+    intsys      Recv                    (void* p_Buffer, uintsys u_BufferSize, int n_Flags=0);
+    intsys      RecvFrom                (void* p_Buffer, uintsys u_BufferSize, int n_Flags,
+                                         SocketAddress& addr_Peer);
+    intsys      Recv                    (String& str_Buffer, int n_Flags=0);
+    intsys      RecvFrom                (String& str_Buffer, int n_Flags,
+                                         SocketAddress& addr_Peer);
+
+    intsys      Send                    (const void* p_Buffer, uintsys u_BufferSize,
+                                         int n_Flags=0);
+    intsys      SendTo                  (const void* p_Buffer, uintsys u_BufferSize,
+                                         int n_Flags, const SocketAddress& addr_Dest);
+    intsys      Send                    (const String& str_Data, int n_Flags=0);
+    intsys      Send                    (const StringList& strl_Data, int n_Flags=0);
+    intsys      SendTo                  (const String& str_Data, int n_Flags,
+                                         const SocketAddress& addr_Dest);
+
+    int         GetPendingError         () const;
+
+    bool        EnableBroadcast         (bool b_Enable=true);
+    bool        EnableKeepAlive         (bool b_Enable=true);
+    bool        EnableLingerOption      (bool b_Enable=true, int n_LingerTime=0);
+    bool        EnableTcpNoDelay        (bool b_Enable=true);
+
+    bool        SetRecvBufferSize       (int n_Size);
+    bool        SetSendBufferSize       (int n_Size);
+
+    int         GetType                 () const;
+
+    int         GetTcpMaxSegmentSize    () const;
+    bool        SetTcpMaxSegmentSize    (int n_Size);
+
+                operator bool           () const;
+
+    static void CloseSocket             (SOCKET sock);
+
+    static int  Select                  (int n_MaxHandle, fd_set* set_Read, fd_set* set_Write,
+                                         fd_set* set_Error, struct timeval* tv_Timeout);
+
+private:
+
+    SOCKET  h_Socket_;
+
+    BerkeleySocket (const BerkeleySocket&);            // prevent copying
+    BerkeleySocket& operator= (const BerkeleySocket&); // prevent assignment
+};
+
+} // namespace mikestoolbox
+

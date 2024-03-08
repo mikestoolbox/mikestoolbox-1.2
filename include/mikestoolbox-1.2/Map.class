@@ -1,0 +1,336 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       Map.class
+//
+//  Synopsis:   Class definitions for objects that provide fast access to
+//              values based on a given key
+//              V = value type, K = key type
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+#define TTC template<typename CONTAINER>
+#define TTT template<typename T>
+
+template<typename K, typename V, class CMP=Less<K> > class Map;
+template<typename K, typename V, class CMP=Less<K> > class MapRef;
+template<typename K, typename V, class CMP=Less<K> > class MapStorage;
+template<typename K, typename V, class CMP=Less<K> > class MapItem;
+template<typename K, typename V, class CMP=Less<K> > class MapIter;
+template<typename K, typename V, class CMP=Less<K> > class MapChangeIter;
+
+template<typename K, typename V, class CMP>
+void CopyMapTree (MapItem<K,V,CMP>* p_Dest, const MapItem<K,V,CMP>* p_Source);
+
+//+---------------------------------------------------------------------------
+//  Class:      MapItem
+//
+//  Synopsis:   A class that contains a key-value pair
+//              K = key type, V = value type
+//----------------------------------------------------------------------------
+
+template<typename K, typename V, class CMP>
+class MapItem
+{
+friend class Map<K,V,CMP>;
+friend class MapIter<K,V,CMP>;
+friend class MapChangeIter<K,V,CMP>;
+friend void CopyMapTree<> (MapItem<K,V,CMP>* p_Dest,
+                           const MapItem<K,V,CMP>* p_Source);
+
+public:
+
+    typedef MapItem<K,V,CMP>    Item;
+
+    MapItem (const Item& item);
+    ~MapItem ();
+
+    const K&        Key         () const;
+    const V&        Value       () const;
+    V&              Value       ();
+
+    bool            IsBlack     () const;
+    bool            IsRed       () const;
+    bool            IsLeft      () const;
+    bool            IsRight     () const;
+    bool            IsChild     () const;   // no descendants
+
+    void            Blacken     ();
+    void            Redden      ();
+
+    const Item*     Left        () const;
+    const Item*     Right       () const;
+    const Item*     Parent      () const;
+
+    Item*           Left        ();
+    Item*           Right       ();
+    Item*           Parent      ();
+
+    const Item*     Next        () const;
+    const Item*     Prev        () const;
+
+    Item*           Next        ();
+    Item*           Prev        ();
+
+    bool            Check       () const;
+    void            GetHeight   (uintsys& u_Height, uintsys& u_BlackHeight) const;
+
+private:
+
+    MapItem (const K& key, const V& value, Item* p_Parent);
+
+    void SetValue_ (const V& value);
+
+    K       key_;
+    V       value_;
+    Item*   p_Left_;
+    Item*   p_Right_;
+    Item*   p_Parent_;
+    bool    b_Red_;
+    bool    b_Left_;
+
+    Item& operator= (const Item&); // no assignment
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      MapRef
+//
+//  Synopsis:   A class that provides access to a key-value pair
+//              K = key type, V = value type
+//----------------------------------------------------------------------------
+
+template<typename K, typename V, class CMP>
+class MapRef
+{
+friend class Map<K,V,CMP>;
+
+public:
+
+    typedef Map<K,V,CMP>        MapType;
+    typedef MapRef<K,V,CMP>     Ref;
+
+            operator const V    () const;
+    V*      operator->          ();
+
+    Ref&    operator=           (const V& value);
+    Ref&    operator=           (const Ref& ref);
+
+    template<typename U>
+    bool    operator==          (const U& value) const;
+    bool    operator==          (const V& value) const;
+
+    template<typename U>
+    bool    operator!=          (const U& value) const;
+    bool    operator!=          (const V& value) const;
+
+private:
+
+    MapRef (MapType& map, const K& key);
+
+    MapType&    map_;
+    const K&    key_;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      MapStorage
+//
+//  Synopsis:   The actual storage for the items in a Map
+//              K = key type, V = value type
+//----------------------------------------------------------------------------
+
+template<typename K, typename V, class CMP>
+class MapStorage : public SharedData
+{
+friend class Map<K,V,CMP>;
+
+public:
+
+    typedef MapStorage<K,V,CMP> Storage;
+    typedef MapItem<K,V,CMP>    Item;
+
+    MapStorage (const Storage& storage);
+    MapStorage ();
+    ~MapStorage ();
+
+    StringList   Debug   () const;
+
+private:
+
+    Item*   p_Root_;
+    uintsys u_NumItems_;
+
+    Storage& operator= (const Storage&);
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      Map
+//
+//  Synopsis:   A class that provides fast access to key-value pairs
+//              K = key type, V = value type
+//----------------------------------------------------------------------------
+
+template<typename K, typename V, class CMP>
+class Map : public SharedResource
+{
+friend class MapIter<K,V,CMP>;
+friend class MapChangeIter<K,V,CMP>;
+
+public:
+
+    typedef K                     KeyType;
+    typedef V                     ValueType;
+    typedef Map<K,V,CMP>          MapType;
+    typedef MapRef<K,V,CMP>       Ref;
+    typedef MapIter<K,V,CMP>      Iter;
+    typedef MapChangeIter<K,V,CMP> ChangeIter;
+
+TTC explicit Map (const CONTAINER& c);
+             Map ();
+
+    const Iter          Begin      () const;
+    const ChangeIter    Begin      ();
+
+    void                Clear      ();
+
+    uintsys             Delete     (const List<K>& lkeys);
+    bool                Delete     (const K& key);
+
+    const Iter          End        () const;
+    const ChangeIter    End        ();
+
+    void                Erase      (ChangeIter& iter);
+
+    bool                Exists     (const K& key) const;
+
+    bool                Find       (const K& key, V& value) const;
+    const Iter          Find       (const K& key) const;
+    const ChangeIter    Find       (const K& key);
+
+    const V             Get        (const K& key) const;
+    const V             Get        (const K& key, const V& v_Default);
+
+    TTC void            Import     (const CONTAINER& c, ImportOptions options);
+    TTC void            Import     (const CONTAINER& c);
+
+    bool                IsEmpty    () const;
+
+    const List<K>       Keys       () const;
+
+    uintsys             NumItems   () const;
+
+    void                Set        (const K& key, const V& value);
+
+    const List<K>       SortedKeys () const;
+
+    const List<V>       Values     () const;
+
+    const V             operator[] (const K& key) const;
+    V&                  operator[] (const K& key);
+
+    const V             operator() (const K& key) const;
+    Ref                 operator() (const K& key);
+
+    TTC MapType&        operator=  (const CONTAINER& c);
+
+    TTC MapType&        operator+= (const CONTAINER& c);
+
+    bool                operator== (const MapType& map) const;
+    bool                operator!= (const MapType& map) const;
+
+    void                Swap       (MapType& map);
+
+    const StringList    Debug      () const;
+
+protected:
+
+    typedef MapStorage<K,V,CMP> Storage;
+    typedef MapItem<K,V,CMP>    Item;
+
+    const Storage*      ViewData   () const;
+          Storage*      ModifyData ();
+
+private:
+
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts, MikesToolboxSimpleContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts, MikesToolboxKeyValueContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts, StandardCPlusPlusSimpleContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts, StandardCPlusPlusKeyValueContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts, UnknownTypeOfContainer);
+
+    static void AddKeyValue_ (MapType& map, const K& key, const V& value, ImportOptions opts);
+
+    const Item*         FindItem_           (const K& key) const;
+    Item*               FindItem_           (const K& key);
+    Item*               CreateItem_         (const K& key, const V& value);
+    void                LeftRotate_         (Item* p_Item);
+    void                RightRotate_        (Item* p_Item);
+    void                InsertFixUp_        (Item* p_Item);
+    void                DeleteFixUp_        (Item* p_Item, Item* p_Parent);
+    void                DeleteFixUpLeft_    (Item* p_Root, Item*& p_Item, Item*& p_Parent);
+    void                DeleteFixUpRight_   (Item* p_Root, Item*& p_Item, Item*& p_Parent);
+    void                Delete_             (Item* p_Item);
+
+    static const Item*  ParentOf_           (const Item* p_Item);
+    static Item*&       ParentOf_           (Item* p_Item);
+    static bool         IsBlack_            (const Item* p_Item);
+    static void         Blacken_            (Item* p_Item);
+    static bool         IsRed_              (const Item* p_Item);
+    static void         Redden_             (Item* p_Item);
+
+    const Item*         Root_               () const;
+    Item*&              RootMod_            ();
+    uintsys&            NumItemsMod_        ();
+
+    Storage*            MakeCopyOfSharedData_ (const SharedData* p_OldData) const;
+};
+
+template<typename K, typename V, class CMP>
+void swap (Map<K,V,CMP>& map1, Map<K,V,CMP>& map2);
+
+typedef Map<String,String>      StringMap;
+typedef Map<String,StringList>  StringListMap;
+
+#undef TTC
+#undef TTT
+
+} // namespace mikestoolbox
+

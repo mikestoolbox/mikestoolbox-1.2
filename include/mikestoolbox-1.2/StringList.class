@@ -1,0 +1,228 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       StringList.class
+//
+//  Synopsis:   Class definitions for objects that reference and manipulate
+//              lists of Strings
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+//+---------------------------------------------------------------------------
+//  Class:      StringListRef
+//
+//  Synopsis:   A class that provides access to a String in the StringList
+//----------------------------------------------------------------------------
+
+class StringListRef
+{
+friend class StringList;
+
+public:
+
+    typedef StringListRef   Ref;
+
+            operator const String   () const;
+    String* operator->              ();
+
+    Ref&    operator=               (const String& str);
+    Ref&    operator=               (const Ref& ref);
+
+    template<typename U>
+    bool    operator==              (const U& u) const;
+
+    template<typename U>
+    bool    operator!=              (const U& u) const;
+
+private:
+
+    StringListRef (StringList& strl, const Index& index);
+
+    StringList& strl_;
+    Index       index_;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      StringList
+//
+//  Synopsis:   A class that holds a list of Strings
+//----------------------------------------------------------------------------
+
+#define TTC template<typename CONTAINER>
+
+class StringList : public List<String>
+{
+public:
+
+    typedef List<String> Base;
+
+TTC explicit StringList (const CONTAINER& c);
+             StringList (int argc, const char* const* const argv);
+    explicit StringList (const char* const* const ppz);
+    explicit StringList (const char* pz);
+    explicit StringList (const String& str);
+             StringList (const String& str, Repeat repeat);
+             StringList ();
+
+    bool                    Check        () const;
+
+    TTC void                Append       (const CONTAINER& c);
+    void                    Append       (const StringList& strl);
+    void                    Append       (const String& str);
+    void                    Append       (const String& str1, const String& str2,
+                                          const String& str3, const String& str4);
+    void                    Append       (const String& str1, const String& str2,
+                                          const String& str3);
+    void                    Append       (const String& str1, const String& str2);
+    void                    Append       (const String& str, Repeat repeat);
+    void                    Append       (const char* pz);
+    void                    Append       (char c);
+    void                    Append       (std::istream& is);
+
+    void                    AppendNonEmpty  (const String& str);
+
+    const String            Base64Decode () const;
+
+    const String            Base64Encode (uintsys u_LineLength) const;
+
+    void                    EraseFrontBytes (uintsys u_NumBytes);
+
+    const StringList        Grep         (const String& str_Spec);
+    const StringList        Grep         (const char*   pz_Spec);
+    const StringList        Grep         (const PerlRegex& rex_Pattern) const;
+
+    const String            Join         (const String& str_Separator) const;
+    const String            Join         (const char*   pz_Separator) const;
+    const String            Join         (char          c_Separator) const;
+    const String            Join         () const;
+
+    void                    Read         (std::istream& is);
+
+    uintsys                 Size         () const;
+
+//  const String            MD5          () const;
+//  const String            SHA1         () const;
+//  const String            SHA224       () const;
+//  const String            SHA256       () const;
+//  const String            SHA384       () const;
+//  const String            SHA512       () const;
+
+    TTC StringList&         operator=    (const CONTAINER& c);
+    StringList&             operator=    (const StringList& list);
+    StringList&             operator=    (const String& str);
+
+    StringList              operator+    (const StringList& strl) const;
+    StringList              operator+    (const String& str) const;
+
+private:
+
+    const StringList GrepFiles_ (char c_FileType, bool b_InvertMatch) const;
+    const StringList GrepMatch_ (const String& str_Pattern, bool b_IgnoreCase,
+                                 bool b_InvertMatch) const;
+    const StringList GrepSubst_ (const String& str_Pattern, bool b_IgnoreCase,
+                                 const String& str_Replace, bool b_GlobalReplace,
+                                 bool b_InvertMatch);
+
+    static bool ParseGrepMatch_ (const String& str_Spec, String& str_Pattern,
+                                 bool& b_IgnoreCase, bool& b_InvertMatch);
+    static bool ParseGrepSubst_ (const String& str_Spec, String& str_Pattern,
+                                 bool& b_IgnoreCase, String& str_Replace,
+                                 bool& b_GlobalReplace, bool& b_InvertMatch);
+    static bool ParseGrepFiles_ (const String& str_Spec, char& c_FileType,
+                                 bool& b_InvertMatch);
+};
+
+#undef TTC
+
+//+---------------------------------------------------------------------------
+//  Class:      StringListByteIter
+//
+//  Synopsis:   A class that iterates through the bytes in the Strings
+//              within a StringList
+//----------------------------------------------------------------------------
+
+class StringListByteIter
+{
+public:
+
+    StringListByteIter (const StringList& strl);
+
+    StringListByteIter&      operator++      ();
+    const StringListByteIter operator++      (int);
+
+    bool     IsValid             () const;
+
+    bool     ExtractUint8        (uintsys& u_Value, ParseError& error);
+    bool     ExtractUint16       (uintsys& u_Value, ParseError& error);
+    bool     ExtractUint24       (uintsys& u_Value, ParseError& error);
+    bool     ExtractUint32       (uintsys& u_Value, ParseError& error);
+
+    bool     Extract             (uintsys u_Length, String& str_Content, ParseError& error);
+    bool     Extract             (uintsys u_Length, StringList& strl_Content, ParseError& error);
+    bool     Extract             (StringList& strl_Rest);
+
+    bool     ExtractUpTo         (uchar uc_End, String& str, ParseError& error);
+
+    uintsys  Capacity            () const;
+
+    void     Swap                (StringListByteIter& iter);
+
+             operator bool       () const;
+
+private:
+
+    void     AdvanceString_      ();
+
+    StringListIter iter_Strings_;
+    StringIter     iter_Bytes_;
+};
+
+} // namespace mikestoolbox
+
+namespace std {
+
+template<>
+void swap<mikestoolbox::StringList> (mikestoolbox::StringList& strl1,
+                                     mikestoolbox::StringList& strl2);
+
+} // namespace std
+

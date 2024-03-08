@@ -1,0 +1,372 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       Socket.class
+//
+//  Synopsis:   Class definitions for objects that communicate over a network
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+class Socket;
+class Network;
+class TcpSocket;
+class TcpListener;
+class UdpSocket;
+
+typedef List<Socket*> SocketList;
+
+const uintsys SOCKET_STATE_NONE       = 0;
+const uintsys SOCKET_STATE_OPEN       = 1 << 0;
+const uintsys SOCKET_STATE_BOUND      = 1 << 1;
+const uintsys SOCKET_STATE_CONNECTING = 1 << 2;
+const uintsys SOCKET_STATE_CONNECTED  = 1 << 3;
+const uintsys SOCKET_STATE_LISTENING  = 1 << 4;
+const uintsys SOCKET_STATE_READABLE   = 1 << 5;
+const uintsys SOCKET_STATE_WRITABLE   = 1 << 6;
+const uintsys SOCKET_STATE_CLOSED     = 1 << 7;
+const uintsys SOCKET_STATE_TIMEDOUT   = 1 << 8;
+
+//+---------------------------------------------------------------------------
+//  Class:      Socket
+//
+//  Synopsis:   A class that makes it easy to deal with Berkeley sockets
+//----------------------------------------------------------------------------
+
+class Socket
+{
+friend class Network;
+friend class TcpListener;
+friend class TcpSocket;
+friend class UdpSocket;
+
+public:
+
+    virtual ~Socket () = 0;
+
+    SOCKET          GetHandle             () const;
+
+    SocketAddress   LocalAddress          () const;
+    SocketAddress   PeerAddress           () const;
+
+    void            SetTimeout            (double d_Timeout) const;
+
+    bool            IsOpen                () const;
+    bool            IsBound               () const;
+    bool            IsConnecting          () const;
+    bool            IsConnected           (double d_Timeout=0.0) const;
+    bool            IsReadable            () const;
+    bool            IsWritable            () const;
+    bool            IsListening           () const;
+    bool            IsClosed              () const;
+
+    void            MarkAsTimedOut        () const;
+    bool            TimedOut              () const;
+    void            ResetTimeoutState     () const;
+
+    void            Cancel                () const;
+    bool            IsCanceled            () const;
+    void            ResetCancelState      () const;
+
+    virtual uintsys GetLastError          () const;
+    virtual void    ClearError            () const;
+
+    static bool     Select                (SocketList& ReadSockets, SocketList& WriteSockets,
+                                           double d_Timeout);
+    static bool     SelectRead            (SocketList& ReadSockets, double d_Timeout);
+    static bool     SelectWrite           (SocketList& WriteSockets, double d_Timeout);
+
+    double          BytesSent             () const;
+    double          BytesReceived         () const;
+    uintsys         NumConnections        () const;
+    uintsys         PacketsSent           () const;
+    uintsys         PacketsReceived       () const;
+
+protected:
+
+    Socket (SOCKET h_Socket=INVALID_SOCKET);
+
+    virtual bool    Socket_                 (int n_Family) = 0;
+    bool            CreateSocket_           (int n_Family, int n_Type, int n_Protocol);
+    bool            CreateTCPSocket_        (int n_Family);
+    bool            CreateUDPSocket_        (int n_Family);
+
+    bool            Unblock_                ();
+    bool            Bind_                   (const SocketAddress& addr);
+    bool            Listen_                 (uint u_Backlog);
+    SOCKET          Accept_                 (SocketAddress& addr);
+    bool            Connect_                (const SocketAddress& addr);
+    bool            Shutdown_               (int n_How);
+    bool            Close_                  ();
+
+    intsys          Recv_                   (void* p_Buffer, uintsys u_BufferSize,
+                                             int n_Flags=0);
+    intsys          RecvFrom_               (void* p_Buffer, uintsys u_BufferSize,
+                                             int n_Flags, SocketAddress& addr_Peer);
+
+    intsys          Send_                   (const void* p_Buffer, uintsys u_BufferSize,
+                                             int n_Flags=0);
+    intsys          Send_                   (const String& str_Data, int n_Flags=0);
+    intsys          Send_                   (const StringList& strl_Data, int n_Flags=0);
+    intsys          SendTo_                 (const void* p_Buffer, uintsys u_BufferSize,
+                                             int n_Flags, const SocketAddress& addr_Dest);
+    intsys          SendTo_                 (const String& str_Data, int n_Flags,
+                                             const SocketAddress& addr_Dest);
+
+    bool            GetPeerName_            ();
+    bool            GetSockName_            ();
+
+    void            SetLastError_           (uintsys u_ErrorCode) const;
+
+    int             GetPendingError_        () const;
+
+    bool            EnableBroadcast_        (bool b_Enable=true);
+    bool            EnableKeepAlive_        (bool b_Enable=true);
+    bool            EnableLingerOption_     (bool b_Enable=true,
+                                             int n_LingerTime=0);
+    bool            EnableTcpNoDelay_       (bool b_Enable=true);
+
+    bool            SetRecvBufferSize_      (int n_Size);
+    bool            SetSendBufferSize_      (int n_Size);
+
+    bool            ReuseAddress_           (bool b_Reuse=true);
+    bool            ReusePort_              (bool b_Reuse=true);
+
+    int             GetType_                () const;
+
+    int             GetTcpMaxSegmentSize_   () const;
+    bool            SetTcpMaxSegmentSize_   (int n_Size);
+
+private:
+
+    BerkeleySocket   socket_;
+    SocketAddress    addr_Local_;
+    SocketAddress    addr_Peer_;
+    mutable double   d_BytesSent_;
+    mutable double   d_BytesReceived_;
+    mutable uintsys  u_PacketsSent_;
+    mutable uintsys  u_PacketsReceived_;
+    mutable uintsys  u_NumConnections_;
+    mutable double   d_Timeout_;
+
+    mutable uintsys  u_State_;
+    mutable uintsys  u_ErrorCode_;
+    mutable bool     b_Canceled_;
+
+    Socket (const Socket&);            // prevent copying
+    Socket& operator= (const Socket&); // prevent assignment
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      TcpListener
+//
+//  Synopsis:   A class that listens for incoming TCP connections
+//----------------------------------------------------------------------------
+
+class TcpListener : public Socket
+{
+friend class Network;
+
+public:
+
+    ~TcpListener ();
+
+    // configuration for accepted sockets
+
+    void    SetRecvChunkSize        (uintsys u_Bytes);
+    void    SetMaxReadAhead         (uintsys u_Bytes);
+    void    SetMaxLineLength        (uintsys u_Length);
+    void    SetMaxMessageSize       (uintsys u_Size);
+
+    void    AllowIpAddressRange     (const IpAddressRange& range);
+    void    BlockIpAddressRange     (const IpAddressRange& range);
+
+    void    EnableKeepAlive         (bool b_Enable=true);
+    void    EnableLingerOption      (bool b_Enable=true, int n_LingerTime=0);
+    void    EnableTcpNoDelayOption  (bool b_Enable=true);
+
+    // end of configuration
+
+    bool          Unblock           ();
+    bool          Listen            (int n_Backlog);
+    TcpSocket*    Accept            ();
+    bool          Close             ();
+
+    bool    IsAddressBlocked        (const SocketAddress& addr) const;
+
+    bool    SetTcpRecvBufferSize    (int n_Size);
+    bool    SetTcpSendBufferSize    (int n_Size);
+    bool    SetTcpMaxSegmentSize    (int n_Size);
+
+private:
+
+    TcpListener (SOCKET h_Socket=INVALID_SOCKET);
+
+    bool Socket_           (int n_Family);
+
+    void AllowIpAddresses_ (const List<IpAddressRange>& list);
+    void BlockIpAddresses_ (const List<IpAddressRange>& list);
+    bool SetSocketOptions_ (TcpSocket* p_Socket);
+
+    Mutex   mutex_Accept_;
+    uintsys u_RecvChunkSize_;
+    uintsys u_MaxReadAhead_;
+    uintsys u_MaxLineLength_;
+    uintsys u_MaxMessageSize_;
+    bool    b_KeepAlive_;
+    bool    b_Linger_;
+    int     n_LingerTime_;
+    bool    b_NoDelay_;
+
+    List<IpAddressRange> list_AllowedIps_;
+    List<IpAddressRange> list_BlockedIps_;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      TcpSocket
+//
+//  Synopsis:   A class that communicates with a peer using TCP/IP
+//----------------------------------------------------------------------------
+
+class TcpSocket : public Socket
+{
+friend class Network;
+friend class TcpListener;
+
+public:
+
+    ~TcpSocket ();
+
+    bool        ReadData               (uintsys u_NumBytes, String& str_Data,
+                                        double d_Timeout=-1.0);
+    bool        ReadData               (String& str_Data, double d_Timeout=-1.0);
+    bool        ReadLine               (String& str_Line, double d_Timeout=-1.0);
+    bool        ReadMultiLine          (StringList& strl_Lines, double d_Timeout=-1.0);
+
+    bool        SendData               (const String& str_Data, double d_Timeout=-1.0);
+    bool        SendDataNow            (const String& str_Data, double d_Timeout=-1.0);
+    bool        SendLine               (const String& str_Line, double d_Timeout=-1.0);
+    bool        SendLineNow            (const String& str_Line, double d_Timeout=-1.0);
+    bool        SendMultiLine          (const StringList& strl_Lines, double d_Timeout=-1.0);
+
+    bool        FlushOutput            (double d_Timeout=-1.0);
+
+    bool        Close                  ();
+
+    uintsys     GetLastError           () const;
+
+    //
+
+    void        SetRecvChunkSize       (uintsys u_Bytes);
+    void        SetMaxReadAhead        (uintsys u_Bytes);
+
+    void        SetMaxLineLength       (uintsys u_Length);
+    void        SetMaxMessageSize      (uintsys u_Size);
+
+    bool        EnableKeepAlive        (bool b_Enable=true);
+    bool        EnableLingerOption     (bool b_Enable=true, int n_LingerTime=0);
+    bool        EnableTcpNoDelayOption (bool b_Enable=true);
+
+    bool        SetTcpRecvBufferSize   (int n_Size);
+    bool        SetTcpSendBufferSize   (int n_Size);
+
+    bool        SetTcpMaxSegmentSize   (int n_Size);
+    int         GetTcpMaxSegmentSize   () const;
+
+private:
+
+    TcpSocket (SOCKET h_Socket=INVALID_SOCKET);
+
+    bool        Socket_                (int n_Family);
+    intsys      RecvData_              ();
+    intsys      ReadData_              (double d_Timeout);
+    bool        PartialFlush_          (uintsys u_MaxSends, double d_Timeout);
+    bool        IsReadBufferFull_      () const;
+    bool        HaveDataToSend_        () const;
+
+    void        SetServerDomainName_   (const String& str_DomainName);
+
+    String      str_PeerDomainName_;
+    StringList  strl_ReadBuffer_;
+    StringList  strl_SendBuffer_;
+    uintsys     u_RecvChunkSize_;
+    uintsys     u_MaxReadAhead_;
+    uintsys     u_MaxLineLength_;
+    uintsys     u_MaxMessageSize_;
+
+    void*       p_Extra_;
+
+    TcpSocket (const TcpSocket&);
+    TcpSocket& operator= (const TcpSocket&);
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      UdpSocket
+//
+//  Synopsis:   A class that communicates with a peer using UDP datagrams
+//----------------------------------------------------------------------------
+
+class UdpSocket : public Socket
+{
+friend class Network;
+
+public:
+
+    bool   Connect      (const SocketAddress& addr_Peer);
+
+    bool   ReadData     (String& str_Data, SocketAddress& addr_Peer,
+                         double d_Timeout=-1.0);
+
+    bool   SendData     (const String& str_Data, double d_Timeout=-1.0);
+    bool   SendDataTo   (const String& str_Data, const SocketAddress& addr_Peer,
+                         double d_Timeout=-1.0);
+
+    bool   Close        ();
+
+private:
+
+    UdpSocket (SOCKET h_Socket=INVALID_SOCKET);
+
+    bool Socket_ (int n_Family);
+};
+
+} // namespace mikestoolbox
+

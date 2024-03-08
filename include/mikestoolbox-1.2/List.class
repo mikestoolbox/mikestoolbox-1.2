@@ -1,0 +1,477 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       List.class
+//
+//  Synopsis:   Class definitions for objects that reference and manipulate
+//              lists of things
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+#define TTC   template<typename CONTAINER>
+#define TTCMP template<typename CMP>
+
+template<typename T> class List;
+template<typename T> class ListData;
+template<typename T> class ListItem;
+template<typename T> class ListIter;
+template<typename T> class ListChangeIter;
+template<typename T> class ListAllocatorType;
+template<typename T> class ListAllocator;
+
+template<typename T>
+class ListAllocatorType
+{
+public:
+
+    typedef ListAllocator<T> Type;
+};
+
+template<typename T>
+class ListAllocator
+{
+public:
+
+    typedef ListItem<T> Item;
+    typedef ListData<T> Data;
+
+    ListAllocator ();
+    ~ListAllocator ();
+
+    Data*   CreateData  (const Data* p_Copy);
+    Data*   CreateData  ();
+    Item*   CreateItem  (const Item* p_Item);
+    Item*   CreateItem  (const T& item);
+    Item*   CreateItem  ();
+
+    void    DeleteData  (Data* p_Data);
+    void    DeleteItem  (Item* p_Item);
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      ListItem
+//
+//  Synopsis:   A class that allows for creating doubly-linked lists
+//----------------------------------------------------------------------------
+
+template<typename T>
+class ListItem
+{
+friend class ListData<T>;
+friend class ListIter<T>;
+friend class ListChangeIter<T>;
+
+public:
+
+    typedef ListItem<T> Item;
+    typedef List<T>     ListType;
+
+    ListItem (const Item& item);
+    ListItem (const T& item);
+    template<class U>
+    ListItem (const U& item);
+    ListItem ();
+    ~ListItem ();
+
+    bool        Check       () const;
+
+    void        Append      (Item* p_Item);
+    Item*       Extract     ();
+    void        SwapValue   (Item* p_Item);
+    const T&    Value       () const;
+    T&          Value       ();
+
+    Item&       operator=   (const Item& item);
+    Item&       operator=   (const T& item);
+    template<class U>
+    Item&       operator=   (const U& item);
+
+    TTCMP bool  SortsBefore (const Item* p_Other, const CMP& cmp) const;
+
+private:
+
+    T       t_;
+    Item*   p_Next_;
+    Item*   p_Prev_;
+    uintsys u_SortPos_;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      ListRef
+//
+//  Synopsis:   A class that provides access to an item in the List
+//----------------------------------------------------------------------------
+
+template<typename T>
+class ListRef
+{
+friend class List<T>;
+
+public:
+
+    typedef List<T>     ListType;
+    typedef ListRef<T>  Ref;
+
+            operator const T    () const;
+    T*      operator->          ();
+
+    Ref&    operator=           (const T& t);
+    Ref&    operator=           (const Ref& ref);
+
+    template<typename U>
+    bool    operator==          (const U& u) const;
+
+    template<typename U>
+    bool    operator!=          (const U& u) const;
+
+private:
+
+    ListRef (ListType& list, const Index& index);
+
+    ListType&   list_;
+    Index       index_;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      ListData
+//
+//  Synopsis:   A class that holds the representation of a List and
+//              allows for sharing of the lists
+//----------------------------------------------------------------------------
+
+template<typename T>
+class ListData : public SharedData
+{
+friend class List<T>;
+friend class ListIter<T>;
+friend class ListChangeIter<T>;
+
+public:
+
+    typedef List<T>     ListType;
+    typedef ListData<T> Data;
+    typedef ListItem<T> Item;
+
+    typedef typename ListAllocatorType<T>::Type Alloc;
+
+    ListData  (const Data& copy);
+    ListData  (AlwaysShared);       // for shared empty list
+    ListData  ();
+    ~ListData ();
+
+    bool                Check           () const;
+
+    uintsys             NumItems        () const;
+    bool                IsEmpty         () const;
+
+    void                Clear           ();
+    Item*               StealItems      ();
+
+    void                Append          (const T& item, Repeat repeat);
+    void                Append          (const T& item);
+    void                Append          (Data* p_Item);
+    void                Append          (Item* p_Item, uintsys u_Num);
+
+    void                Prepend         (const T& item, Repeat repeat);
+    void                Prepend         (const T& item);
+    void                Prepend         (Data* p_Item);
+    void                Prepend         (Item* p_Item, uintsys u_Num);
+
+    void                Insert          (const Index& index, const T& item);
+    const T             Pop             ();
+    const T             Shift           ();
+    Data*               Split           (uintsys u_Index);
+    void                Truncate        (uintsys u_Length);
+
+    void                RotateLeft      ();
+    void                RotateRight     ();
+
+    void                Reverse         ();
+    TTCMP void          Sort            (const CMP& cmp);
+
+    const Item*         SeekToItem      (uintsys u_Index) const;
+    Item*               SeekToItem      (uintsys u_Index);
+
+    static Data*        Undef           ();
+    static Alloc*       GetAllocator    ();
+
+private:
+
+    TTCMP void Sort_       (Item* p_Start, Item* p_End, uintsys u_NumItems, const CMP& cmp);
+    TTCMP bool SmallSort_  (Item* p_Start, Item* p_End, uintsys u_NumItems, const CMP& cmp);
+    TTCMP void PutInOrder_ (Item* p1, Item* p2, const CMP& cmp);
+    TTCMP void PutInOrder_ (Item* p1, Item* p2, Item* p3, const CMP& cmp);
+    TTCMP void PutInOrder_ (Item* p1, Item* p2, Item* p3, Item* p4, const CMP& cmp);
+
+    Item*   p_Root_;
+    uintsys u_NumItems_;
+
+    Data& operator= (const Data&);
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      List
+//
+//  Synopsis:   A class that holds a list of items
+//----------------------------------------------------------------------------
+
+template<typename T>
+class List : public SharedResource
+{
+friend class ListIter<T>;
+friend class ListChangeIter<T>;
+
+public:
+
+    typedef T                   ValueType;
+    typedef List<T>             ListType;
+    typedef ListItem<T>         Item;
+    typedef ListIter<T>         Iter;
+    typedef ListChangeIter<T>   ChangeIter;
+    typedef ListData<T>         Data;
+    typedef ListRef<T>          Ref;
+
+    typedef typename ListAllocatorType<T>::Type Alloc;
+
+TTC explicit List (const CONTAINER& c);
+             List (const T& item, Repeat repeat);
+    explicit List (const T& item);
+    explicit List (Data* p_Data);
+             List ();
+
+    bool                    Check           () const;
+
+    TTC ListType&           Append          (const CONTAINER& c);
+    ListType&               Append          (ListType list);
+    ListType&               Append          (const T& item);
+    ListType&               Append          (const T& item, Repeat repeat);
+    const Iter              Begin           () const;
+    const ChangeIter        Begin           ();
+    ListType&               Clear           ();
+    bool                    Contains        (const T& t) const;
+    uintsys                 Count           (const T& t) const;
+    bool                    Delete          (const T& item);
+    const Iter              End             () const;
+    const ChangeIter        End             ();
+    ListType&               Erase           (ChangeIter& iter);
+    const Iter              Find            (const T& t) const;
+    const ChangeIter        Find            (const T& t);
+    const ListType          Head            (uintsys u_NumItems=1) const;
+    ListType&               Insert          (const Index& index, const T& item);
+    ListType&               Insert          (const Index& index, ListType list);
+    bool                    IsEmpty         () const;
+    TTCMP bool              IsSorted        (const CMP& cmp) const;
+    bool                    IsSorted        () const;
+    uintsys                 NumItems        () const;
+    const T                 Pop             ();
+    TTC ListType&           Prepend         (const CONTAINER& c);
+    ListType&               Prepend         (ListType list);
+    ListType&               Prepend         (const T& item);
+    ListType&               Prepend         (const T& item, Repeat repeat);
+    const T                 Remove          (const Index& index);
+    ListType&               Reverse         ();
+    const T                 Shift           ();
+    TTCMP ListType&         Sort            (const CMP& cmp);
+    ListType&               Sort            ();
+    const ListType          Splice          (const Index& index);
+    const ListType          Splice          (const Index& index, uintsys u_Length);
+    const ListType          Splice          (const Index& index, uintsys u_Length,
+                                             const ListType& list_Replace);
+    const ListType          Split           (const Index& index);
+    void                    Swap            (ListType& list);
+    const ListType          SubList         (const Index& offset, uintsys u_NumItems) const;
+    const ListType          Tail            (uintsys u_NumItems=1) const;
+    ListType&               Truncate        (uintsys u_Length);
+    ListType&               Unique          ();
+
+    TTC ListType&           operator=       (const CONTAINER& c);
+    ListType&               operator=       (const ListType& list);
+    ListType&               operator=       (const T& item);
+
+    TTC ListType&           operator+=      (const CONTAINER& c);
+    ListType&               operator+=      (ListType list);
+    ListType&               operator+=      (const T& item);
+
+    TTC const ListType      operator+       (const CONTAINER& c) const;
+    const ListType          operator+       (const ListType& list) const;
+    const ListType          operator+       (const T& item) const;
+
+    bool                    operator==      (const ListType& list) const;
+    bool                    operator!=      (const ListType& list) const;
+
+    const T                 operator[]      (const Index& index) const;
+    T&                      operator[]      (const Index& index);
+
+    const T                 operator()      (const Index& index) const;
+    Ref                     operator()      (const Index& index);
+
+protected:
+
+    const Data* ViewData        () const;
+          Data* ModifyData      ();
+
+private:
+
+    TTC void        Append_                 (const CONTAINER& c, MikesToolboxSimpleContainer);
+    TTC void        Append_                 (const CONTAINER& c, MikesToolboxKeyValueContainer);
+    TTC void        Append_                 (const CONTAINER& c, StandardCPlusPlusSimpleContainer);
+    TTC void        Append_                 (const CONTAINER& c, StandardCPlusPlusKeyValueContainer);
+    TTC void        Append_                 (const CONTAINER& c, UnknownTypeOfContainer);
+    Item*           CopyItems_              ();
+    Item*           StealItems_             ();
+    Data*           MakeCopyOfSharedData_   (const SharedData* p_OldData) const;
+    static Alloc*   GetAllocator_           ();
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      ListChangeIter<T>
+//
+//  Synopsis:   A class that iterates through the items in a list
+//----------------------------------------------------------------------------
+
+template<typename T>
+class ListChangeIter
+{
+friend class List<T>;
+
+public:
+
+    typedef List<T>           ListType;
+    typedef ListData<T>       Data;
+    typedef ListItem<T>       Item;
+    typedef ListChangeIter<T> ChangeIter;
+
+    ListChangeIter (ListType& list, const Index& offset=0);
+
+    void              MoveTo      (const Index& offset);
+
+    uintsys           Offset      () const;
+
+    ChangeIter&       operator++  ();
+    const ChangeIter  operator++  (int);
+
+    ChangeIter&       operator--  ();
+    const ChangeIter  operator--  (int);
+
+    T&                operator*   () const;
+    T*                operator->  () const;
+
+    ChangeIter&       operator=   (const ChangeIter&);
+
+    bool              operator==  (const ChangeIter& iter) const;
+    bool              operator!=  (const ChangeIter& iter) const;
+
+                      operator bool () const;
+
+private:
+
+    ListType&   list_;
+    Item*       p_Item_;
+    uintsys     u_Offset_;
+};
+
+//+---------------------------------------------------------------------------
+//  Class:      ListIter<T>
+//
+//  Synopsis:   A class that iterates through the items in a list
+//----------------------------------------------------------------------------
+
+template<typename T>
+class ListIter
+{
+public:
+
+    typedef List<T>             ListType;
+    typedef ListData<T>         Data;
+    typedef ListItem<T>         Item;
+    typedef ListIter<T>         Iter;
+    typedef ListChangeIter<T>   ChangeIter;
+
+    ListIter (const ListType& list, const Index& offset=0);
+    ListIter (const ChangeIter& iter);
+
+    void            MoveTo      (const Index& offset);
+
+    uintsys         Offset      () const;
+
+    Iter&           operator++  ();
+    const Iter      operator++  (int);
+
+    Iter&           operator--  ();
+    const Iter      operator--  (int);
+
+    const T&        operator*   () const;
+    const T*        operator->  () const;
+
+    Iter&           operator=   (const ListType&);
+    Iter&           operator=   (const Iter&);
+    Iter&           operator=   (const ChangeIter&);
+
+    bool            operator==  (const Iter& iter) const;
+    bool            operator!=  (const Iter& iter) const;
+
+                    operator bool () const;
+
+private:
+
+    const ListType list_;
+    const Item*    p_Item_;
+    uintsys        u_Offset_;
+};
+
+template<typename T>
+void swap (List<T>& list1, List<T>& list2);
+
+template<typename T, typename T2>
+List<T> MakeList (const T& t1, const T2& t2);
+
+template<typename T, typename T2, typename T3>
+List<T> MakeList (const T& t1, const T2& t2, const T3& t3);
+
+template<typename T, typename T2, typename T3, typename T4>
+List<T> MakeList (const T& t1, const T2& t2, const T3& t3, const T4& t4);
+
+#undef TTC
+#undef TTCMP
+
+} // namespace mikestoolbox
+

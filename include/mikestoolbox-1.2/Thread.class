@@ -1,0 +1,144 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       Thread.class
+//
+//  Synopsis:   Definition of Thread base class used to create threaded
+//              applications
+//----------------------------------------------------------------------------
+
+namespace mikestoolbox {
+
+#ifndef PLATFORM_WINDOWS
+
+const uintsys THREAD_PRIORITY_HIGHEST      =  2;
+const uintsys THREAD_PRIORITY_ABOVE_NORMAL =  1;
+const uintsys THREAD_PRIORITY_NORMAL       =  0;
+const uintsys THREAD_PRIORITY_BELOW_NORMAL = -1;
+const uintsys THREAD_PRIORITY_LOWEST       = -2;
+
+#endif
+
+#ifndef SINGLE_THREADED
+
+#ifdef PLATFORM_WINDOWS
+#define THREAD_TYPE   HANDLE
+#define THREAD_RETURN DWORD WINAPI
+#endif
+
+#ifdef PLATFORM_UNIX
+#define THREAD_TYPE   pthread_t
+#define THREAD_RETURN void*
+#endif
+
+#endif // SINGLE_THREADED
+
+uintsys getThreadId();
+
+//+---------------------------------------------------------------------------
+//  Class:      Thread
+//
+//  Synopsis:   Base class for representing a runnable thread.  Implement the
+//              thread behavior in the Main_() method.  Optionally implement
+//              Stop_() to cause the thread to terminate (return from Main_).
+//----------------------------------------------------------------------------
+
+class Thread
+{
+public:
+
+    virtual ~Thread () = 0;
+
+    uintsys GetId              () const;
+
+    void    Run                ();
+    bool    IsRunning          () const;
+    void    Suspend            ();
+    void    Resume             ();
+    void    Stop               ();
+
+    void    SetPriority        (intsys n_Priority);
+
+    double  ElapsedTime        () const;
+
+    intsys  ExitCode           () const;
+
+    bool    ExceptionCaught    () const;
+    String  ExceptionMessage   () const;
+
+protected:
+
+    Thread ();
+
+    bool    ShouldStop         () const;
+
+private:
+
+    virtual intsys Main_ () = 0;
+    virtual void   Stop_ ();
+
+#ifndef SINGLE_THREADED
+    THREAD_TYPE h_Thread_;
+#endif
+#ifdef PLATFORM_WINDOWS
+    DWORD       dw_ThreadId_;
+#endif
+    bool        b_Running_;
+    bool        b_ShouldStop_;
+    intsys      n_Priority_;
+    intsys      n_ExitCode_;
+    bool        b_Exception_;
+    String      str_Exception_;
+    Condition   cond_Startup_;
+    Date        date_Start_;
+    Date        date_Stop_;
+
+#ifndef SINGLE_THREADED
+    static THREAD_RETURN ThreadMain_ (void* p_This);
+#endif
+
+    // no copying or assignment
+    Thread (const Thread&);
+    Thread& operator= (const Thread&);
+};
+
+} // namespace mikestoolbox
+

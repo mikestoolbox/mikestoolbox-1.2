@@ -1,0 +1,328 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as 
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+//+---------------------------------------------------------------------------
+//  File:       Base.def
+//
+//  Synopsis:   Contains definitions of the types, macros, constants, and
+//              inline template functions used throughout various projects.
+//----------------------------------------------------------------------------
+
+#if (defined(__APPLE__) && defined(__MACH__))
+#define PLATFORM_OSX
+#endif
+
+#if defined(unix) || defined(__unix) || defined(__unix__) || defined(PLATFORM_OSX)
+#define PLATFORM_UNIX
+#endif
+
+#ifdef WIN32
+#define PLATFORM_WINDOWS
+#ifndef __USE_W32_SOCKETS
+#define __USE_W32_SOCKETS
+#endif
+#ifndef FD_SETSIZE
+#define FD_SETSIZE 1024
+#endif
+#ifdef   UNICODE
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+#endif
+#ifdef  _UNICODE
+#ifndef  UNICODE
+#define  UNICODE
+#endif
+#endif
+#include <windows.h>
+#include <limits.h>
+#ifndef SYSTEM_INT_SIZE
+#define SYSTEM_INT_SIZE 32
+#endif
+#endif
+
+#ifndef SYSTEM_INT_SIZE
+#define SYSTEM_INT_SIZE 64
+#endif
+
+#ifndef SINGLE_THREADED
+#ifndef _REENTRANT
+#define _REENTRANT
+#endif
+#ifdef PLATFORM_UNIX
+#include <pthread.h>
+#endif
+#endif
+
+#include <cstring>
+#include <ctime>
+#include <cerrno>
+#include <cmath>
+
+#include <new>
+#include <memory>
+#include <utility>
+#include <iostream>
+#include <fstream>
+
+typedef unsigned char uchar;
+
+namespace mikestoolbox {
+
+// system types
+
+typedef int8_t       int8;
+typedef int16_t      int16;
+typedef int          int32;
+typedef int64_t      int64;
+
+typedef uint8_t      uint8;
+typedef uint16_t     uint16;
+typedef unsigned int uint32;
+typedef uint64_t     uint64;
+
+#if (SYSTEM_INT_SIZE == 64)
+
+typedef int64_t  intsys;
+typedef uint64_t uintsys;
+
+const intsys  MAX_INTSYS  = 0x7FFFFFFFFFFFFFFF;
+const intsys  MIN_INTSYS  = 0x8000000000000000;
+
+const uintsys MAX_UINTSYS = 0xFFFFFFFFFFFFFFFF;
+
+#define HAVE_STD_STRTOLL
+#define HAVE_STD_STRTOULL
+
+#elif (SYSTEM_INT_SIZE == 32)
+
+typedef int32_t  intsys;
+typedef uint32_t uintsys;
+
+const intsys  MAX_INTSYS  = 0x7FFFFFFF;
+const intsys  MIN_INTSYS  = 0x80000000;
+
+const uintsys MAX_UINTSYS = 0xFFFFFFFF;
+
+#else
+#error Please set SYSTEM_INT_SIZE to your system integer size (either 32 or 64).
+#endif
+
+// forward declarations
+
+class String;
+class SubString;
+class StringIter;
+class StringList;
+class PerlRegex;
+class PerlRegexData;
+
+template<typename T> class List;
+template<typename T> class ListItem;
+template<typename T> class ListRep;
+template<typename T> class ListIter;
+template<typename T> class ListChangeIter;
+
+typedef ListItem<String>       StringItem;
+typedef ListRep<String>        StringListRep;
+typedef ListIter<String>       StringListIter;
+typedef ListChangeIter<String> StringListChangeIter;
+
+template<typename K, typename V, typename H>
+class Hash;
+
+template<typename K, typename V, typename CMP>
+class Map;
+
+// constants
+
+extern const char* const gpz_Hex;
+extern const char* const gpz_HEX;
+extern const char* const gpz_Base64;
+
+extern const uintsys MAX_UNICODE_CODE_POINT;
+
+// functions
+
+#ifndef PLATFORM_WINDOWS
+inline void ZeroMemory (void* p, size_t n)
+{
+#ifdef HAVE_MEMSET_S
+    std::memset_s (p, n, 0, n);
+#else
+    std::memset (p, 0, n);
+#endif
+}
+#endif
+
+void millisleep (uintsys u_Milliseconds);
+
+inline uintsys SwapEndian16Bit (uintsys u)    // swap lowest 2 bytes
+{
+    return ((u & 0xFF00) >> 8) + ((u & 0x00FF) << 8);
+}
+
+inline uintsys SwapEndian24Bit (uintsys u)    // swap lowest 3 bytes
+{
+    return ((u & 0xFF0000) >> 16) + (u & 0x00FF00) +
+           ((u & 0x0000FF) << 16);
+}
+
+inline uintsys SwapEndian32Bit (uintsys u)    // swap lowest 4 bytes
+{
+    return ((u & 0xFF000000) >> 24) +
+           ((u & 0x00FF0000) >>  8) +
+           ((u & 0x0000FF00) <<  8) +
+           ((u & 0x000000FF) << 24);
+}
+
+template<typename T>
+inline void ZeroStructure (T& t)
+{
+    ZeroMemory (&t, sizeof(T));
+}
+
+template<typename T>
+inline uintsys NumberOfBits (const T& t)
+{
+    return sizeof(T) * 8;
+}
+
+template<typename T>
+inline uintsys NumberOfBits ()
+{
+    return sizeof(T) * 8;
+}
+
+template<typename T>
+inline bool IsBitSet (const T& t, uintsys u_BitNum)
+{
+    return ((t >> u_BitNum) & 1);
+}
+
+template<typename T>
+inline bool IsTopBitSet (const T& t)
+{
+    return IsBitSet (t, NumberOfBits(t) - 1);
+}
+
+template<typename T>
+inline bool IsNumberOdd (const T& t)
+{
+    return IsBitSet (t, 0);
+}
+
+template<typename T>
+inline bool IsNumberEven (const T& t)
+{
+    return !IsNumberOdd (t);
+}
+
+template<typename T>
+inline const T& Maximum (const T& x, const T& y)
+{
+    return (x < y ? y : x);
+}
+
+template<class T, class T2>
+inline T Maximum (const T& x, const T2& y)
+{
+    return (x < y ? y : x);
+}
+
+template<typename T>
+inline const T& Minimum (const T& x, const T& y)
+{
+    return (x < y ? x : y);
+}
+
+template<class T, class T2>
+inline T Minimum (const T& x, const T2& y)
+{
+    return (x < y ? x : y);
+}
+
+template<typename T>
+inline T AbsoluteValue (const T& t)
+{
+    return (t < T()) ? (-t) : t;
+}
+
+template<typename T>
+class Less
+{
+public:
+
+    bool operator() (const T& t1, const T& t2) const { return t1 < t2; }
+};
+
+template<typename T>
+class Greater
+{
+public:
+
+    bool operator() (const T& t1, const T& t2) const { return t2 < t1; }
+};
+
+inline uchar ByteToLower (uchar uc)
+{
+    if ((uc <= (uchar)'Z') && (uc >= (uchar)'A'))
+    {
+        uc |= 0x20;
+    }
+
+    return uc;
+}
+
+namespace internal {
+
+// make sure all code is compiled as SINGLE_THREADED or not -- will
+// cause a link error if there is a mismatch
+
+#ifdef SINGLE_THREADED
+extern const intsys gn_SingleThreadedZero;
+#else
+extern const intsys gn_MultiThreadedZero;
+#endif
+
+} // namespace internal
+
+} // namespace mikestoolbox
+

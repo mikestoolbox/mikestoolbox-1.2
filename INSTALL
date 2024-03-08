@@ -1,0 +1,103 @@
+/*
+  Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
+
+  This source code is the property of Michael S. D'Errico and is
+  protected under international copyright laws.
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of version 3 of the GNU General Public License as
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  Options for Contacting the Author:
+
+    email name:   mikestoolbox
+    email domain: pobox.com
+    X/Twitter:    @mikestoolbox
+    mail:         Michael D'Errico
+                  10161 Park Run Drive, Suite 150
+                  Las Vegas, NV 89145
+*/
+
+Instructions for installing Mike's Toolbox software in your home directory:
+===========================================================================
+
+Create the following directories:
+
+    mkdir ~/include
+    mkdir ~/lib
+    mkdir ~/build
+
+Download the most recent revision of version one of the PCRE package:
+
+    https://sourceforge.net/projects/pcre/files/pcre/8.45 : get pcre-8.45.tar.gz
+    gzcat pcre-8.45.tar.gz | tar xf -
+
+Move the software into the build directory:
+
+    mv mikestoolbox-1.2 ~/build
+    mv pcre-8.45 ~/build
+
+Build the PCRE package:
+
+    cd ~/build/pcre-8.45
+    ./configure
+    make
+    make check
+
+Create links to the header files:
+
+    cd ~/include
+    ln -s ../build/pcre-8.45/pcre.h .
+    ln -s ../build/mikestoolbox-1.2/include/mikestoolbox-1.2.h .
+    ln -s ../build/mikestoolbox-1.2/include/mikestoolbox-1.2 .
+
+Set up environment variables:
+
+    [use the "env" command to see all of your environment variables.]
+    [add these if they don't already exist:]
+
+    export CPLUS_INCLUDE_PATH=~/include
+    export CPLUS_LIBRARY_PATH=~/lib
+    export LIBRARY_PATH=~/lib
+
+    [if they do already exist, modify the commands which create them]
+    [to include the new directories.]
+
+    [add these command to your shell startup file, e.g. ~/.zshrc]
+
+Build Mike's Toolbox:
+
+    cd ~/build/mikestoolbox-1.2/src
+    make
+
+Create links to the library files:
+
+    cd ~/lib
+    ln -s ../build/mikestoolbox-1.2/src/libmikestoolbox-1.2.a .
+    ln -s ../build/pcre-8.45/.libs/libpcre.a .
+
+Test the Mike's Toolbox software:
+
+    cd ~/build/mikestoolbox-1.2/test
+    make test
+
