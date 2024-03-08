@@ -1,0 +1,24 @@
+
+Mike's Toolbox C++ software library
+-----------------------------------
+
+[Currently Mike's Toolbox is only supported on Mac OSX]
+
+Essential building blocks for robust software development including:
+
+    - Strings - Holds text or even binary data
+    - Regular Expressions - String pattern matching (Perl syntax)
+    - Containers:
+        - List<item>
+        - StringList
+        - Map<key,value>
+        - Hash<key,value>
+        - iterators
+    - Threading:
+        - Mutex
+        - Condition
+        - Thread - supply a thread_main() function
+    - Networking
+        - IP addresses
+        - Sockets
+
