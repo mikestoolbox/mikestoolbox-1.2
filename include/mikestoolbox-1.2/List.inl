@@ -3,16 +3,16 @@
 
   This source code is the property of Michael S. D'Errico and is
   protected under international copyright laws.
-  
+
   This program is free software: you can redistribute it and/or modify
-  it under the terms of version 3 of the GNU General Public License as 
+  it under the terms of version 3 of the GNU General Public License as
   published by the Free Software Foundation.
 
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -933,7 +933,7 @@ inline List<T>& List<T>::Insert (const Index& index, ListType list)
     return *this;
 }
 
-template<typename T, typename T2> 
+template<typename T, typename T2>
 List<T> MakeList (const T& t1, const T2& t2)
 {
     List<T> list (t1);
@@ -943,7 +943,7 @@ List<T> MakeList (const T& t1, const T2& t2)
     return list;
 }
 
-template<typename T, typename T2, typename T3> 
+template<typename T, typename T2, typename T3>
 List<T> MakeList (const T& t1, const T2& t2, const T3& t3)
 {
     List<T> list (t1);

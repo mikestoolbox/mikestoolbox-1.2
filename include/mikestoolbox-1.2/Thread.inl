@@ -3,16 +3,16 @@
 
   This source code is the property of Michael S. D'Errico and is
   protected under international copyright laws.
-  
+
   This program is free software: you can redistribute it and/or modify
-  it under the terms of version 3 of the GNU General Public License as 
+  it under the terms of version 3 of the GNU General Public License as
   published by the Free Software Foundation.
 
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -160,7 +160,7 @@ inline Thread::Thread ()
     , date_Stop_     (date_Start_)
 {
     h_Thread_ = CreateThread (0, 0, Thread::ThreadMain_, (void*)this, 0,
-                              &dw_ThreadId_); 
+                              &dw_ThreadId_);
 
     if (h_Thread_ == 0)
     {
