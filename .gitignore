@@ -1,0 +1,13 @@
+*.o
+*.a
+prog/Base64Decode
+prog/Base64Encode
+test/DateTest
+test/FileTest
+test/HashTest
+test/ListTest
+test/MapTest
+test/SocketTest
+test/StringIterTest
+test/StringListTest
+test/StringTest
