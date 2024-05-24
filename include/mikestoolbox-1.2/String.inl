@@ -911,6 +911,23 @@ inline bool String::Contains (char c, const Index& offset, bool b_Case) const
     return (FindFirst (c, offset, b_Case));
 }
 
+inline bool String::Contains (const String& str, bool b_Case) const
+{
+    return Contains (str, 0, b_Case);
+}
+
+inline bool String::Contains (const char* pz, bool b_Case) const
+{
+    String str (pz);
+
+    return Contains (str, 0, b_Case);
+}
+
+inline bool String::Contains (char c, bool b_Case) const
+{
+    return Contains (c, 0, b_Case);
+}
+
 inline uintsys String::Count (char c) const
 {
     return Count ((uchar)c);
@@ -975,7 +992,7 @@ inline const String String::Head (uintsys u_NumChars) const
     return Segment (0, u_NumChars);
 }
 
-inline void String::IgnoreCase (bool b_Ignore)
+inline void String::IgnoreCase (bool b_Ignore) const
 {
     b_IgnoreCase_ = b_Ignore;
 }

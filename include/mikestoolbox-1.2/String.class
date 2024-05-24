@@ -185,12 +185,20 @@ public:
 
     void                  Complement       ();  // invert bits of each byte (1's complement)
 
-    bool                  Contains         (const String& str, const Index& offset=0,
+    bool                  Contains         (const String& str,
+                                            const Index& offset,
                                             bool b_Case=true) const;
-    bool                  Contains         (const char* pz, const Index& offset=0,
+    bool                  Contains         (const char* pz,
+                                            const Index& offset,
                                             bool b_Case=true) const;
-    bool                  Contains         (char c, const Index& offset=0,
+    bool                  Contains         (char c, const Index& offset,
                                             bool b_Case=true) const;
+
+    bool                  Contains         (const String& str,
+                                            bool b_Case=true) const;
+    bool                  Contains         (const char* pz,
+                                            bool b_Case=true) const;
+    bool                  Contains         (char c, bool b_Case=true) const;
 
     uintsys               CopyTo           (char* ps_Buffer, uintsys u_Capacity) const;
 
@@ -232,7 +240,7 @@ public:
     const String          Hex              () const;
     const String          HEX              () const;
 
-    void                  IgnoreCase       (bool b_Ignore=true);
+    void                  IgnoreCase       (bool b_Ignore=true) const;
 
     void                  IncrementASCII   ();
     void                  IncrementBase10  ();
@@ -461,8 +469,8 @@ private:
     uchar*  PointerToFirstByteMod_ ();
     uchar*  PointerToLastByteMod_  ();
 
-    Memory mem_;
-    bool   b_IgnoreCase_;
+    Memory       mem_;
+    mutable bool b_IgnoreCase_;
 
     // don't allow boolean test
     operator bool () const;
