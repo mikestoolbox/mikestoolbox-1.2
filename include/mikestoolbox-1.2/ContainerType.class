@@ -90,12 +90,6 @@ struct ContainerType<std::vector<T,A> >
     typedef StandardCPlusPlusSimpleContainer Type;
 };
 
-template<class T, size_t N>
-struct ContainerType<std::array<T,N> >
-{
-    typedef StandardCPlusPlusSimpleContainer Type;
-};
-
 template<class T>
 struct ContainerType<std::deque<T> >
 {
@@ -104,12 +98,6 @@ struct ContainerType<std::deque<T> >
 
 template<class T>
 struct ContainerType<std::list<T> >
-{
-    typedef StandardCPlusPlusSimpleContainer Type;
-};
-
-template<class T>
-struct ContainerType<std::forward_list<T> >
 {
     typedef StandardCPlusPlusSimpleContainer Type;
 };
@@ -126,20 +114,6 @@ struct ContainerType<std::multiset<K,CMP,A> >
     typedef StandardCPlusPlusSimpleContainer Type;
 };
 
-#ifdef PLATFORM_OSX
-template<class V, class HASH, class PRED, class A>
-struct ContainerType<std::unordered_set<V,HASH,PRED,A> >
-{
-    typedef StandardCPlusPlusSimpleContainer Type;
-};
-
-template<class V, class HASH, class PRED, class A>
-struct ContainerType<std::unordered_multiset<V,HASH,PRED,A> >
-{
-    typedef StandardCPlusPlusSimpleContainer Type;
-};
-#endif
-
 template<class K, class V, class CMP, class A>
 struct ContainerType<std::map<K,V,CMP,A> >
 {
@@ -153,6 +127,25 @@ struct ContainerType<std::multimap<K,V,CMP,A> >
 };
 
 #ifdef PLATFORM_OSX
+
+template<class T, size_t N>
+struct ContainerType<std::array<T,N> >
+{
+    typedef StandardCPlusPlusSimpleContainer Type;
+};
+
+template<class T>
+struct ContainerType<std::forward_list<T> >
+{
+    typedef StandardCPlusPlusSimpleContainer Type;
+};
+
+template<class V, class HASH, class PRED, class A>
+struct ContainerType<std::unordered_set<V,HASH,PRED,A> >
+{
+    typedef StandardCPlusPlusSimpleContainer Type;
+};
+
 template<class K, class T, class HASH, class PRED, class A>
 struct ContainerType<std::unordered_map<K,T,HASH,PRED,A> >
 {
@@ -164,6 +157,13 @@ struct ContainerType<std::unordered_multimap<K,T,HASH,PRED,A> >
 {
     typedef StandardCPlusPlusKeyValueContainer Type;
 };
+
+template<class V, class HASH, class PRED, class A>
+struct ContainerType<std::unordered_multiset<V,HASH,PRED,A> >
+{
+    typedef StandardCPlusPlusSimpleContainer Type;
+};
+
 #endif
 
 } // namespace mikestoolbox
