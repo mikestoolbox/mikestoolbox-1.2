@@ -38,7 +38,7 @@
 #                  10161 Park Run Drive, Suite 150
 #                  Las Vegas, NV 89145
 
-platform    = unix # win32
+platform    = osx # unix # win32
 
 library     = libmikestoolbox-1.2.a
 
@@ -54,7 +54,7 @@ CXXFLAGS    = $(strip $(OPTIMIZE) $(WARNINGS) $(ERRORS) $(PROFILE))
 LNFLAGS     = $(strip $(OPTIMIZE) $(PROFILE))
 
 LIBTOOL     = libtool -static -o $(library) -
-ARCHIVE     = ar rcu $(library)
+ARCHIVE     = ar rc  $(library)
 RANLIB      = ranlib $(library)
 
 MAIN_LIBS   = -lmikestoolbox-1.2 -lpcre
@@ -91,9 +91,14 @@ o: $(library_o) $($(patsubst %,%_o,$(platform)))
 $(pch): $(headers) Makefile
 	$(CXX) -x c++-header ../include/mikestoolbox-1.2.h -o $@
 
-unix: $(library_o) $(unix_o)
+osx: $(library_o) $(unix_o)
 	rm -f $(library)
 	$(LIBTOOL) $(library_o) $(unix_o)
+
+unix: $(library_o) $(unix_o)
+	rm -f $(library)
+	$(ARCHIVE) $(library_o) $(unix_o)
+	$(RANLIB)
 
 win32: $(library_o) $(win32_o)
 	rm -f $(library)
