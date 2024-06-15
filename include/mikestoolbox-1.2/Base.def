@@ -111,9 +111,12 @@
 #include <list>
 #include <forward_list>
 #include <set>
-#include <unordered_set>
 #include <map>
+
+#ifdef PLATFORM_OSX
+#include <unordered_set>
 #include <unordered_map>
+#endif
 
 typedef unsigned char uchar;
 
