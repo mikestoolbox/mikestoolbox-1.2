@@ -133,6 +133,7 @@ inline String TypenameGen<uint64>::operator() ()
     return String("uint64");
 }
 
+#ifdef __APPLE__
 template<>
 inline String TypenameGen<long>::operator() ()
 {
@@ -144,6 +145,7 @@ inline String TypenameGen<unsigned long>::operator() ()
 {
     return String("unsigned long");
 }
+#endif // __APPLE__
 
 template<>
 inline String TypenameGen<float>::operator() ()
