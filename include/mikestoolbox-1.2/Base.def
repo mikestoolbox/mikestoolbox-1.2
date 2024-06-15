@@ -102,6 +102,14 @@
 #include <iostream>
 #include <fstream>
 
+#include <deque>
+#include <list>
+#include <forward_list>
+#include <set>
+#include <unordered_set>
+#include <map>
+#include <unordered_map>
+
 typedef unsigned char uchar;
 
 namespace mikestoolbox {

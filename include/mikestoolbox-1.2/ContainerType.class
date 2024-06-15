@@ -84,47 +84,36 @@ struct ContainerType<Map<K,V,CMP> >
     typedef MikesToolboxKeyValueContainer Type;
 };
 
-#ifdef _LIBCPP_VECTOR
 template<class T, class A>
 struct ContainerType<std::vector<T,A> >
 {
     typedef StandardCPlusPlusSimpleContainer Type;
 };
-#endif
 
-#ifdef _LIBCPP_ARRAY
 template<class T, size_t N>
 struct ContainerType<std::array<T,N> >
 {
     typedef StandardCPlusPlusSimpleContainer Type;
 };
-#endif
 
-#ifdef _LIBCPP_DEQUE
-template<class T, class A>
-struct ContainerType<std::deque<T,A> >
+template<class T>
+struct ContainerType<std::deque<T> >
 {
     typedef StandardCPlusPlusSimpleContainer Type;
 };
-#endif
 
-#ifdef _LIBCPP_LIST
-template<class T, class A>
-struct ContainerType<std::list<T,A> >
+template<class T>
+struct ContainerType<std::list<T> >
 {
     typedef StandardCPlusPlusSimpleContainer Type;
 };
-#endif
 
-#ifdef _LIBCPP_FORWARD_LIST
-template<class T, class A>
-struct ContainerType<std::forward_list<T,A> >
+template<class T>
+struct ContainerType<std::forward_list<T> >
 {
     typedef StandardCPlusPlusSimpleContainer Type;
 };
-#endif
 
-#ifdef _LIBCPP_SET
 template<class K, class CMP, class A>
 struct ContainerType<std::set<K,CMP,A> >
 {
@@ -136,9 +125,7 @@ struct ContainerType<std::multiset<K,CMP,A> >
 {
     typedef StandardCPlusPlusSimpleContainer Type;
 };
-#endif
 
-#ifdef _LIBCPP_UNORDERED_SET
 template<class V, class HASH, class PRED, class A>
 struct ContainerType<std::unordered_set<V,HASH,PRED,A> >
 {
@@ -150,9 +137,7 @@ struct ContainerType<std::unordered_multiset<V,HASH,PRED,A> >
 {
     typedef StandardCPlusPlusSimpleContainer Type;
 };
-#endif
 
-#ifdef _LIBCPP_MAP
 template<class K, class V, class CMP, class A>
 struct ContainerType<std::map<K,V,CMP,A> >
 {
@@ -164,9 +149,7 @@ struct ContainerType<std::multimap<K,V,CMP,A> >
 {
     typedef StandardCPlusPlusKeyValueContainer Type;
 };
-#endif
 
-#ifdef _LIBCPP_UNORDERED_MAP
 template<class K, class T, class HASH, class PRED, class A>
 struct ContainerType<std::unordered_map<K,T,HASH,PRED,A> >
 {
@@ -178,7 +161,6 @@ struct ContainerType<std::unordered_multimap<K,T,HASH,PRED,A> >
 {
     typedef StandardCPlusPlusKeyValueContainer Type;
 };
-#endif
 
 } // namespace mikestoolbox
 
