@@ -382,7 +382,10 @@ bool File::Append (const String& str_Contents, int n_Flags)
                 return true;
             }
 
-            ftruncate (handle, n_OriginalLength);
+            if (ftruncate (handle, n_OriginalLength) < 0)
+            {
+                return false;
+            }
         }
     }
 
