@@ -72,10 +72,19 @@
 #endif
 #endif
 #include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #include <limits.h>
+typedef int socklen_t;
+#define HAVE_AWFUL_DATE_FUNCTIONS
 #ifndef SYSTEM_INT_SIZE
 #define SYSTEM_INT_SIZE 32
 #endif
+#endif
+
+#ifdef PLATFORM_UNIX
+#include <sys/socket.h>
+#include <netdb.h>
 #endif
 
 #ifndef SYSTEM_INT_SIZE

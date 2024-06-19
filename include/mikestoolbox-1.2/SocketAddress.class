@@ -44,15 +44,6 @@
 //  Synopsis:   Class definitions for objects that represent socket addresses
 //----------------------------------------------------------------------------
 
-#ifdef PLATFORM_UNIX
-#include <sys/socket.h>
-#endif // PLATFORM_UNIX
-
-#ifdef PLATFORM_WINDOWS
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#endif
-
 namespace mikestoolbox {
 
 class SocketAddress
