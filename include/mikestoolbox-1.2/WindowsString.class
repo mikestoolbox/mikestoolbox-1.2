@@ -97,6 +97,9 @@ private:
     String str_Windows_;
 };
 
+String UTF8ToWindows (const String& str);
+String WindowsToUTF8 (const String& str);
+
 } // namespace mikestoolbox
 
 namespace std {
