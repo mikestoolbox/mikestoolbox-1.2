@@ -46,13 +46,6 @@
 
 #include "mikestoolbox-1.2.h"
 
-#ifdef PLATFORM_WINDOWS
-#include <winsock2.h>
-#include <ws2tcpip.h>
-
-typedef int socklen_t;
-#endif
-
 #ifdef PLATFORM_UNIX
 #include <netdb.h>
 #include <fcntl.h>
