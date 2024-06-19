@@ -46,11 +46,6 @@
 
 #include "mikestoolbox-1.2.h"
 
-#include <winsock2.h>
-#include <ws2tcpip.h>
-
-typedef int socklen_t;
-
 #define SOCKET_OP_FAILED(x)  ((x) == SOCKET_ERROR)
 
 #ifndef SOCKET_MESSAGE_SIZE

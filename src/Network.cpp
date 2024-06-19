@@ -46,11 +46,6 @@
 
 #include "mikestoolbox-1.2.h"
 
-#ifdef PLATFORM_UNIX
-#include <sys/socket.h>
-#include <netdb.h>
-#endif
-
 namespace mikestoolbox {
 
 TcpListener* Network::TcpListen (const SocketAddress& address)
@@ -65,7 +60,7 @@ TcpListener* Network::TcpListen (const SocketAddress& address)
     }
 
     if (p_Socket->Socket_       (address.Family()) &&
-        p_Socket->ReuseAddress_ ()              &&
+        p_Socket->ReuseAddress_ ()                 &&
         p_Socket->Bind_         (address))
     {
         p_Socket->AllowIpAddresses_ (list_AllowedIps_);
