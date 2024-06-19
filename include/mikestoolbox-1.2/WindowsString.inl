@@ -48,6 +48,56 @@
 
 namespace mikestoolbox {
 
+inline String UTF8ToWindows (const String& str_UTF8)
+{
+    StringIter iter (str_UTF8);
+    String     result;
+    uintsys    uc;
+    ParseError error;
+
+    result.Reserve (str_UTF8.Length() * 2);
+
+    while (iter)
+    {
+        if (iter.ParseUTF8Char (uc, error))
+        {
+            result.AppendUTF16LE (uc);
+        }
+        else
+        {
+            throw Exception ("UTF8ToWindows: Bad UTF8 character");
+        }
+    }
+
+    return result;
+}
+
+inline String WindowsToUTF8 (const String& str_Windows)
+{
+    StringIter iter (str_Windows);
+    String     result;
+    uintsys    uc;
+    ParseError error;
+
+    iter.SetLittleEndian();
+
+    result.Reserve (str_Windows.Length());
+
+    while (iter)
+    {
+        if (iter.ParseUTF16Char (uc, error))
+        {
+            result.AppendUTF8 (uc);
+        }
+        else
+        {
+            throw Exception ("UTF8ToWindows: Bad UTF16 character");
+        }
+    }
+
+    return result;
+}
+
 inline WindowsString::WindowsString (const String& str)
     : str_UTF8_    (str)
     , str_Windows_ (UTF8ToWindows (str_UTF8_))
