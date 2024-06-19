@@ -46,12 +46,13 @@ CXX         = c++
 LINK        = c++
 
 OPTIMIZE    = -O2
-WARNINGS    = -Wall -ansi # -Weverything
+STANDARD    = # -std=c++11
+WARNINGS    = -Wall # -ansi -Weverything
 ERRORS      = # -ferror-limit=5 -pedantic-errors
 PROFILE     = # -fprofile-instr-generate
 
-CXXFLAGS    = $(strip $(OPTIMIZE) $(WARNINGS) $(ERRORS) $(PROFILE))
-LNFLAGS     = $(strip $(OPTIMIZE) $(PROFILE))
+CXXFLAGS    = $(strip $(STANDARD) $(OPTIMIZE) $(WARNINGS) $(ERRORS) $(PROFILE))
+LNFLAGS     = $(strip $(STANDARD) $(OPTIMIZE) $(PROFILE))
 
 LIBTOOL     = libtool -static -o $(library) -
 ARCHIVE     = ar rc  $(library)
