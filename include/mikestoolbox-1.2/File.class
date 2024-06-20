@@ -50,10 +50,6 @@ const int FILE_CREATE_OK        = 1<<0;
 const int FILE_REPLACE_EXISTING = 1<<1;
 const int FILE_COPY_ALLOWED     = 1<<2;
 
-#ifdef HAVE_AWFUL_DIR_FUNCTIONS
-extern Mutex gmutex_ReadDirectory;
-#endif
-
 StringList ReadDirectory (const String& str_Directory);
 StringList ReadDirectory (const char* pz_Directory);
 bool       MakeDirectory (const String& str_Directory);

@@ -52,6 +52,10 @@
 #include <unistd.h>
 #include <dirent.h>
 
+#ifdef HAVE_AWFUL_DIR_FUNCTIONS
+static Mutex gmutex_ReadDirectory;
+#endif
+
 namespace mikestoolbox {
 
 class UnixFileHandle
