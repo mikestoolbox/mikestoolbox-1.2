@@ -77,14 +77,6 @@ const StringList gstrl_EmptyStringListToInitializeEmptyListBaseClass;
 
 double AutoPrintTimer::d_DefaultThreshold_ = 0.0;
 
-#ifdef HAVE_AWFUL_DIR_FUNCTIONS
-Mutex gmutex_ReadDirectory;
-#endif
-
-#ifdef HAVE_AWFUL_DATE_FUNCTIONS
-Mutex Date::mutex_;
-#endif
-
 const uintsys   Date::u_SecondsPerDay_ = 24 * 60 * 60;
 const Date      Date::date_UNIX_Epoch_ (1970, 1, 1);
 
