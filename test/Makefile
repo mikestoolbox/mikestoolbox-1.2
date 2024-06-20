@@ -92,7 +92,7 @@ over: clean
 
 o: $(objects)
 
-test: $(tests)
+test: $(targets)
 	$(command)
 
 $(objects): Makefile
