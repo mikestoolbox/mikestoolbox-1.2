@@ -48,6 +48,10 @@
 
 namespace mikestoolbox {
 
+#ifdef HAVE_AWFUL_DATE_FUNCTIONS
+static Mutex gmutex_LocalTime;
+#endif
+
 intsys DecodeTimeZoneName (const String& str_TimeZone);
 
 static const PerlRegex regex_RFC2822_Date ("(\\w+, )?(\\d+) (\\w+) (\\d+) "
@@ -1165,13 +1169,17 @@ LocalDate::LocalDate (uintsys u_Year, uintsys u_Month, uintsys u_Day, uintsys u_
 
 static inline intsys TimeZoneOffset (const struct tm* p_Time)
 {
+#ifdef HAVE_STRUCT_TM_GMTOFF
     return p_Time ? (p_Time->tm_gmtoff / 60) : 0;
+#else
+    return 0;
+#endif
 }
 
 static inline intsys LocalTimeZoneOffset (time_t t)
 {
 #ifdef HAVE_AWFUL_DATE_FUNCTIONS
-    MutexLocker locker (mutex_);
+    MutexLocker locker (gmutex_LocalTime);
 
     return TimeZoneOffset (localtime (&t));
 #else
