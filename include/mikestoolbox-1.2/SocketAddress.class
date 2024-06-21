@@ -113,3 +113,13 @@ typedef List<IpAddressRange> IpRangeList;
 
 } // namespace mikestoolbox
 
+#ifdef PLATFORM_WINDOWS
+extern "C"
+{
+    int inet_aton (const char* strptr, struct in_addr* addrptr);
+    int inet_pton (int family, const char* strptr, void* addrptr);
+    const char* inet_ntop (int family, const void* addrptr,
+                           char* strptr, size_t len);
+}
+#endif
+
