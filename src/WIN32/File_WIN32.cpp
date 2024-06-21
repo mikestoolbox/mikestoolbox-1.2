@@ -273,20 +273,15 @@ bool File::Rename (const String& str_NewName, int n_Flags)
     return false;
 }
 
-uintsys File::Size () const
+uint64 File::Size () const
 {
     WIN32_FILE_ATTRIBUTE_DATA wfad;
 
     if (GetFileAttributesEx (str_Name_, GetFileExInfoStandard, &wfad))
     {
-        uintsys u_SizeHigh = (uint32)wfad.nFileSizeHigh;
+        uint64 u_SizeHigh = (uint32)wfad.nFileSizeHigh;
 
         u_SizeHigh = u_SizeHigh << 32;
-
-        if ((u_SizeHigh >> 32) ^ (uint32)wfad.nFileSizeHigh)
-        {
-            throw StringException ("File size unrepresentable in uintsys: " + str_Name_);
-        }
 
         return u_SizeHigh | (uint32)wfad.nFileSizeLow;
     }
@@ -339,7 +334,7 @@ String GetDirectory ()
 #endif
 }
 
-bool File::Append (const StringI& str_Contents, int n_Flags)
+bool File::Append (const String& str_Contents, int n_Flags)
 {
     DWORD dw_CreateOptions;
 
@@ -411,7 +406,7 @@ bool File::Append (const StringI& str_Contents, int n_Flags)
     return false;
 }
 
-bool File::Read (StringI& str_Contents) const
+bool File::Read (String& str_Contents) const
 {
     WIN32_FILE_ATTRIBUTE_DATA wfad;
 
@@ -459,7 +454,7 @@ bool File::Read (StringI& str_Contents) const
     return (dw_NeedToRead == 0);
 }
 
-bool File::Write (const StringI& str_Contents, int n_Flags)
+bool File::Write (const String& str_Contents, int n_Flags)
 {
     DWORD dw_CreateOptions;
 
@@ -531,7 +526,7 @@ bool File::Write (const StringI& str_Contents, int n_Flags)
     return false;
 }
 
-StringList ReadDirectory (const StringI& str_Directory)
+StringList ReadDirectory (const String& str_Directory)
 {
     StringList strl_Files;
 
@@ -588,7 +583,7 @@ StringList ReadDirectory (const StringI& str_Directory)
     return strl_Files;
 }
 
-bool MakeDirectory (const StringI& str_Dir)
+bool MakeDirectory (const String& str_Dir)
 {
     String str_Directory (str_Dir);
     String str_DriveLetter;
@@ -653,7 +648,7 @@ bool MakeDirectory (const StringI& str_Dir)
     return CreateDirectory (str_Name, 0) ? true : false;
 }
 
-inline bool SetDirectory (const StringI& str_Directory)
+inline bool SetDirectory (const String& str_Directory)
 {
     WindowsString str (str_Directory);
 
