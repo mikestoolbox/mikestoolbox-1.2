@@ -363,7 +363,9 @@ Date::Date (const struct tm* p_Time)
 
         operator= (date);
 
+#ifdef HAVE_STRUCT_TM_GMTOFF
         AddSeconds (- p_Time->tm_gmtoff);
+#endif
     }
 }
 
@@ -571,7 +573,9 @@ DateParts::DateParts (const struct tm* p_Time)
                          p_Time->tm_min,
                          p_Time->tm_sec);
 
+#ifdef HAVE_STRUCT_TM_GMTOFF
         parts.AddSeconds (- p_Time->tm_gmtoff);
+#endif
 
         operator= (parts);
     }
