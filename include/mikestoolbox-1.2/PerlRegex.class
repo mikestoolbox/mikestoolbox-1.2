@@ -93,7 +93,7 @@ public:
                                   PerlRegexMatches& matches) const;
 
     const char*    Error         () const;
-    int            ErrorOffset   () const;
+    intsys         ErrorOffset   () const;
 
     void           Swap          (PerlRegex& regex);
 

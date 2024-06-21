@@ -109,10 +109,13 @@ public:
     virtual uintsys GetLastError          () const;
     virtual void    ClearError            () const;
 
-    static bool     Select                (SocketList& ReadSockets, SocketList& WriteSockets,
+    static bool     Select                (SocketList& ReadSockets,
+                                           SocketList& WriteSockets,
                                            double d_Timeout);
-    static bool     SelectRead            (SocketList& ReadSockets, double d_Timeout);
-    static bool     SelectWrite           (SocketList& WriteSockets, double d_Timeout);
+    static bool     SelectRead            (SocketList& ReadSockets,
+                                           double d_Timeout);
+    static bool     SelectWrite           (SocketList& WriteSockets,
+                                           double d_Timeout);
 
     double          BytesSent             () const;
     double          BytesReceived         () const;
@@ -124,31 +127,42 @@ protected:
 
     Socket (SOCKET h_Socket=INVALID_SOCKET);
 
-    virtual bool    Socket_                 (int n_Family) = 0;
-    bool            CreateSocket_           (int n_Family, int n_Type, int n_Protocol);
-    bool            CreateTCPSocket_        (int n_Family);
-    bool            CreateUDPSocket_        (int n_Family);
+    virtual bool    Socket_                 (intsys n_Family) = 0;
+    bool            CreateSocket_           (intsys n_Family,
+                                             intsys n_Type,
+                                             intsys n_Protocol);
+    bool            CreateTCPSocket_        (intsys n_Family);
+    bool            CreateUDPSocket_        (intsys n_Family);
 
     bool            Unblock_                ();
     bool            Bind_                   (const SocketAddress& addr);
     bool            Listen_                 (uintsys u_Backlog);
     SOCKET          Accept_                 (SocketAddress& addr);
     bool            Connect_                (const SocketAddress& addr);
-    bool            Shutdown_               (int n_How);
+    bool            Shutdown_               (intsys n_How);
     bool            Close_                  ();
 
-    intsys          Recv_                   (void* p_Buffer, uintsys u_BufferSize,
-                                             int n_Flags=0);
-    intsys          RecvFrom_               (void* p_Buffer, uintsys u_BufferSize,
-                                             int n_Flags, SocketAddress& addr_Peer);
+    intsys          Recv_                   (void* p_Buffer,
+                                             uintsys u_BufferSize,
+                                             intsys n_Flags=0);
+    intsys          RecvFrom_               (void* p_Buffer,
+                                             uintsys u_BufferSize,
+                                             intsys n_Flags,
+                                             SocketAddress& addr_Peer);
 
-    intsys          Send_                   (const void* p_Buffer, uintsys u_BufferSize,
-                                             int n_Flags=0);
-    intsys          Send_                   (const String& str_Data, int n_Flags=0);
-    intsys          Send_                   (const StringList& strl_Data, int n_Flags=0);
-    intsys          SendTo_                 (const void* p_Buffer, uintsys u_BufferSize,
-                                             int n_Flags, const SocketAddress& addr_Dest);
-    intsys          SendTo_                 (const String& str_Data, int n_Flags,
+    intsys          Send_                   (const void* p_Buffer,
+                                             uintsys u_BufferSize,
+                                             intsys n_Flags=0);
+    intsys          Send_                   (const String& str_Data,
+                                             intsys n_Flags=0);
+    intsys          Send_                   (const StringList& strl_Data,
+                                             intsys n_Flags=0);
+    intsys          SendTo_                 (const void* p_Buffer,
+                                             uintsys u_BufferSize,
+                                             intsys n_Flags,
+                                             const SocketAddress& addr_Dest);
+    intsys          SendTo_                 (const String& str_Data,
+                                             intsys n_Flags,
                                              const SocketAddress& addr_Dest);
 
     bool            GetPeerName_            ();
@@ -156,24 +170,24 @@ protected:
 
     void            SetLastError_           (uintsys u_ErrorCode) const;
 
-    int             GetPendingError_        () const;
+    intsys          GetPendingError_        () const;
 
     bool            EnableBroadcast_        (bool b_Enable=true);
     bool            EnableKeepAlive_        (bool b_Enable=true);
     bool            EnableLingerOption_     (bool b_Enable=true,
-                                             int n_LingerTime=0);
+                                             intsys n_LingerTime=0);
     bool            EnableTcpNoDelay_       (bool b_Enable=true);
 
-    bool            SetRecvBufferSize_      (int n_Size);
-    bool            SetSendBufferSize_      (int n_Size);
+    bool            SetRecvBufferSize_      (intsys n_Size);
+    bool            SetSendBufferSize_      (intsys n_Size);
 
     bool            ReuseAddress_           (bool b_Reuse=true);
     bool            ReusePort_              (bool b_Reuse=true);
 
-    int             GetType_                () const;
+    intsys          GetType_                () const;
 
-    int             GetTcpMaxSegmentSize_   () const;
-    bool            SetTcpMaxSegmentSize_   (int n_Size);
+    intsys          GetTcpMaxSegmentSize_   () const;
+    bool            SetTcpMaxSegmentSize_   (intsys n_Size);
 
 private:
 
@@ -220,27 +234,28 @@ public:
     void    BlockIpAddressRange     (const IpAddressRange& range);
 
     void    EnableKeepAlive         (bool b_Enable=true);
-    void    EnableLingerOption      (bool b_Enable=true, int n_LingerTime=0);
+    void    EnableLingerOption      (bool b_Enable=true,
+                                     intsys n_LingerTime=0);
     void    EnableTcpNoDelayOption  (bool b_Enable=true);
 
     // end of configuration
 
     bool          Unblock           ();
-    bool          Listen            (int n_Backlog);
+    bool          Listen            (intsys n_Backlog);
     TcpSocket*    Accept            ();
     bool          Close             ();
 
     bool    IsAddressBlocked        (const SocketAddress& addr) const;
 
-    bool    SetTcpRecvBufferSize    (int n_Size);
-    bool    SetTcpSendBufferSize    (int n_Size);
-    bool    SetTcpMaxSegmentSize    (int n_Size);
+    bool    SetTcpRecvBufferSize    (intsys n_Size);
+    bool    SetTcpSendBufferSize    (intsys n_Size);
+    bool    SetTcpMaxSegmentSize    (intsys n_Size);
 
 private:
 
     TcpListener (SOCKET h_Socket=INVALID_SOCKET);
 
-    bool Socket_           (int n_Family);
+    bool Socket_           (intsys n_Family);
 
     void AllowIpAddresses_ (const List<IpAddressRange>& list);
     void BlockIpAddresses_ (const List<IpAddressRange>& list);
@@ -253,7 +268,7 @@ private:
     uintsys u_MaxMessageSize_;
     bool    b_KeepAlive_;
     bool    b_Linger_;
-    int     n_LingerTime_;
+    intsys  n_LingerTime_;
     bool    b_NoDelay_;
 
     List<IpAddressRange> list_AllowedIps_;
@@ -275,17 +290,26 @@ public:
 
     ~TcpSocket ();
 
-    bool        ReadData               (uintsys u_NumBytes, String& str_Data,
+    bool        ReadData               (uintsys u_NumBytes,
+                                        String& str_Data,
                                         double d_Timeout=-1.0);
-    bool        ReadData               (String& str_Data, double d_Timeout=-1.0);
-    bool        ReadLine               (String& str_Line, double d_Timeout=-1.0);
-    bool        ReadMultiLine          (StringList& strl_Lines, double d_Timeout=-1.0);
+    bool        ReadData               (String& str_Data,
+                                        double d_Timeout=-1.0);
+    bool        ReadLine               (String& str_Line,
+                                        double d_Timeout=-1.0);
+    bool        ReadMultiLine          (StringList& strl_Lines,
+                                        double d_Timeout=-1.0);
 
-    bool        SendData               (const String& str_Data, double d_Timeout=-1.0);
-    bool        SendDataNow            (const String& str_Data, double d_Timeout=-1.0);
-    bool        SendLine               (const String& str_Line, double d_Timeout=-1.0);
-    bool        SendLineNow            (const String& str_Line, double d_Timeout=-1.0);
-    bool        SendMultiLine          (const StringList& strl_Lines, double d_Timeout=-1.0);
+    bool        SendData               (const String& str_Data,
+                                        double d_Timeout=-1.0);
+    bool        SendDataNow            (const String& str_Data,
+                                        double d_Timeout=-1.0);
+    bool        SendLine               (const String& str_Line,
+                                        double d_Timeout=-1.0);
+    bool        SendLineNow            (const String& str_Line,
+                                        double d_Timeout=-1.0);
+    bool        SendMultiLine          (const StringList& strl_Lines,
+                                        double d_Timeout=-1.0);
 
     bool        FlushOutput            (double d_Timeout=-1.0);
 
@@ -302,23 +326,25 @@ public:
     void        SetMaxMessageSize      (uintsys u_Size);
 
     bool        EnableKeepAlive        (bool b_Enable=true);
-    bool        EnableLingerOption     (bool b_Enable=true, int n_LingerTime=0);
+    bool        EnableLingerOption     (bool b_Enable=true,
+                                        intsys n_LingerTime=0);
     bool        EnableTcpNoDelayOption (bool b_Enable=true);
 
-    bool        SetTcpRecvBufferSize   (int n_Size);
-    bool        SetTcpSendBufferSize   (int n_Size);
+    bool        SetTcpRecvBufferSize   (intsys n_Size);
+    bool        SetTcpSendBufferSize   (intsys n_Size);
 
-    bool        SetTcpMaxSegmentSize   (int n_Size);
-    int         GetTcpMaxSegmentSize   () const;
+    bool        SetTcpMaxSegmentSize   (intsys n_Size);
+    intsys      GetTcpMaxSegmentSize   () const;
 
 private:
 
     TcpSocket (SOCKET h_Socket=INVALID_SOCKET);
 
-    bool        Socket_                (int n_Family);
+    bool        Socket_                (intsys n_Family);
     intsys      RecvData_              ();
     intsys      ReadData_              (double d_Timeout);
-    bool        PartialFlush_          (uintsys u_MaxSends, double d_Timeout);
+    bool        PartialFlush_          (uintsys u_MaxSends,
+                                        double d_Timeout);
     bool        IsReadBufferFull_      () const;
     bool        HaveDataToSend_        () const;
 
@@ -352,11 +378,14 @@ public:
 
     bool   Connect      (const SocketAddress& addr_Peer);
 
-    bool   ReadData     (String& str_Data, SocketAddress& addr_Peer,
+    bool   ReadData     (String& str_Data,
+                         SocketAddress& addr_Peer,
                          double d_Timeout=-1.0);
 
-    bool   SendData     (const String& str_Data, double d_Timeout=-1.0);
-    bool   SendDataTo   (const String& str_Data, const SocketAddress& addr_Peer,
+    bool   SendData     (const String& str_Data,
+                         double d_Timeout=-1.0);
+    bool   SendDataTo   (const String& str_Data,
+                         const SocketAddress& addr_Peer,
                          double d_Timeout=-1.0);
 
     bool   Close        ();
@@ -365,7 +394,7 @@ private:
 
     UdpSocket (SOCKET h_Socket=INVALID_SOCKET);
 
-    bool Socket_ (int n_Family);
+    bool Socket_ (intsys n_Family);
 };
 
 } // namespace mikestoolbox

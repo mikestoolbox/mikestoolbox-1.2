@@ -318,7 +318,7 @@ bool SocketAddress::GetAddress (String& str_Address) const
     return !str_Address.IsEmpty();
 }
 
-int SocketAddress::Family () const
+intsys SocketAddress::Family () const
 {
     return ss_Address_.ss_family;
 }
@@ -334,7 +334,7 @@ bool SocketAddress::IsValid () const
     return false;
 }
 
-int SocketAddress::Length () const
+intsys SocketAddress::Length () const
 {
     switch (ss_Address_.ss_family)
     {

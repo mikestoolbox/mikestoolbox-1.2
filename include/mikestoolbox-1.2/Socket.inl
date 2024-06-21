@@ -116,13 +116,13 @@ inline void Socket::ClearError () const
     u_ErrorCode_ = ERROR_NO_ERROR;
 }
 
-inline intsys Socket::Send_ (const String& str_Data, int n_Flags)
+inline intsys Socket::Send_ (const String& str_Data, intsys n_Flags)
 {
     return Socket::Send_ ((const void*)str_Data.PointerToFirstChar(),
                           str_Data.Length(), n_Flags);
 }
 
-inline intsys Socket::SendTo_ (const String& str_Data, int n_Flags,
+inline intsys Socket::SendTo_ (const String& str_Data, intsys n_Flags,
                                const SocketAddress& addr_Dest)
 {
     return Socket::SendTo_ ((const void*)str_Data.PointerToFirstChar(),
@@ -253,18 +253,18 @@ inline void TcpListener::EnableKeepAlive (bool b_Enable)
     b_KeepAlive_ = b_Enable;
 }
 
-inline void TcpListener::EnableLingerOption (bool b_Enable, int n_LingerTime)
+inline void TcpListener::EnableLingerOption (bool b_Enable, intsys n_LingerTime)
 {
     b_Linger_     = b_Enable;
     n_LingerTime_ = n_LingerTime;
 }
 
-inline bool TcpListener::SetTcpRecvBufferSize (int n_Size)
+inline bool TcpListener::SetTcpRecvBufferSize (intsys n_Size)
 {
     return Socket::SetRecvBufferSize_ (n_Size);
 }
 
-inline bool TcpListener::SetTcpSendBufferSize (int n_Size)
+inline bool TcpListener::SetTcpSendBufferSize (intsys n_Size)
 {
     return Socket::SetSendBufferSize_ (n_Size);
 }
@@ -274,12 +274,12 @@ inline void TcpListener::EnableTcpNoDelayOption (bool b_Enable)
     b_NoDelay_ = b_Enable;
 }
 
-inline bool TcpListener::SetTcpMaxSegmentSize (int n_Size)
+inline bool TcpListener::SetTcpMaxSegmentSize (intsys n_Size)
 {
     return Socket::SetTcpMaxSegmentSize_ (n_Size);
 }
 
-inline bool TcpListener::Listen (int n_Backlog)
+inline bool TcpListener::Listen (intsys n_Backlog)
 {
     if (IsListening())
     {
@@ -346,27 +346,27 @@ inline bool TcpSocket::EnableKeepAlive (bool b_Enable)
     return Socket::EnableKeepAlive_ (b_Enable);
 }
 
-inline bool TcpSocket::EnableLingerOption (bool b_Enable, int n_LingerTime)
+inline bool TcpSocket::EnableLingerOption (bool b_Enable, intsys n_LingerTime)
 {
     return Socket::EnableLingerOption_ (b_Enable, n_LingerTime);
 }
 
-inline bool TcpSocket::SetTcpRecvBufferSize (int n_Size)
+inline bool TcpSocket::SetTcpRecvBufferSize (intsys n_Size)
 {
     return Socket::SetRecvBufferSize_ (n_Size);
 }
 
-inline bool TcpSocket::SetTcpSendBufferSize (int n_Size)
+inline bool TcpSocket::SetTcpSendBufferSize (intsys n_Size)
 {
     return Socket::SetSendBufferSize_ (n_Size);
 }
 
-inline bool TcpSocket::SetTcpMaxSegmentSize (int n_Size)
+inline bool TcpSocket::SetTcpMaxSegmentSize (intsys n_Size)
 {
     return Socket::SetTcpMaxSegmentSize_ (n_Size);
 }
 
-inline int TcpSocket::GetTcpMaxSegmentSize () const
+inline intsys TcpSocket::GetTcpMaxSegmentSize () const
 {
     return Socket::GetTcpMaxSegmentSize_();
 }

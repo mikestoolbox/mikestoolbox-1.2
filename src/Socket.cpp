@@ -75,7 +75,7 @@ bool Socket::Close_ ()
     return socket_.Close();
 }
 
-static int CreateFD_SET (fd_set& set, const SocketList& list, bool& b_Canceled)
+static intsys CreateFD_SET (fd_set& set, const SocketList& list, bool& b_Canceled)
 {
     if (b_Canceled)
     {
@@ -189,7 +189,7 @@ static void RemoveUnsetSockets (fd_set& set, SocketList& list)
 
 bool Socket::Select (SocketList& ReadSockets, SocketList& WriteSockets, double d_Timeout)
 {
-    int n_Return = -1;
+    intsys n_Return = -1;
 
     fd_set set_Read;
     fd_set set_Write;
@@ -212,8 +212,12 @@ bool Socket::Select (SocketList& ReadSockets, SocketList& WriteSockets, double d
     {
         errno = 0;
 
-        int n_Max = Maximum (CreateFD_SET (set_Read,  ReadSockets,  b_Canceled),
-                             CreateFD_SET (set_Write, WriteSockets, b_Canceled));
+        intsys n_Max = Maximum (CreateFD_SET (set_Read,
+                                              ReadSockets,
+                                              b_Canceled),
+                                CreateFD_SET (set_Write,
+                                              WriteSockets,
+                                              b_Canceled));
 
         if (b_Canceled)
         {
@@ -258,7 +262,7 @@ bool Socket::Select (SocketList& ReadSockets, SocketList& WriteSockets, double d
     return true;
 }
 
-bool Socket::CreateSocket_ (int n_Family, int n_Type, int n_Protocol)
+bool Socket::CreateSocket_ (intsys n_Family, intsys n_Type, intsys n_Protocol)
 {
     socket_.Close();
 
@@ -276,7 +280,7 @@ bool Socket::CreateSocket_ (int n_Family, int n_Type, int n_Protocol)
     return false;
 }
 
-bool Socket::CreateTCPSocket_ (int n_Family)
+bool Socket::CreateTCPSocket_ (intsys n_Family)
 {
     socket_.Close();
 
@@ -294,7 +298,7 @@ bool Socket::CreateTCPSocket_ (int n_Family)
     return false;
 }
 
-bool Socket::CreateUDPSocket_ (int n_Family)
+bool Socket::CreateUDPSocket_ (intsys n_Family)
 {
     socket_.Close();
 
@@ -373,7 +377,7 @@ bool Socket::Bind_ (const SocketAddress& addr)
     return false;
 }
 
-bool Socket::Listen_ (uint u_Backlog)
+bool Socket::Listen_ (uintsys u_Backlog)
 {
     if (IsListening())
     {
@@ -504,7 +508,7 @@ bool Socket::IsConnected (double d_Timeout) const
         date_Exp.AddSeconds (d_Timeout);
 
         SOCKET sock = GetHandle();
-        int    max  = sock + 1;
+        intsys max  = sock + 1;
 
         ResetTimeoutState();
 
@@ -527,11 +531,11 @@ bool Socket::IsConnected (double d_Timeout) const
 
             CreateTimevalMax2Seconds (date_Exp.SecondsMoreThan (date_Now), tv_Timeout);
 
-            int n_Return = BerkeleySocket::Select (max, &ReadSet, &WriteSet, 0, &tv_Timeout);
+            intsys n_Return = BerkeleySocket::Select (max, &ReadSet, &WriteSet, 0, &tv_Timeout);
 
             if (n_Return > 0)
             {
-                int n_Error = GetPendingError_();
+                intsys n_Error = GetPendingError_();
 
                 u_State_ &= ~SOCKET_STATE_CONNECTING;
 
@@ -565,7 +569,7 @@ bool Socket::IsConnected (double d_Timeout) const
     return false;
 }
 
-bool Socket::Shutdown_ (int n_How)
+bool Socket::Shutdown_ (intsys n_How)
 {
     ClearError();
 
@@ -642,7 +646,7 @@ bool Socket::Shutdown_ (int n_How)
     return false;
 }
 
-intsys Socket::Recv_ (void* p_Buffer, uintsys u_BufferSize, int n_Flags)
+intsys Socket::Recv_ (void* p_Buffer, uintsys u_BufferSize, intsys n_Flags)
 {
     if (!IsReadable())
     {
@@ -670,7 +674,7 @@ intsys Socket::Recv_ (void* p_Buffer, uintsys u_BufferSize, int n_Flags)
     return n_Return;
 }
 
-intsys Socket::RecvFrom_ (void* p_Buffer, uintsys u_BufferSize, int n_Flags,
+intsys Socket::RecvFrom_ (void* p_Buffer, uintsys u_BufferSize, intsys n_Flags,
                           SocketAddress& addr_Peer)
 {
     if (!IsReadable())
@@ -699,7 +703,7 @@ intsys Socket::RecvFrom_ (void* p_Buffer, uintsys u_BufferSize, int n_Flags,
     return n_Return;
 }
 
-intsys Socket::Send_ (const void* p_Buffer, uintsys u_BufferSize, int n_Flags)
+intsys Socket::Send_ (const void* p_Buffer, uintsys u_BufferSize, intsys n_Flags)
 {
     if (!IsWritable())
     {
@@ -727,7 +731,7 @@ intsys Socket::Send_ (const void* p_Buffer, uintsys u_BufferSize, int n_Flags)
     return n_Return;
 }
 
-intsys Socket::Send_ (const StringList& strl_Data, int n_Flags)
+intsys Socket::Send_ (const StringList& strl_Data, intsys n_Flags)
 {
     if (!IsWritable())
     {
@@ -756,7 +760,7 @@ intsys Socket::Send_ (const StringList& strl_Data, int n_Flags)
 }
 
 intsys Socket::SendTo_ (const void* p_Buffer, uintsys u_BufferSize,
-                        int n_Flags, const SocketAddress& addr_Dest)
+                        intsys n_Flags, const SocketAddress& addr_Dest)
 {
     if (!IsWritable())
     {
@@ -784,7 +788,7 @@ intsys Socket::SendTo_ (const void* p_Buffer, uintsys u_BufferSize,
     return n_Return;
 }
 
-int Socket::GetPendingError_ () const
+intsys Socket::GetPendingError_ () const
 {
     return socket_.GetPendingError();
 }
@@ -799,17 +803,17 @@ bool Socket::EnableKeepAlive_ (bool b_Enable)
     return socket_.EnableKeepAlive (b_Enable);
 }
 
-bool Socket::EnableLingerOption_ (bool b_Enable, int n_LingerTime)
+bool Socket::EnableLingerOption_ (bool b_Enable, intsys n_LingerTime)
 {
     return socket_.EnableLingerOption (b_Enable, n_LingerTime);
 }
 
-bool Socket::SetRecvBufferSize_ (int n_Size)
+bool Socket::SetRecvBufferSize_ (intsys n_Size)
 {
     return socket_.SetRecvBufferSize (n_Size);
 }
 
-bool Socket::SetSendBufferSize_ (int n_Size)
+bool Socket::SetSendBufferSize_ (intsys n_Size)
 {
     return socket_.SetSendBufferSize (n_Size);
 }
@@ -824,17 +828,17 @@ bool Socket::ReusePort_ (bool b_Reuse)
     return socket_.ReusePort (b_Reuse);
 }
 
-int Socket::GetType_ () const
+intsys Socket::GetType_ () const
 {
     return socket_.GetType();
 }
 
-int Socket::GetTcpMaxSegmentSize_ () const
+intsys Socket::GetTcpMaxSegmentSize_ () const
 {
     return socket_.GetTcpMaxSegmentSize();
 }
 
-bool Socket::SetTcpMaxSegmentSize_ (int n_Size)
+bool Socket::SetTcpMaxSegmentSize_ (intsys n_Size)
 {
     return socket_.SetTcpMaxSegmentSize (n_Size);
 }
@@ -861,7 +865,7 @@ TcpListener::TcpListener (SOCKET h_Socket)
     // nothing
 }
 
-bool TcpListener::Socket_ (int n_Family)
+bool TcpListener::Socket_ (intsys n_Family)
 {
     return Socket::CreateTCPSocket_ (n_Family);
 }
@@ -994,7 +998,7 @@ TcpSocket* TcpListener::Accept ()
     return p_Socket;
 }
 
-bool TcpSocket::Socket_ (int n_Family)
+bool TcpSocket::Socket_ (intsys n_Family)
 {
     return Socket::CreateTCPSocket_ (n_Family);
 }
@@ -1407,7 +1411,7 @@ UdpSocket::UdpSocket (SOCKET h_Socket)
     // nothing
 }
 
-bool UdpSocket::Socket_ (int n_Family)
+bool UdpSocket::Socket_ (intsys n_Family)
 {
     return Socket::CreateUDPSocket_ (n_Family);
 }
