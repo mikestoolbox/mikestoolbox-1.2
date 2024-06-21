@@ -90,7 +90,7 @@ public:
     bool          Read            (StringList& strl_Lines) const;
     bool          Read            (String& str_Contents) const;
     bool          Rename          (const String& str_NewName, int n_Flags=0);
-    uintsys       Size            () const;
+    uint64        Size            () const;
     StringList    Tail            (uintsys u_NumLines) const;
     bool          Write           (const StringList& strl_Lines, int n_Flags=
                                    FILE_CREATE_OK|FILE_REPLACE_EXISTING);
