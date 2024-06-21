@@ -46,6 +46,8 @@
 
 #include "mikestoolbox-1.2.h"
 
+#ifdef PLATFORM_UNIX
+
 namespace mikestoolbox {
 
 #ifdef HAVE_AWFUL_DIR_FUNCTIONS
@@ -559,4 +561,6 @@ bool MakeDirectory (const String& str_Dir)
 }
 
 } // namespace mikestoolbox
+
+#endif // PLATFORM_UNIX
 

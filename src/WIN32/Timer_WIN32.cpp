@@ -46,6 +46,8 @@
 
 #include "mikestoolbox-1.2.h"
 
+#ifdef PLATFORM_WINDOWS
+
 namespace mikestoolbox {
 
 static const double d_Scale = 65536.0 * 65536.0;    // 2^32
@@ -101,4 +103,6 @@ double Timer::Elapsed ()
 }
 
 } // namespace mikestoolbox
+
+#endif // PLATFORM_WINDOWS
 

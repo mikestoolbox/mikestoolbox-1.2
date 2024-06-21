@@ -46,6 +46,8 @@
 
 #include "mikestoolbox-1.2.h"
 
+#ifdef PLATFORM_WINDOWS
+
 namespace mikestoolbox {
 
 bool File::IsDirectory () const
@@ -656,4 +658,6 @@ inline bool SetDirectory (const String& str_Directory)
 }
 
 } // namespace mikestoolbox
+
+#endif // PLATFORM_WINDOWS
 

@@ -46,6 +46,8 @@
 
 #include "mikestoolbox-1.2.h"
 
+#ifdef PLATFORM_UNIX
+
 #define SOCKET_OP_FAILED(x)  ((x) < 0)
 
 #ifndef SOCKET_MESSAGE_SIZE
@@ -174,4 +176,6 @@ bool BerkeleySocket::SetTcpMaxSegmentSize (intsys n_Size)
 }
 
 } // namespace mikestoolbox
+
+#endif // PLATFORM_UNIX
 

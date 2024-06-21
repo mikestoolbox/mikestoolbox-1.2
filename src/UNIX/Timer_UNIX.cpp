@@ -46,6 +46,8 @@
 
 #include "mikestoolbox-1.2.h"
 
+#ifdef PLATFORM_UNIX
+
 namespace mikestoolbox {
 
 Timer::Timer ()
@@ -83,4 +85,6 @@ double Timer::Elapsed ()
 }
 
 } // namespace mikestoolbox
+
+#endif // PLATFORM_UNIX
 

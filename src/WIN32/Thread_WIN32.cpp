@@ -46,6 +46,8 @@
 
 #include "mikestoolbox-1.2.h"
 
+#ifdef PLATFORM_WINDOWS
+
 #ifndef SINGLE_THREADED
 
 namespace mikestoolbox {
@@ -149,4 +151,6 @@ uintsys Thread::GetId () const
 } // namespace mikestoolbox
 
 #endif // !SINGLE_THREADED
+
+#endif // PLATFORM_WINDOWS
 

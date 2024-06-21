@@ -46,6 +46,8 @@
 
 #include "mikestoolbox-1.2.h"
 
+#ifdef PLATFORM_WINDOWS
+
 #ifndef INET_ADDRSTRLEN
 #define INET_ADDRSTRLEN 16
 #endif
@@ -151,4 +153,6 @@ const char* inet_ntop (int family, const void* addrptr, char* strptr, size_t len
 }
 
 }   // extern "C"
+
+#endif // PLATFORM_WINDOWS
 

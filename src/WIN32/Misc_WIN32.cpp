@@ -40,6 +40,8 @@
 
 #include "mikestoolbox-1.2.h"
 
+#ifdef PLATFORM_WINDOWS
+
 namespace mikestoolbox {
 
 void millisleep (uintsys u_Milliseconds)
@@ -48,4 +50,6 @@ void millisleep (uintsys u_Milliseconds)
 }
 
 } // namespace mikestoolbox
+
+#endif // PLATFORM_WINDOWS
 
