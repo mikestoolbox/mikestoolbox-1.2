@@ -742,11 +742,11 @@ inline void String::AppendUTF8 (uintsys u)
     }
 }
 
-inline void String::AppendUTF16 (uintsys u)
+inline void String::AppendUTF16BE (uintsys u)
 {
     if (u > MAX_UNICODE_CODE_POINT)
     {
-        throw Exception ("String::AppendUTF16: illegal character");
+        throw Exception ("String::AppendUTF16BE: illegal character");
     }
 
     if (u <= 0xFFFF)
@@ -764,6 +764,44 @@ inline void String::AppendUTF16 (uintsys u)
 
         AppendUint16 (u_Hi);
         AppendUint16 (u_Lo);
+    }
+}
+
+inline void String::AppendUTF16 (uintsys u)
+{
+    AppendUTF16BE (u);
+}
+
+inline uintsys SwapBytesUTF16 (uintsys u)
+{
+    uintsys u_HiByte = (u >> 8) & 0xFF;
+    uintsys u_LoByte =  u       & 0xFF;
+
+    return (u_LoByte << 8) | u_HiByte;
+}
+
+inline void String::AppendUTF16LE (uintsys u)
+{
+    if (u > MAX_UNICODE_CODE_POINT)
+    {
+        throw Exception ("String::AppendUTF16LE: illegal character");
+    }
+
+    if (u <= 0xFFFF)
+    {
+        AppendUint16 (SwapBytesUTF16(u));
+    }
+    else
+    {
+        // output two Unicode surrogates
+
+        u -= 0x010000;
+
+        uintsys u_HiChar = 0xD800 | (u >> 10);
+        uintsys u_LoChar = 0xDC00 | (u & 0x3FF);
+
+        AppendUTF16LE (u_HiChar);
+        AppendUTF16LE (u_LoChar);
     }
 }
 

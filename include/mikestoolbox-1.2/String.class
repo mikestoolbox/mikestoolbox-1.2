@@ -133,6 +133,8 @@ public:
 
     void                  AppendUTF8       (uintsys u_Char);
     void                  AppendUTF16      (uintsys u_Char);
+    void                  AppendUTF16LE    (uintsys u_Char);
+    void                  AppendUTF16BE    (uintsys u_Char);
     void                  AppendUTF32      (uintsys u_Char);
 
     void                  AppendUint8      (uintsys u); // big-endian
