@@ -385,7 +385,7 @@ bool SocketAddress::operator== (const SocketAddress& addr) const
     return false;
 }
 
-IpAddressRange::IpAddressRange (const String& str_Address, uint u_NumBits)
+IpAddressRange::IpAddressRange (const String& str_Address, uintsys u_NumBits)
     : addr_      (str_Address)
     , u_NumBits_ (u_NumBits)
     , u_Bitmask_ (0)
@@ -404,7 +404,7 @@ IpAddressRange::IpAddressRange (const String& str_Address, uint u_NumBits)
     u_Bitmask_ = (~u_Bitmask_) << (32 - u_NumBits_);
 }
 
-IpAddressRange::IpAddressRange (const char* pz_Address, uint u_NumBits)
+IpAddressRange::IpAddressRange (const char* pz_Address, uintsys u_NumBits)
     : addr_      (pz_Address)
     , u_NumBits_ (u_NumBits)
     , u_Bitmask_ (0)
@@ -473,7 +473,7 @@ IpAddressRange::IpAddressRange (const char* pz_RangeSpec)
     }
 }
 
-IpAddressRange::IpAddressRange (const SocketAddress& addr, uint u_NumBits)
+IpAddressRange::IpAddressRange (const SocketAddress& addr, uintsys u_NumBits)
     : addr_      (addr)
     , u_NumBits_ (u_NumBits)
     , u_Bitmask_ (0)

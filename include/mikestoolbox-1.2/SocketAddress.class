@@ -70,8 +70,8 @@ public:
 
     bool            IsValid         () const;
 
-    int             Family          () const;
-    int             Length          () const;
+    intsys          Family          () const;
+    intsys          Length          () const;
     uintsys         Capacity        () const;
 
     SocketAddress&  operator=       (const SocketAddress&);
@@ -93,11 +93,11 @@ class IpAddressRange
 {
 public:
 
-    IpAddressRange (const String& str_Address, uint u_NumBits);
-    IpAddressRange (const char* pz_Address, uint u_NumBits);
+    IpAddressRange (const String& str_Address, uintsys u_NumBits);
+    IpAddressRange (const char* pz_Address, uintsys u_NumBits);
     IpAddressRange (const String& str_RangeSpec);
     IpAddressRange (const char* pz_RangeSpec);
-    IpAddressRange (const SocketAddress& addr, uint u_NumBits);
+    IpAddressRange (const SocketAddress& addr, uintsys u_NumBits);
     IpAddressRange ();
 
     bool Contains (const SocketAddress& addr) const;

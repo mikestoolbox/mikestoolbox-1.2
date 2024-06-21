@@ -180,7 +180,7 @@ const String PerlRegexMatches::GetMatch (uintsys u_Index) const
 {
     String str_Substring;
 
-    if (u_Index < static_cast<uint> (n_NumSubstrings_))
+    if (u_Index < static_cast<uintsys> (n_NumSubstrings_))
     {
         int n_Offset = an_Substrings_[2*u_Index];
         int n_Length = an_Substrings_[2*u_Index+1] - n_Offset;

@@ -131,7 +131,7 @@ protected:
 
     bool            Unblock_                ();
     bool            Bind_                   (const SocketAddress& addr);
-    bool            Listen_                 (uint u_Backlog);
+    bool            Listen_                 (uintsys u_Backlog);
     SOCKET          Accept_                 (SocketAddress& addr);
     bool            Connect_                (const SocketAddress& addr);
     bool            Shutdown_               (int n_How);

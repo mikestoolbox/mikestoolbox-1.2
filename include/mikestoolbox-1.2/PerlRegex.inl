@@ -236,7 +236,7 @@ inline const char* PerlRegex::Error () const
     return ViewData()->pz_CompileError_;
 }
 
-inline int PerlRegex::ErrorOffset () const
+inline intsys PerlRegex::ErrorOffset () const
 {
     return ViewData()->n_CompileErrorOffset_;
 }
@@ -263,7 +263,7 @@ inline PerlRegexMatches::PerlRegexMatches ()
 
 inline uintsys PerlRegexMatches::GetMatchLength (uintsys u_Index) const
 {
-    if (u_Index < (uint)n_NumSubstrings_)
+    if (u_Index < (uintsys)n_NumSubstrings_)
     {
         return an_Substrings_[2*u_Index+1] - an_Substrings_[2*u_Index];
     }
@@ -275,7 +275,7 @@ inline const StringList PerlRegexMatches::GetMatches () const
 {
     StringList strl;
 
-    for (int n=0; n<n_NumSubstrings_; ++n)
+    for (intsys n=0; n<n_NumSubstrings_; ++n)
     {
         strl.Append (GetMatch (n));
     }
