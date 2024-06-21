@@ -44,7 +44,9 @@ using namespace mikestoolbox;
 
 int main (int, char**)
 {
+#ifdef PLATFORM_UNIX
     signal (SIGPIPE, SIG_IGN);
+#endif
 
     String  str_Host;
     uintsys u_Port = 80;
