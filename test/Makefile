@@ -43,7 +43,7 @@ CXX         = c++
 LINK        = c++
 
 OPTIMIZE    = -O2
-WARNINGS    = -Wall -ansi # -Weverything
+WARNINGS    = -Wall # -ansi # -Weverything
 ERRORS      = # -ferror-limit=5 -pedantic-errors
 PROFILE     = # -fprofile-instr-generate
 
@@ -53,7 +53,7 @@ LNFLAGS     = $(strip $(OPTIMIZE) $(PROFILE))
 MAIN_LIBS   = -lmikestoolbox-1.2 -lpcre
 MACOSX_LIBS = $(MAIN_LIBS)
 LINUX_LIBS  = $(MAIN_LIBS) -lpthread -ldl
-WIN32_LIBS  = $(MAIN_LIBS) -lws2_32 -lgdi32 -lcomdlg32 -lgmon
+WIN32_LIBS  = $(MAIN_LIBS) -lws2_32 # -lgdi32 -lcomdlg32 -lgmon
 
 LIBS        = $(MACOSX_LIBS)
 
