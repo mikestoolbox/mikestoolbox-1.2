@@ -168,7 +168,7 @@ static void MarkSocketsTimedOut (const SocketList& list)
     }
 }
 
-static void RemoveUnsetSockets (const fd_set& set, SocketList& list)
+static void RemoveUnsetSockets (fd_set& set, SocketList& list)
 {
     ListChangeIter<Socket*> iter (list);
 
