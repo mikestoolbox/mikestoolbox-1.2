@@ -110,7 +110,7 @@ private:
 };
 
 template<uintsys MAX_GATHER>
-inline SocketMessage<MAX_GATHER>::SocketMessage (const StringList& strl)
+inline SocketMessage<MAX_GATHER>::SocketMessage (const StringList& strl_Message)
     : buffers_       ()
     , dw_NumBuffers_ (0)
 {
@@ -178,6 +178,37 @@ intsys BerkeleySocket::Send (const StringList& strl_Data, int n_Flags)
 
     return dw_BytesSent;
 }
+
+#ifdef TCP_MAXSEG
+intsys BerkeleySocket::GetTcpMaxSegmentSize () const
+{
+    intsys n_Size = 0;
+
+    socklen_t n_Length = sizeof(n_Size);
+
+    getsockopt (h_Socket_, IPPROTO_TCP, TCP_MAXSEG, (char*)&n_Size, &n_Length);
+
+    return n_Size;
+}
+
+bool BerkeleySocket::SetTcpMaxSegmentSize (intsys n_Size)
+{
+    return setsockopt (h_Socket_, IPPROTO_TCP, TCP_MAXSEG, (const char*)&n_Size,
+                        sizeof(n_Size)) == 0;
+}
+
+#else
+
+intsys BerkeleySocket::GetTcpMaxSegmentSize () const
+{
+    throw Exception ("BerkeleySocket::GetTcpMaxSegmentSize not supported");
+}
+
+bool BerkeleySocket::SetTcpMaxSegmentSize (intsys n_Size)
+{
+    return false;
+}
+#endif
 
 } // namespace mikestoolbox
 
