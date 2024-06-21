@@ -49,6 +49,7 @@
 #define PCRE_INCLUDE_FILE <pcre.h>
 #endif
 
+#define  PCRE_STATIC
 #include PCRE_INCLUDE_FILE
 
 namespace mikestoolbox {
