@@ -46,11 +46,6 @@
 
 #include "mikestoolbox-1.2.h"
 
-#ifdef PLATFORM_UNIX
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#endif
-
 #ifndef INET_ADDRSTRLEN
 #define INET_ADDRSTRLEN 16
 #endif
