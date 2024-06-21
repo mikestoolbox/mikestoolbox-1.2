@@ -42,7 +42,7 @@ CXX         = c++
 LINK        = c++
 
 OPTIMIZE    = -O2
-WARNINGS    = -Wall -ansi # -Weverything
+WARNINGS    = -Wall # -ansi # -Weverything
 ERRORS      = # -ferror-limit=5 -pedantic-errors
 PROFILE     = # -fprofile-instr-generate
 
