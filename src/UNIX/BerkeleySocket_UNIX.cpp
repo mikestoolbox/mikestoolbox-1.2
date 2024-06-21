@@ -46,10 +46,6 @@
 
 #include "mikestoolbox-1.2.h"
 
-#include <netdb.h>
-#include <fcntl.h>
-#include <netinet/tcp.h>
-
 #define SOCKET_OP_FAILED(x)  ((x) < 0)
 
 #ifndef SOCKET_MESSAGE_SIZE
@@ -134,7 +130,7 @@ inline SocketMessage<MAX_GATHER>::~SocketMessage ()
 
 bool BerkeleySocket::Unblock ()
 {
-    int n_Flags = fcntl (h_Socket_, F_GETFL, 0);
+    intsys n_Flags = fcntl (h_Socket_, F_GETFL, 0);
 
     if (n_Flags < 0)
     {
@@ -146,7 +142,7 @@ bool BerkeleySocket::Unblock ()
     return (fcntl (h_Socket_, F_SETFL, n_Flags) >= 0);
 }
 
-intsys BerkeleySocket::Send (const StringList& strl_Data, int n_Flags)
+intsys BerkeleySocket::Send (const StringList& strl_Data, intsys n_Flags)
 {
     SocketMessage<SOCKET_MESSAGE_SIZE> message (strl_Data);
 
@@ -160,9 +156,9 @@ intsys BerkeleySocket::Send (const StringList& strl_Data, int n_Flags)
     return n_Return;
 }
 
-int BerkeleySocket::GetTcpMaxSegmentSize () const
+intsys BerkeleySocket::GetTcpMaxSegmentSize () const
 {
-    int n_Size = 0;
+    intsys n_Size = 0;
 
     socklen_t n_Length = sizeof(n_Size);
 
@@ -171,7 +167,7 @@ int BerkeleySocket::GetTcpMaxSegmentSize () const
     return n_Size;
 }
 
-bool BerkeleySocket::SetTcpMaxSegmentSize (int n_Size)
+bool BerkeleySocket::SetTcpMaxSegmentSize (intsys n_Size)
 {
     return setsockopt (h_Socket_, IPPROTO_TCP, TCP_MAXSEG, (const char*)&n_Size,
                         sizeof(n_Size)) == 0;
