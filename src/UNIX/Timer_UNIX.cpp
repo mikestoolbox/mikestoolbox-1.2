@@ -46,8 +46,6 @@
 
 #include "mikestoolbox-1.2.h"
 
-#include <sys/time.h>
-
 namespace mikestoolbox {
 
 Timer::Timer ()

@@ -46,12 +46,6 @@
 
 #include "mikestoolbox-1.2.h"
 
-#include <sys/stat.h>
-#include <sys/param.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <dirent.h>
-
 #ifdef HAVE_AWFUL_DIR_FUNCTIONS
 static Mutex gmutex_ReadDirectory;
 #endif
@@ -334,7 +328,7 @@ bool File::Rename (const String& str_NewName, int n_Flags)
     return false;
 }
 
-uintsys File::Size () const
+uint64 File::Size () const
 {
     struct stat stat_Buf;
 

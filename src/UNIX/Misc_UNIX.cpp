@@ -39,7 +39,6 @@
 */
 
 #include "mikestoolbox-1.2.h"
-#include <sys/select.h>
 
 namespace mikestoolbox {
 
