@@ -114,7 +114,7 @@ inline SocketMessage<MAX_GATHER>::SocketMessage (const StringList& strl)
     : buffers_       ()
     , dw_NumBuffers_ (0)
 {
-    StringListConstIter iter (strl_Message);
+    StringListIter iter (strl_Message);
 
     uintsys u = 0;
 
