@@ -55,6 +55,9 @@
 
 #ifdef WIN32
 #define PLATFORM_WINDOWS
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x501
+#endif
 #ifndef __USE_W32_SOCKETS
 #define __USE_W32_SOCKETS
 #endif
@@ -83,8 +86,19 @@ typedef int socklen_t;
 #endif
 
 #ifdef PLATFORM_UNIX
-#include <sys/socket.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <dirent.h>
 #include <netdb.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/ioctl.h>
+#include <sys/param.h>
+#include <sys/select.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 #endif
 
 #ifndef SYSTEM_INT_SIZE
@@ -130,24 +144,29 @@ typedef int socklen_t;
 
 typedef unsigned char uchar;
 
-namespace mikestoolbox {
-
 // system types
 
-typedef int8_t     int8;
-typedef int16_t    int16;
-typedef int32_t    int32;
-typedef int64_t    int64;
+typedef int8_t    int8;
+typedef int16_t   int16;
+typedef int32_t   int32;
+typedef int64_t   int64;
 
-typedef u_int8_t   uint8;
-typedef u_int16_t  uint16;
-typedef u_int32_t  uint32;
-typedef u_int64_t  uint64;
+#ifdef PLATFORM_WINDOWS
+typedef uint8_t   uint8;
+typedef uint16_t  uint16;
+typedef uint32_t  uint32;
+typedef uint64_t  uint64;
+#else
+typedef u_int8_t  uint8;
+typedef u_int16_t uint16;
+typedef u_int32_t uint32;
+typedef u_int64_t uint64;
+#endif
 
 #if (SYSTEM_INT_SIZE == 64)
 
-typedef int64_t   intsys;
-typedef u_int64_t uintsys;
+typedef int64  intsys;
+typedef uint64 uintsys;
 
 const intsys  MAX_INTSYS  = 0x7FFFFFFFFFFFFFFF;
 const intsys  MIN_INTSYS  = 0x8000000000000000;
@@ -159,8 +178,8 @@ const uintsys MAX_UINTSYS = 0xFFFFFFFFFFFFFFFF;
 
 #elif (SYSTEM_INT_SIZE == 32)
 
-typedef int32_t   intsys;
-typedef u_int32_t uintsys;
+typedef int32  intsys;
+typedef uint32 uintsys;
 
 const intsys  MAX_INTSYS  = 0x7FFFFFFF;
 const intsys  MIN_INTSYS  = 0x80000000;
@@ -170,6 +189,8 @@ const uintsys MAX_UINTSYS = 0xFFFFFFFF;
 #else
 #error Please set SYSTEM_INT_SIZE to your system integer size (either 32 or 64).
 #endif
+
+namespace mikestoolbox {
 
 // forward declarations
 
