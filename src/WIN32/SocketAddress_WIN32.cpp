@@ -73,7 +73,7 @@ int inet_aton (const char* strptr, struct in_addr* addrptr)
         return 0;
     }
 
-    ParseError error;
+    mikestoolbox::ParseError error;
 
     if (!(iter.ParseNumber (u1,  error) &&
           iter.SkipChar    ('.', error) &&
