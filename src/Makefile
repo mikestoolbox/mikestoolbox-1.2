@@ -103,7 +103,8 @@ unix: $(library_o) $(unix_o)
 
 win32: $(library_o) $(win32_o)
 	rm -f $(library)
-	$(LIBTOOL) $(library_o) $(win32_o)
+	$(ARCHIVE) $(library_o) $(win32_o)
+	$(RANLIB)
 
 $(library_o) $(unix_o) $(win32_o): $(headers) Makefile
 
