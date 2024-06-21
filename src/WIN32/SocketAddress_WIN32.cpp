@@ -73,6 +73,8 @@ int inet_aton (const char* strptr, struct in_addr* addrptr)
         return 0;
     }
 
+    ParseError error;
+
     if (!(iter.ParseNumber (u1,  error) &&
           iter.SkipChar    ('.', error) &&
           iter.ParseNumber (u2,  error) &&
