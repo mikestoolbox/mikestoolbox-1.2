@@ -55,7 +55,7 @@
 
 #else
 
-typedef int SOCKET;
+typedef intsys SOCKET;
 #define INVALID_SOCKET (-1)
 
 #endif
@@ -78,17 +78,19 @@ public:
     BerkeleySocket ();
     ~BerkeleySocket ();
 
-    bool        CreateSocket            (int n_Family, int n_Type, int n_Protocol);
-    bool        CreateTCPSocket         (int n_Family);
-    bool        CreateUDPSocket         (int n_Family);
+    bool        CreateSocket            (intsys n_Family,
+                                         intsys n_Type,
+                                         intsys n_Protocol);
+    bool        CreateTCPSocket         (intsys n_Family);
+    bool        CreateUDPSocket         (intsys n_Family);
 
     SOCKET      GetHandle               () const;
 
     bool        Bind                    (const SocketAddress& addr);
     bool        Connect                 (const SocketAddress& addr);
-    bool        Listen                  (uint u_Backlog);
+    bool        Listen                  (uintsys u_Backlog);
     SOCKET      Accept                  (SocketAddress& addr);
-    bool        Shutdown                (int n_How);
+    bool        Shutdown                (intsys n_How);
     bool        Close                   ();
 
     bool        ReuseAddress            (bool b_Reuse=true);
@@ -98,43 +100,59 @@ public:
     bool        GetPeerName             (SocketAddress& addr) const;
     bool        GetSockName             (SocketAddress& addr) const;
 
-    intsys      Recv                    (void* p_Buffer, uintsys u_BufferSize, int n_Flags=0);
-    intsys      RecvFrom                (void* p_Buffer, uintsys u_BufferSize, int n_Flags,
+    intsys      Recv                    (void* p_Buffer,
+                                         uintsys u_BufferSize,
+                                         intsys n_Flags=0);
+    intsys      RecvFrom                (void* p_Buffer,
+                                         uintsys u_BufferSize,
+                                         intsys n_Flags,
                                          SocketAddress& addr_Peer);
-    intsys      Recv                    (String& str_Buffer, int n_Flags=0);
-    intsys      RecvFrom                (String& str_Buffer, int n_Flags,
+    intsys      Recv                    (String& str_Buffer,
+                                         intsys n_Flags=0);
+    intsys      RecvFrom                (String& str_Buffer,
+                                         intsys n_Flags,
                                          SocketAddress& addr_Peer);
 
-    intsys      Send                    (const void* p_Buffer, uintsys u_BufferSize,
-                                         int n_Flags=0);
-    intsys      SendTo                  (const void* p_Buffer, uintsys u_BufferSize,
-                                         int n_Flags, const SocketAddress& addr_Dest);
-    intsys      Send                    (const String& str_Data, int n_Flags=0);
-    intsys      Send                    (const StringList& strl_Data, int n_Flags=0);
-    intsys      SendTo                  (const String& str_Data, int n_Flags,
+    intsys      Send                    (const void* p_Buffer,
+                                         uintsys u_BufferSize,
+                                         intsys n_Flags=0);
+    intsys      SendTo                  (const void* p_Buffer,
+                                         uintsys u_BufferSize,
+                                         intsys n_Flags,
+                                         const SocketAddress& addr_Dest);
+    intsys      Send                    (const String& str_Data,
+                                         intsys n_Flags=0);
+    intsys      Send                    (const StringList& strl_Data,
+                                         intsys n_Flags=0);
+    intsys      SendTo                  (const String& str_Data,
+                                         intsys n_Flags,
                                          const SocketAddress& addr_Dest);
 
-    int         GetPendingError         () const;
+    intsys      GetPendingError         () const;
 
     bool        EnableBroadcast         (bool b_Enable=true);
     bool        EnableKeepAlive         (bool b_Enable=true);
-    bool        EnableLingerOption      (bool b_Enable=true, int n_LingerTime=0);
+    bool        EnableLingerOption      (bool b_Enable=true,
+                                         intsys n_LingerTime=0);
     bool        EnableTcpNoDelay        (bool b_Enable=true);
 
-    bool        SetRecvBufferSize       (int n_Size);
-    bool        SetSendBufferSize       (int n_Size);
+    bool        SetRecvBufferSize       (intsys n_Size);
+    bool        SetSendBufferSize       (intsys n_Size);
 
-    int         GetType                 () const;
+    intsys      GetType                 () const;
 
-    int         GetTcpMaxSegmentSize    () const;
-    bool        SetTcpMaxSegmentSize    (int n_Size);
+    intsys      GetTcpMaxSegmentSize    () const;
+    bool        SetTcpMaxSegmentSize    (intsys n_Size);
 
                 operator bool           () const;
 
     static void CloseSocket             (SOCKET sock);
 
-    static int  Select                  (int n_MaxHandle, fd_set* set_Read, fd_set* set_Write,
-                                         fd_set* set_Error, struct timeval* tv_Timeout);
+    static intsys Select                (intsys n_MaxHandle,
+                                         fd_set* set_Read,
+                                         fd_set* set_Write,
+                                         fd_set* set_Error,
+                                         struct timeval* tv_Timeout);
 
 private:
 
