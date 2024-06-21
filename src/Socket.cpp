@@ -866,11 +866,6 @@ bool TcpListener::Socket_ (int n_Family)
     return Socket::CreateTCPSocket_ (n_Family);
 }
 
-bool TcpListener::SetTcpMaxSegmentSize (int n_Size)
-{
-    return Socket::SetTcpMaxSegmentSize_ (n_Size);
-}
-
 TcpSocket::TcpSocket (SOCKET h_Socket)
     : Socket                       (h_Socket)
     , str_PeerDomainName_          ()

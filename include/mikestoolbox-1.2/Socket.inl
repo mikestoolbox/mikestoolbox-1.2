@@ -274,6 +274,11 @@ inline void TcpListener::EnableTcpNoDelayOption (bool b_Enable)
     b_NoDelay_ = b_Enable;
 }
 
+inline bool TcpListener::SetTcpMaxSegmentSize (int n_Size)
+{
+    return Socket::SetTcpMaxSegmentSize_ (n_Size);
+}
+
 inline bool TcpListener::Listen (int n_Backlog)
 {
     if (IsListening())
