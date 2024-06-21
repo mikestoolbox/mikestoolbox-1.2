@@ -58,12 +58,12 @@ extern "C" {
 
 int inet_aton (const char* strptr, struct in_addr* addrptr)
 {
-    const mikestoolbox::uintsys u_MaxIPv4AddressLength = 15;
+    const uintsys u_MaxIPv4AddressLength = 15;
 
-    mikestoolbox::uintsys u1 = 0;
-    mikestoolbox::uintsys u2 = 0;
-    mikestoolbox::uintsys u3 = 0;
-    mikestoolbox::uintsys u4 = 0;
+    uintsys u1 = 0;
+    uintsys u2 = 0;
+    uintsys u3 = 0;
+    uintsys u4 = 0;
 
     mikestoolbox::String     str_Address (strptr);
     mikestoolbox::StringIter iter        (str_Address);
@@ -73,13 +73,13 @@ int inet_aton (const char* strptr, struct in_addr* addrptr)
         return 0;
     }
 
-    if (!(iter.ParseNumberOVERFLOW (u1)  &&
-          iter.ParseChar           ('.') &&
-          iter.ParseNumberOVERFLOW (u2)  &&
-          iter.ParseChar           ('.') &&
-          iter.ParseNumberOVERFLOW (u3)  &&
-          iter.ParseChar           ('.') &&
-          iter.ParseNumberOVERFLOW (u4)))
+    if (!(iter.ParseNumber (u1,  error) &&
+          iter.SkipChar    ('.', error) &&
+          iter.ParseNumber (u2,  error) &&
+          iter.SkipChar    ('.', error) &&
+          iter.ParseNumber (u3,  error) &&
+          iter.SkipChar    ('.', error) &&
+          iter.ParseNumber (u4,  error)))
     {
         return 0;
     }
@@ -89,7 +89,7 @@ int inet_aton (const char* strptr, struct in_addr* addrptr)
         return 0;
     }
 
-    mikestoolbox::uintsys u_Address = (u1 << 24) | (u2 << 16) | (u3 << 8) | u4;
+    uintsys u_Address = (u1 << 24) | (u2 << 16) | (u3 << 8) | u4;
 
     addrptr->s_addr = htonl (u_Address);
 
@@ -123,13 +123,13 @@ const char* inet_ntop (int family, const void* addrptr, char* strptr, size_t len
     {
         mikestoolbox::String str_IP;
 
-        str_IP += (mikestoolbox::uintsys) p_Address[0];
+        str_IP += (uintsys) p_Address[0];
         str_IP += '.';
-        str_IP += (mikestoolbox::uintsys) p_Address[1];
+        str_IP += (uintsys) p_Address[1];
         str_IP += '.';
-        str_IP += (mikestoolbox::uintsys) p_Address[2];
+        str_IP += (uintsys) p_Address[2];
         str_IP += '.';
-        str_IP += (mikestoolbox::uintsys) p_Address[3];
+        str_IP += (uintsys) p_Address[3];
 
         if (str_IP.Length() >= len)
         {
