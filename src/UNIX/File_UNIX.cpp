@@ -46,11 +46,11 @@
 
 #include "mikestoolbox-1.2.h"
 
+namespace mikestoolbox {
+
 #ifdef HAVE_AWFUL_DIR_FUNCTIONS
 static Mutex gmutex_ReadDirectory;
 #endif
-
-namespace mikestoolbox {
 
 class UnixFileHandle
 {
