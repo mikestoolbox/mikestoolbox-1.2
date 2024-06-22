@@ -39,7 +39,7 @@
 #                  Las Vegas, NV 89145
 
 
-.PHONY: all clean over test prog
+.PHONY: all clean over src test prog
 
 all: prog
 
@@ -51,8 +51,10 @@ clean:
 over: clean
 	make all
 
-test:
-	(cd src;  make)
+src:
+	(cd src; make)
+
+test: src
 	(cd test; make test)
 
 prog: test
