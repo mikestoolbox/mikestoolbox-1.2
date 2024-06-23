@@ -46,13 +46,13 @@ WARNINGS    = -Wall # -ansi # -Weverything
 ERRORS      = # -ferror-limit=5 -pedantic-errors
 PROFILE     = # -fprofile-instr-generate
 
-CXXFLAGS    = $(OPTIMIZE) $(WARNINGS) $(ERRORS) $(PROFILE)
-LNFLAGS     = $(OPTIMIZE) $(PROFILE)
+CXXFLAGS    = $(strip $(OPTIMIZE) $(WARNINGS) $(ERRORS) $(PROFILE))
+LNFLAGS     = $(strip $(OPTIMIZE) $(PROFILE))
 
 MAIN_LIBS   = -lmikestoolbox-1.2 -lpcre
 MACOSX_LIBS = $(MAIN_LIBS)
 LINUX_LIBS  = $(MAIN_LIBS) -lpthread -ldl
-WIN32_LIBS  = $(MAIN_LIBS) -lws2_32 -lgdi32 -lcomdlg32 -lgmon
+WIN32_LIBS  = $(MAIN_LIBS) -lws2_32 # -lgdi32 -lcomdlg32 -lgmon
 
 LIBS        = $(MACOSX_LIBS)
 
@@ -63,7 +63,7 @@ objects     = $(patsubst %,%.o,$(targets))
 
 .PHONY: all clean over o
 
-all: $(targets)
+all: $(objects) $(targets)
 
 clean:
 	rm -f *.o $(targets)
