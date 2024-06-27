@@ -38,6 +38,18 @@
 #                  10161 Park Run Drive, Suite 150
 #                  Las Vegas, NV 89145
 
+uname = $(shell uname)
+
+ifeq ($(uname), Darwin)
+  platform = osx
+else
+ifeq ($(uname), Linux)
+  platform = unix
+else
+  platform = win32
+endif
+endif
+
 CXX         = c++
 LINK        = c++
 
@@ -54,7 +66,15 @@ MACOSX_LIBS = $(MAIN_LIBS)
 LINUX_LIBS  = $(MAIN_LIBS) -lpthread -ldl
 WIN32_LIBS  = $(MAIN_LIBS) -lws2_32 # -lgdi32 -lcomdlg32 -lgmon
 
-LIBS        = $(MACOSX_LIBS)
+ifeq ($(platform), osx)
+  LIBS  = $(MACOSX_LIBS)
+else
+ifeq ($(platform), unix)
+  LIBS  = $(LINUX_LIBS)
+else
+  LIBS  = $(WIN32_LIBS)
+endif
+endif
 
 tests       = DateTest          \
               FileTest          \
