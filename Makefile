@@ -44,19 +44,19 @@
 all: prog
 
 clean:
-	(cd src;  make clean)
-	(cd test; make clean)
-	(cd prog; make clean)
+	cd src  && $(MAKE) clean
+	cd test && $(MAKE) clean
+	cd prog && $(MAKE) clean
 
 over: clean
 	make all
 
 src:
-	(cd src; make)
+	cd src && $(MAKE)
 
 test: src
-	(cd test; make test)
+	cd test && $(MAKE) test
 
 prog: test
-	(cd prog; make)
+	cd prog && $(MAKE)
 
