@@ -38,14 +38,24 @@
 #                  10161 Park Run Drive, Suite 150
 #                  Las Vegas, NV 89145
 
-platform    = osx # unix # win32
+uname = $(shell uname)
+
+ifeq ($(uname), Darwin)
+  platform = osx
+else
+ifeq ($(uname), Linux)
+  platform = unix
+else
+  platform = win32
+endif
+endif
 
 library     = libmikestoolbox-1.2.a
 
 CXX         = c++
 LINK        = c++
 
-OPTIMIZE    = -O2
+OPTIMIZE    = -g -O2
 STANDARD    = # -std=c++11
 WARNINGS    = -Wall # -ansi -Weverything
 ERRORS      = # -ferror-limit=5 -pedantic-errors
@@ -57,13 +67,6 @@ LNFLAGS     = $(strip $(STANDARD) $(OPTIMIZE) $(PROFILE))
 LIBTOOL     = libtool -static -o $(library) -
 ARCHIVE     = ar rc  $(library)
 RANLIB      = ranlib $(library)
-
-MAIN_LIBS   = -lmikestoolbox-1.2 -lpcre
-MACOSX_LIBS = $(MAIN_LIBS)
-LINUX_LIBS  = $(MAIN_LIBS) -lpthread -ldl
-WIN32_LIBS  = $(MAIN_LIBS) -lws2_32 -lgdi32 -lcomdlg32 -lgmon
-
-LIBS        = $(MACOSX_LIBS)
 
 headers     = $(wildcard ../include/mikestoolbox-1.2/*.*) ../include/mikestoolbox-1.2.h
 
@@ -77,7 +80,7 @@ win32_o     = $(patsubst %.cpp,%.o,$(win32_cpp))
 
 pch         = mikestoolbox-1.2.h.pch
 
-.PHONY: all clean over o unix win32
+.PHONY: all clean over o osx unix win32
 
 all: $(platform)
 
