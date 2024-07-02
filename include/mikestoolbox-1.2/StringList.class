@@ -108,12 +108,17 @@ TTC explicit StringList (const CONTAINER& c);
     TTC void                Append       (const CONTAINER& c);
     void                    Append       (const StringList& strl);
     void                    Append       (const String& str);
-    void                    Append       (const String& str1, const String& str2,
-                                          const String& str3, const String& str4);
-    void                    Append       (const String& str1, const String& str2,
+    void                    Append       (const String& str1,
+                                          const String& str2,
+                                          const String& str3,
+                                          const String& str4);
+    void                    Append       (const String& str1,
+                                          const String& str2,
                                           const String& str3);
-    void                    Append       (const String& str1, const String& str2);
-    void                    Append       (const String& str, Repeat repeat);
+    void                    Append       (const String& str1,
+                                          const String& str2);
+    void                    Append       (const String& str,
+                                          Repeat repeat);
     void                    Append       (const char* pz);
     void                    Append       (char c);
     void                    Append       (std::istream& is);
@@ -155,19 +160,29 @@ TTC explicit StringList (const CONTAINER& c);
 
 private:
 
-    const StringList GrepFiles_ (char c_FileType, bool b_InvertMatch) const;
-    const StringList GrepMatch_ (const String& str_Pattern, bool b_IgnoreCase,
+    const StringList GrepFiles_ (char c_FileType,
                                  bool b_InvertMatch) const;
-    const StringList GrepSubst_ (const String& str_Pattern, bool b_IgnoreCase,
-                                 const String& str_Replace, bool b_GlobalReplace,
+    const StringList GrepMatch_ (const String& str_Pattern,
+                                 bool b_IgnoreCase,
+                                 bool b_InvertMatch) const;
+    const StringList GrepSubst_ (const String& str_Pattern,
+                                 bool b_IgnoreCase,
+                                 const String& str_Replace,
+                                 bool b_GlobalReplace,
                                  bool b_InvertMatch);
 
-    static bool ParseGrepMatch_ (const String& str_Spec, String& str_Pattern,
-                                 bool& b_IgnoreCase, bool& b_InvertMatch);
-    static bool ParseGrepSubst_ (const String& str_Spec, String& str_Pattern,
-                                 bool& b_IgnoreCase, String& str_Replace,
-                                 bool& b_GlobalReplace, bool& b_InvertMatch);
-    static bool ParseGrepFiles_ (const String& str_Spec, char& c_FileType,
+    static bool ParseGrepMatch_ (const String& str_Spec,
+                                 String& str_Pattern,
+                                 bool& b_IgnoreCase,
+                                 bool& b_InvertMatch);
+    static bool ParseGrepSubst_ (const String& str_Spec,
+                                 String& str_Pattern,
+                                 bool& b_IgnoreCase,
+                                 String& str_Replace,
+                                 bool& b_GlobalReplace,
+                                 bool& b_InvertMatch);
+    static bool ParseGrepFiles_ (const String& str_Spec,
+                                 char& c_FileType,
                                  bool& b_InvertMatch);
 };
 
@@ -196,11 +211,15 @@ public:
     bool     ExtractUint24       (uintsys& u_Value, ParseError& error);
     bool     ExtractUint32       (uintsys& u_Value, ParseError& error);
 
-    bool     Extract             (uintsys u_Length, String& str_Content, ParseError& error);
-    bool     Extract             (uintsys u_Length, StringList& strl_Content, ParseError& error);
+    bool     Extract             (uintsys u_Length, String& str_Content,
+                                  ParseError& error);
+    bool     Extract             (uintsys u_Length, StringList& strl_Content,
+                                  ParseError& error);
     bool     Extract             (StringList& strl_Rest);
 
-    bool     ExtractUpTo         (uchar uc_End, String& str, ParseError& error);
+    bool     ExtractUpTo         (uchar uc_End,
+                                  String& str,
+                                  ParseError& error);
 
     uintsys  Capacity            () const;
 

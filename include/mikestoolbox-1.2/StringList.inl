@@ -92,7 +92,8 @@ inline void StringList::Append (const String& str1, const String& str2)
     }
 }
 
-inline void StringList::Append (const String& str1, const String& str2, const String& str3)
+inline void StringList::Append (const String& str1, const String& str2,
+                                const String& str3)
 {
     uintsys u_OrigNumItems = NumItems();
 
