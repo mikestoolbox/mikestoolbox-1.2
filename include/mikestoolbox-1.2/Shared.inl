@@ -152,7 +152,8 @@ inline SharedResource& SharedResource::operator= (const SharedResource& shared)
     return *this;
 }
 
-inline SharedData* SharedResource::MakeCopyOfSharedData_ (const SharedData* p_OldData) const
+inline SharedData*
+    SharedResource::MakeCopyOfSharedData_ (const SharedData* p_OldData) const
 {
     throw Exception ("SharedResource: copy on write not implemented");
 }

@@ -284,17 +284,27 @@ protected:
 
 private:
 
-    TTC void Import_ (const CONTAINER& c, ImportOptions opts, MikesToolboxSimpleContainer);
-    TTC void Import_ (const CONTAINER& c, ImportOptions opts, MikesToolboxKeyValueContainer);
-    TTC void Import_ (const CONTAINER& c, ImportOptions opts, StandardCPlusPlusSimpleContainer);
-    TTC void Import_ (const CONTAINER& c, ImportOptions opts, StandardCPlusPlusKeyValueContainer);
-    TTC void Import_ (const CONTAINER& c, ImportOptions opts, UnknownTypeOfContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts,
+                      MikesToolboxSimpleContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts,
+                      MikesToolboxKeyValueContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts,
+                      StandardCPlusPlusSimpleContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts,
+                      StandardCPlusPlusKeyValueContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts,
+                      UnknownTypeOfContainer);
 
-    static void AddKeyValue_ (HashType& hash, const K& key, const V& value, ImportOptions options);
+    static void AddKeyValue_ (HashType& hash,
+                              const K& key,
+                              const V& value,
+                              ImportOptions options);
 
     const Item* FindItem_          (const K& key) const;
     Item*       FindItem_          (const K& key);
-    Item*       CreateItem_        (const K& key, const V& value, uintsys u_KeyHash=0);
+    Item*       CreateItem_        (const K& key,
+                                    const V& value,
+                                    uintsys u_KeyHash=0);
     uintsys     OptimumNumBuckets_ (uintsys u_NumItems);
     void        Resize_            (uintsys u_NumItems);
 

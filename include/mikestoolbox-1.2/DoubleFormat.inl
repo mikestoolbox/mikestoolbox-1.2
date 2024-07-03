@@ -104,7 +104,8 @@ inline void DoubleFormat::SetDefaultAuto ()
     b_DefaultDecimal_    = false;
 }
 
-inline intsys DoubleFormat::Print (double d, char* ps_Buffer, uintsys u_Capacity) const
+inline intsys DoubleFormat::Print (double d, char* ps_Buffer,
+                                   uintsys u_Capacity) const
 {
     const char* pz_Format = "%1.*g";
 

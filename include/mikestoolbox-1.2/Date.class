@@ -148,7 +148,8 @@ private:
 namespace std {
 
 template<>
-void swap<mikestoolbox::Date> (mikestoolbox::Date& date1, mikestoolbox::Date& date2);
+void swap<mikestoolbox::Date> (mikestoolbox::Date& date1,
+                               mikestoolbox::Date& date2);
 
 } // namespace std
 

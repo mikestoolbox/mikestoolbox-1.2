@@ -189,14 +189,16 @@ inline uintsys Socket::PacketsReceived () const
     return u_PacketsReceived_;
 }
 
-inline bool Socket::SelectRead (SocketList& list_ReadSockets, double d_Timeout)
+inline bool Socket::SelectRead (SocketList& list_ReadSockets,
+                                double d_Timeout)
 {
     SocketList list_WriteSockets;
 
     return Select (list_ReadSockets, list_WriteSockets, d_Timeout);
 }
 
-inline bool Socket::SelectWrite (SocketList& list_WriteSockets, double d_Timeout)
+inline bool Socket::SelectWrite (SocketList& list_WriteSockets,
+                                 double d_Timeout)
 {
     SocketList list_ReadSockets;
 

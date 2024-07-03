@@ -168,7 +168,8 @@ inline void HeapMemory::Append (const HeapMemory& mem)
 
         uchar* ps_Dest = Expand (0, u_AppendLength);
 
-        std::memcpy (ps_Dest + u_OriginalLength, mem.PointerToFirstByte(), u_AppendLength);
+        std::memcpy (ps_Dest + u_OriginalLength, mem.PointerToFirstByte(),
+                     u_AppendLength);
     }
 }
 
@@ -380,7 +381,8 @@ inline HeapMemory& HeapMemory::operator= (const HeapMemory& mem)
     }
     else
     {
-        std::memcpy (Allocate (u_NewLength), mem.PointerToFirstByte(), u_NewLength);
+        std::memcpy (Allocate (u_NewLength), mem.PointerToFirstByte(),
+                     u_NewLength);
     }
 
     return *this;
@@ -397,7 +399,8 @@ inline HeapMemory& HeapMemory::operator= (const MEMORY& mem)
     }
     else
     {
-        std::memcpy (Allocate (u_NewLength), mem.PointerToFirstByte(), u_NewLength);
+        std::memcpy (Allocate (u_NewLength), mem.PointerToFirstByte(),
+                     u_NewLength);
     }
 
     return *this;
@@ -443,7 +446,8 @@ inline bool HeapMemory::operator== (const HeapMemory& mem) const
         return true;
     }
 
-    return std::memcmp (PointerToFirstByte(), mem.PointerToFirstByte(), u_Length_) == 0;
+    return std::memcmp (PointerToFirstByte(), mem.PointerToFirstByte(),
+                        u_Length_) == 0;
 }
 
 template<class MEMORY>
@@ -459,7 +463,8 @@ inline bool HeapMemory::operator== (const MEMORY& mem) const
         return true;
     }
 
-    return std::memcmp (PointerToFirstByte(), mem.PointerToFirstByte(), u_Length_) == 0;
+    return std::memcmp (PointerToFirstByte(), mem.PointerToFirstByte(),
+                        u_Length_) == 0;
 }
 
 inline bool HeapMemory::operator< (const HeapMemory& mem) const
@@ -476,7 +481,9 @@ inline bool HeapMemory::operator< (const HeapMemory& mem) const
         return (u_Length_ < mem.Length());
     }
 
-    int n_Compare = std::memcmp (PointerToFirstByte(), mem.PointerToFirstByte(), u_MinLength);
+    int n_Compare = std::memcmp (PointerToFirstByte(),
+                                 mem.PointerToFirstByte(),
+                                 u_MinLength);
 
     if (n_Compare == 0)
     {
@@ -496,7 +503,9 @@ inline bool HeapMemory::operator< (const MEMORY& mem) const
         return (u_Length_ < mem.Length());
     }
 
-    int n_Compare = std::memcmp (PointerToFirstByte(), mem.PointerToFirstByte(), u_MinLength);
+    int n_Compare = std::memcmp (PointerToFirstByte(),
+                                 mem.PointerToFirstByte(),
+                                 u_MinLength);
 
     if (n_Compare == 0)
     {
@@ -674,7 +683,8 @@ inline uchar* SharedMemory<MEMORY>::EditInPlace ()
 }
 
 template<class MEMORY>
-inline void SharedMemory<MEMORY>::Append (const uchar* ps_Data, uintsys u_AppendLength)
+inline void
+    SharedMemory<MEMORY>::Append (const uchar* ps_Data, uintsys u_AppendLength)
 {
     uintsys u_OriginalLength = Length();
     uchar*  ps_Dest          = Expand (0, u_AppendLength) + u_OriginalLength;
@@ -733,7 +743,8 @@ inline void SharedMemory<MEMORY>::Destroy ()
 }
 
 template<class MEMORY>
-inline void SharedMemory<MEMORY>::Erase (const Index& offset, uintsys u_NumBytes)
+inline void SharedMemory<MEMORY>::Erase (const Index& offset,
+                                         uintsys u_NumBytes)
 {
     uintsys u_Offset = 0;
 
@@ -800,7 +811,8 @@ inline void SharedMemory<MEMORY>::Swap (SharedMemory& mem)
 }
 
 template<class MEMORY>
-inline SharedMemory<MEMORY>& SharedMemory<MEMORY>::operator= (const SharedMemory<MEMORY>& mem)
+inline SharedMemory<MEMORY>&
+    SharedMemory<MEMORY>::operator= (const SharedMemory<MEMORY>& mem)
 {
     SharedMemory<MEMORY> mem_New (mem);
 
@@ -811,7 +823,8 @@ inline SharedMemory<MEMORY>& SharedMemory<MEMORY>::operator= (const SharedMemory
 
 template<class MEMORY>
 template<class MEMORY2>
-inline SharedMemory<MEMORY>& SharedMemory<MEMORY>::operator= (const MEMORY2& mem)
+inline SharedMemory<MEMORY>&
+    SharedMemory<MEMORY>::operator= (const MEMORY2& mem)
 {
     SharedMemory<MEMORY> mem_New (mem);
 
@@ -831,7 +844,8 @@ inline SharedMemory<MEMORY>& SharedMemory<MEMORY>::operator= (const char* pz)
 }
 
 template<class MEMORY>
-inline bool SharedMemory<MEMORY>::operator== (const SharedMemory<MEMORY>& mem) const
+inline bool
+    SharedMemory<MEMORY>::operator== (const SharedMemory<MEMORY>& mem) const
 {
     const Data* p_This = p_Data_;
     const Data* p_That = mem.p_Data_;
@@ -945,7 +959,8 @@ void SharedMemory<MEMORY>::Reserve (uintsys u_NumBytes)
 }
 
 template<class MEMORY>
-uchar* SharedMemory<MEMORY>::Expand (uintsys u_NumCharsBefore, uintsys u_NumCharsAfter)
+uchar* SharedMemory<MEMORY>::Expand (uintsys u_NumCharsBefore,
+                                     uintsys u_NumCharsAfter)
 {
     if (References_() == 1)
     {
@@ -975,7 +990,8 @@ uchar* SharedMemory<MEMORY>::Expand (uintsys u_NumCharsBefore, uintsys u_NumChar
 
     uchar* p_Start = p_NewData->mem_.Allocate (u_TotalChars);
 
-    std::memcpy (p_Start+u_NumCharsBefore, PointerToFirstByte(), u_OriginalLength);
+    std::memcpy (p_Start+u_NumCharsBefore, PointerToFirstByte(),
+                 u_OriginalLength);
 
     Swap (mem_New);
 

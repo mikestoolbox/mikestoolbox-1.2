@@ -112,7 +112,8 @@ public:
     Item*           Prev        ();
 
     bool            Check       () const;
-    void            GetHeight   (uintsys& u_Height, uintsys& u_BlackHeight) const;
+    void            GetHeight   (uintsys& u_Height,
+                                 uintsys& u_BlackHeight) const;
 
 private:
 
@@ -290,13 +291,19 @@ protected:
 
 private:
 
-    TTC void Import_ (const CONTAINER& c, ImportOptions opts, MikesToolboxSimpleContainer);
-    TTC void Import_ (const CONTAINER& c, ImportOptions opts, MikesToolboxKeyValueContainer);
-    TTC void Import_ (const CONTAINER& c, ImportOptions opts, StandardCPlusPlusSimpleContainer);
-    TTC void Import_ (const CONTAINER& c, ImportOptions opts, StandardCPlusPlusKeyValueContainer);
-    TTC void Import_ (const CONTAINER& c, ImportOptions opts, UnknownTypeOfContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts,
+                      MikesToolboxSimpleContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts,
+                      MikesToolboxKeyValueContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts,
+                      StandardCPlusPlusSimpleContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts,
+                      StandardCPlusPlusKeyValueContainer);
+    TTC void Import_ (const CONTAINER& c, ImportOptions opts,
+                      UnknownTypeOfContainer);
 
-    static void AddKeyValue_ (MapType& map, const K& key, const V& value, ImportOptions opts);
+    static void AddKeyValue_ (MapType& map, const K& key, const V& value,
+                              ImportOptions opts);
 
     const Item*         FindItem_           (const K& key) const;
     Item*               FindItem_           (const K& key);
@@ -305,8 +312,10 @@ private:
     void                RightRotate_        (Item* p_Item);
     void                InsertFixUp_        (Item* p_Item);
     void                DeleteFixUp_        (Item* p_Item, Item* p_Parent);
-    void                DeleteFixUpLeft_    (Item* p_Root, Item*& p_Item, Item*& p_Parent);
-    void                DeleteFixUpRight_   (Item* p_Root, Item*& p_Item, Item*& p_Parent);
+    void                DeleteFixUpLeft_    (Item* p_Root, Item*& p_Item,
+                                             Item*& p_Parent);
+    void                DeleteFixUpRight_   (Item* p_Root, Item*& p_Item,
+                                             Item*& p_Parent);
     void                Delete_             (Item* p_Item);
 
     static const Item*  ParentOf_           (const Item* p_Item);
@@ -320,7 +329,7 @@ private:
     Item*&              RootMod_            ();
     uintsys&            NumItemsMod_        ();
 
-    Storage*            MakeCopyOfSharedData_ (const SharedData* p_OldData) const;
+    Storage*  MakeCopyOfSharedData_ (const SharedData* p_OldData) const;
 };
 
 template<typename K, typename V, class CMP>

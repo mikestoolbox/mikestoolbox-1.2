@@ -236,11 +236,16 @@ public:
 
 private:
 
-    TTCMP void Sort_       (Item* p_Start, Item* p_End, uintsys u_NumItems, const CMP& cmp);
-    TTCMP bool SmallSort_  (Item* p_Start, Item* p_End, uintsys u_NumItems, const CMP& cmp);
-    TTCMP void PutInOrder_ (Item* p1, Item* p2, const CMP& cmp);
-    TTCMP void PutInOrder_ (Item* p1, Item* p2, Item* p3, const CMP& cmp);
-    TTCMP void PutInOrder_ (Item* p1, Item* p2, Item* p3, Item* p4, const CMP& cmp);
+    TTCMP void Sort_       (Item* p_Start, Item* p_End, uintsys u_NumItems,
+                            const CMP& cmp);
+    TTCMP bool SmallSort_  (Item* p_Start, Item* p_End, uintsys u_NumItems,
+                            const CMP& cmp);
+    TTCMP void PutInOrder_ (Item* p1, Item* p2,
+                            const CMP& cmp);
+    TTCMP void PutInOrder_ (Item* p1, Item* p2, Item* p3,
+                            const CMP& cmp);
+    TTCMP void PutInOrder_ (Item* p1, Item* p2, Item* p3, Item* p4,
+                            const CMP& cmp);
 
     Item*   p_Root_;
     uintsys u_NumItems_;
@@ -296,8 +301,10 @@ TTC explicit List (const CONTAINER& c);
     const Iter              Find            (const T& t) const;
     const ChangeIter        Find            (const T& t);
     const ListType          Head            (uintsys u_NumItems=1) const;
-    ListType&               Insert          (const Index& index, const T& item);
-    ListType&               Insert          (const Index& index, ListType list);
+    ListType&               Insert          (const Index& index,
+                                             const T& item);
+    ListType&               Insert          (const Index& index,
+                                             ListType list);
     bool                    IsEmpty         () const;
     TTCMP bool              IsSorted        (const CMP& cmp) const;
     bool                    IsSorted        () const;
@@ -313,12 +320,15 @@ TTC explicit List (const CONTAINER& c);
     TTCMP ListType&         Sort            (const CMP& cmp);
     ListType&               Sort            ();
     const ListType          Splice          (const Index& index);
-    const ListType          Splice          (const Index& index, uintsys u_Length);
-    const ListType          Splice          (const Index& index, uintsys u_Length,
+    const ListType          Splice          (const Index& index,
+                                             uintsys u_Length);
+    const ListType          Splice          (const Index& index,
+                                             uintsys u_Length,
                                              const ListType& list_Replace);
     const ListType          Split           (const Index& index);
     void                    Swap            (ListType& list);
-    const ListType          SubList         (const Index& offset, uintsys u_NumItems) const;
+    const ListType          SubList         (const Index& offset,
+                                             uintsys u_NumItems) const;
     const ListType          Tail            (uintsys u_NumItems=1) const;
     ListType&               Truncate        (uintsys u_Length);
     ListType&               Unique          ();
@@ -351,15 +361,20 @@ protected:
 
 private:
 
-    TTC void        Append_                 (const CONTAINER& c, MikesToolboxSimpleContainer);
-    TTC void        Append_                 (const CONTAINER& c, MikesToolboxKeyValueContainer);
-    TTC void        Append_                 (const CONTAINER& c, StandardCPlusPlusSimpleContainer);
-    TTC void        Append_                 (const CONTAINER& c, StandardCPlusPlusKeyValueContainer);
-    TTC void        Append_                 (const CONTAINER& c, UnknownTypeOfContainer);
-    Item*           CopyItems_              ();
-    Item*           StealItems_             ();
-    Data*           MakeCopyOfSharedData_   (const SharedData* p_OldData) const;
-    static Alloc*   GetAllocator_           ();
+    TTC void        Append_               (const CONTAINER& c,
+                                           MikesToolboxSimpleContainer);
+    TTC void        Append_               (const CONTAINER& c,
+                                           MikesToolboxKeyValueContainer);
+    TTC void        Append_               (const CONTAINER& c,
+                                           StandardCPlusPlusSimpleContainer);
+    TTC void        Append_               (const CONTAINER& c,
+                                           StandardCPlusPlusKeyValueContainer);
+    TTC void        Append_               (const CONTAINER& c,
+                                           UnknownTypeOfContainer);
+    Item*           CopyItems_            ();
+    Item*           StealItems_           ();
+    Data*           MakeCopyOfSharedData_ (const SharedData* p_OldData) const;
+    static Alloc*   GetAllocator_         ();
 };
 
 //+---------------------------------------------------------------------------

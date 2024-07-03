@@ -55,9 +55,9 @@ public:
 
                      WindowsString       (const String& str);
                      WindowsString       (const WCHAR* pz, uintsys u_Length);
-                     WindowsString       (const char* pz, uintsys u_Length);
+                     WindowsString       (const char*  pz, uintsys u_Length);
                      WindowsString       (const WCHAR* pz);
-                     WindowsString       (const char* pz);
+                     WindowsString       (const char*  pz);
                      WindowsString       ();
 
     String           UTF8                () const;

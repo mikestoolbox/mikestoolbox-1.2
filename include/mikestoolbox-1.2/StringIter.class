@@ -98,23 +98,36 @@ public:
 
     uintsys          Offset              () const;
 
-    bool             ParseAsn1           (StringIter& next,       ParseError& error);
-    bool             ParseAsn1           (uchar&   uc_TagClass,   uintsys& u_TagNumber,
-                                          bool&    b_Constructed, intsys& n_Length,
-                                                                  ParseError& error);
-    bool             ParseAsn1Tag        (uchar&   uc_TagClass,   uintsys& u_TagNumber,
-                                          bool&    b_Constructed, ParseError& error);
-    bool             ParseAsn1Length     (intsys&  n_Length,      ParseError& error);
+    bool             ParseAsn1           (StringIter& next,
+                                          ParseError& error);
+    bool             ParseAsn1           (uchar&   uc_TagClass,
+                                          uintsys& u_TagNumber,
+                                          bool&    b_Constructed,
+                                          intsys& n_Length,
+                                          ParseError& error);
+    bool             ParseAsn1Tag        (uchar&   uc_TagClass,
+                                          uintsys& u_TagNumber,
+                                          bool&    b_Constructed,
+                                          ParseError& error);
+    bool             ParseAsn1Length     (intsys&  n_Length,
+                                          ParseError& error);
 
-    bool             ParseNumber         (uintsys  u_Digits,      uintsys& u_Number,
-                                                                  ParseError& error);
-    bool             ParseNumber         (uintsys& u_Number,      ParseError& error);
-    bool             ParseHexNibble      (uchar&   uc_Nibble,     ParseError& error);
-    bool             ParseHexByte        (uchar&   uc_Byte,       ParseError& error);
+    bool             ParseNumber         (uintsys  u_Digits,
+                                          uintsys& u_Number,
+                                          ParseError& error);
+    bool             ParseNumber         (uintsys& u_Number,
+                                          ParseError& error);
+    bool             ParseHexNibble      (uchar&   uc_Nibble,
+                                          ParseError& error);
+    bool             ParseHexByte        (uchar&   uc_Byte,
+                                          ParseError& error);
 
-    bool             ParseUTF8Char       (uintsys& u_CodePoint,   ParseError& error);
-    bool             ParseUTF16Char      (uintsys& u_CodePoint,   ParseError& error);
-    bool             ParseUTF32Char      (uintsys& u_CodePoint,   ParseError& error);
+    bool             ParseUTF8Char       (uintsys& u_CodePoint,
+                                          ParseError& error);
+    bool             ParseUTF16Char      (uintsys& u_CodePoint,
+                                          ParseError& error);
+    bool             ParseUTF32Char      (uintsys& u_CodePoint,
+                                          ParseError& error);
 
     const uchar*     Pointer             () const;
 
@@ -156,10 +169,10 @@ private:
     const uchar* p_End_;
     const uchar* p_Char_;
 
-    bool             ExtractUTF8Char1_   (uintsys& u_CodePoint, ParseError& error);
-    bool             ExtractUTF8Char2_   (uintsys& u_CodePoint, ParseError& error);
-    bool             ExtractUTF8Char3_   (uintsys& u_CodePoint, ParseError& error);
-    bool             ExtractUTF8Char4_   (uintsys& u_CodePoint, ParseError& error);
+    bool ExtractUTF8Char1_ (uintsys& u_CodePoint, ParseError& error);
+    bool ExtractUTF8Char2_ (uintsys& u_CodePoint, ParseError& error);
+    bool ExtractUTF8Char3_ (uintsys& u_CodePoint, ParseError& error);
+    bool ExtractUTF8Char4_ (uintsys& u_CodePoint, ParseError& error);
 
     bool (StringIter::* pmf_ExtractUint16_) (uintsys& u, ParseError& error);
     bool (StringIter::* pmf_ExtractUint24_) (uintsys& u, ParseError& error);
@@ -192,13 +205,16 @@ public:
 
 private:
 
-    bool ExtractBitsBigEndian_    (uintsys u_NumBits, uintsys& u, ParseError& error);
-    bool ExtractBitsLittleEndian_ (uintsys u_NumBits, uintsys& u, ParseError& error);
+    bool ExtractBitsBigEndian_    (uintsys u_NumBits, uintsys& u,
+                                   ParseError& error);
+    bool ExtractBitsLittleEndian_ (uintsys u_NumBits, uintsys& u,
+                                   ParseError& error);
 
     StringIter iter_;
     uintsys    u_BitOffset_;
 
-    bool (StringBitIter::* pmf_ExtractBits_) (uintsys u_NumBits, uintsys& u, ParseError& error);
+    bool (StringBitIter::* pmf_ExtractBits_) (uintsys u_NumBits, uintsys& u,
+                                              ParseError& error);
 };
 
 std::ostream& operator<< (std::ostream& os, const StringIter& iter);

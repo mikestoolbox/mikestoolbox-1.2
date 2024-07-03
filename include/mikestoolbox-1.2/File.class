@@ -73,9 +73,9 @@ public:
     String        Directory       () const;
 
     bool          Append          (const StringList& strl_Lines,
-                                   int n_Flags= FILE_CREATE_OK);
+                                   int n_Flags = FILE_CREATE_OK);
     bool          Append          (const String& str_Contents,
-                                   int n_Flags= FILE_CREATE_OK);
+                                   int n_Flags = FILE_CREATE_OK);
     bool          CopyTo          (File& file, int n_Flags=0) const;
     Date          DateModified    () const;
     bool          Delete          ();
@@ -92,9 +92,9 @@ public:
     bool          Rename          (const String& str_NewName, int n_Flags=0);
     uint64        Size            () const;
     StringList    Tail            (uintsys u_NumLines) const;
-    bool          Write           (const StringList& strl_Lines, int n_Flags=
+    bool          Write           (const StringList& strl_Lines, int n_Flags =
                                    FILE_CREATE_OK|FILE_REPLACE_EXISTING);
-    bool          Write           (const String& str_Contents, int n_Flags=
+    bool          Write           (const String& str_Contents, int n_Flags =
                                    FILE_CREATE_OK|FILE_REPLACE_EXISTING);
 
     File&         operator=       (const String& str_Filename);

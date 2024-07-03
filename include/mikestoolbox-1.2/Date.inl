@@ -694,7 +694,8 @@ inline LocalDate& LocalDate::operator= (const Date& date)
 namespace std {
 
 template<>
-inline void swap<mikestoolbox::Date> (mikestoolbox::Date& date1, mikestoolbox::Date& date2)
+inline void swap<mikestoolbox::Date> (mikestoolbox::Date& date1,
+                                      mikestoolbox::Date& date2)
 {
     date1.Swap (date2);
 }

@@ -96,7 +96,7 @@ explicit ArrayPointerHolder (T* p);
 
     T&                      operator[]  (uintsys u_Index);
 
-    ArrayPointerHolder<T>&  operator=   (T* p); // deletes current pointer if any
+    ArrayPointerHolder<T>&  operator=   (T* p); // deletes current pointer
 
     void                    Swap        (ArrayPointerHolder<T>& other);
 

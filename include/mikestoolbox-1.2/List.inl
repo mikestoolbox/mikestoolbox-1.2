@@ -164,7 +164,8 @@ inline ListData<T>* List<T>::ModifyData ()
 }
 
 template<typename T>
-inline ListData<T>* List<T>::MakeCopyOfSharedData_ (const SharedData* p_Copy) const
+inline ListData<T>*
+    List<T>::MakeCopyOfSharedData_ (const SharedData* p_Copy) const
 {
     const Data* p_Data = (const Data*) p_Copy;
 
@@ -462,7 +463,8 @@ inline void List<T>::Append_ (const CONTAINER& c, MikesToolboxSimpleContainer)
 
 template<typename T>
 template<typename CONTAINER>
-inline void List<T>::Append_ (const CONTAINER& c, MikesToolboxKeyValueContainer)
+inline void
+    List<T>::Append_ (const CONTAINER& c, MikesToolboxKeyValueContainer)
 {
     if (!c.IsEmpty())
     {
@@ -487,7 +489,8 @@ inline void List<T>::Append_ (const CONTAINER& c, MikesToolboxKeyValueContainer)
 
 template<typename T>
 template<typename CONTAINER>
-inline void List<T>::Append_ (const CONTAINER& c, StandardCPlusPlusSimpleContainer)
+inline void
+    List<T>::Append_ (const CONTAINER& c, StandardCPlusPlusSimpleContainer)
 {
     typename CONTAINER::const_iterator iter1 (c.begin());
     typename CONTAINER::const_iterator iter2 (c.end());
@@ -508,7 +511,8 @@ inline void List<T>::Append_ (const CONTAINER& c, StandardCPlusPlusSimpleContain
 
 template<typename T>
 template<typename CONTAINER>
-inline void List<T>::Append_ (const CONTAINER& c, StandardCPlusPlusKeyValueContainer)
+inline void
+    List<T>::Append_ (const CONTAINER& c, StandardCPlusPlusKeyValueContainer)
 {
     typename CONTAINER::const_iterator iter1 (c.begin());
     typename CONTAINER::const_iterator iter2 (c.end());
@@ -667,7 +671,8 @@ inline List<T>& List<T>::Erase (ListChangeIter<T>& iter)
 
         if (p_Data != iter.list_.ViewData())
         {
-            throw Exception ("List: Attempt to Erase element using an invalid iterator");
+            throw Exception
+                ("List: Attempt to Erase element using an invalid iterator");
         }
 
         Item* p_ToBeDeleted = iter.p_Item_;
@@ -883,7 +888,8 @@ inline const ListChangeIter<T> List<T>::Find (const T& item)
 }
 
 template<typename T>
-inline const List<T> List<T>::SubList (const Index& offset, uintsys u_NumItems) const
+inline const List<T>
+    List<T>::SubList (const Index& offset, uintsys u_NumItems) const
 {
     ListType list;
 

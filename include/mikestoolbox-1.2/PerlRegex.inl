@@ -248,7 +248,8 @@ inline intsys PerlRegex::Match (const uchar* ps, uintsys u_Length,
     return Match ((const char*)ps, u_Length, options, matches);
 }
 
-inline intsys PerlRegex::Match (const String& str, const PerlRegexOptions& options,
+inline intsys PerlRegex::Match (const String& str,
+                                const PerlRegexOptions& options,
                                 PerlRegexMatches& matches) const
 {
     return Match (str.PointerToFirstChar(), str.Length(), options, matches);

@@ -301,7 +301,8 @@ inline MapChangeIter<K,V,CMP>::MapChangeIter (Map<K,V,CMP>& map)
 }
 
 template<typename K, typename V, class CMP>
-inline MapChangeIter<K,V,CMP>::MapChangeIter (Map<K,V,CMP>& map, MapItem<K,V,CMP>* p_Item)
+inline MapChangeIter<K,V,CMP>::MapChangeIter (Map<K,V,CMP>& map,
+                                              MapItem<K,V,CMP>* p_Item)
     : map_     (map)
     , p_Item_  (p_Item)
 {
@@ -396,7 +397,8 @@ inline const MapChangeIter<K,V,CMP> MapChangeIter<K,V,CMP>::operator-- (int)
 }
 
 template<typename K, typename V, class CMP>
-inline MapChangeIter<K,V,CMP>& MapChangeIter<K,V,CMP>::operator= (const MapChangeIter<K,V,CMP>& iter)
+inline MapChangeIter<K,V,CMP>&
+    MapChangeIter<K,V,CMP>::operator= (const MapChangeIter<K,V,CMP>& iter)
 {
     p_Item_ = (map_.ViewData() == iter.map_.ViewData()) ? iter.p_Item_ : 0;
 
@@ -404,25 +406,31 @@ inline MapChangeIter<K,V,CMP>& MapChangeIter<K,V,CMP>::operator= (const MapChang
 }
 
 template<typename K, typename V, class CMP>
-inline bool MapChangeIter<K,V,CMP>::operator== (const MapChangeIter<K,V,CMP>& iter) const
+inline bool
+    MapChangeIter<K,V,CMP>::operator== (const MapChangeIter<K,V,CMP>& iter)
+    const
 {
     return (p_Item_ == iter.p_Item_);
 }
 
 template<typename K, typename V, class CMP>
-inline bool MapChangeIter<K,V,CMP>::operator!= (const MapChangeIter<K,V,CMP>& iter) const
+inline bool
+    MapChangeIter<K,V,CMP>::operator!= (const MapChangeIter<K,V,CMP>& iter)
+    const
 {
     return (p_Item_ != iter.p_Item_);
 }
 
 template<typename K, typename V, class CMP>
-inline bool MapChangeIter<K,V,CMP>::operator== (const MapIter<K,V,CMP>& iter) const
+inline bool
+    MapChangeIter<K,V,CMP>::operator== (const MapIter<K,V,CMP>& iter) const
 {
     return (p_Item_ == iter.p_Item_);
 }
 
 template<typename K, typename V, class CMP>
-inline bool MapChangeIter<K,V,CMP>::operator!= (const MapIter<K,V,CMP>& iter) const
+inline bool
+    MapChangeIter<K,V,CMP>::operator!= (const MapIter<K,V,CMP>& iter) const
 {
     return (p_Item_ != iter.p_Item_);
 }
@@ -450,7 +458,8 @@ inline MapIter<K,V,CMP>::MapIter (const Map<K,V,CMP>& map)
 }
 
 template<typename K, typename V, class CMP>
-inline MapIter<K,V,CMP>::MapIter (const Map<K,V,CMP>& map, const MapItem<K,V,CMP>* p_Item)
+inline MapIter<K,V,CMP>::MapIter (const Map<K,V,CMP>& map,
+                                  const MapItem<K,V,CMP>* p_Item)
     : map_    (map)
     , p_Item_ (p_Item)
 {
@@ -553,7 +562,8 @@ inline const MapIter<K,V,CMP> MapIter<K,V,CMP>::operator-- (int)
 }
 
 template<typename K, typename V, class CMP>
-inline MapIter<K,V,CMP>& MapIter<K,V,CMP>::operator= (const MapChangeIter<K,V,CMP>& iter)
+inline MapIter<K,V,CMP>&
+    MapIter<K,V,CMP>::operator= (const MapChangeIter<K,V,CMP>& iter)
 {
     p_Item_ = (map_.ViewData() == iter.map_.ViewData()) ? iter.p_Item_ : 0;
 
@@ -561,7 +571,8 @@ inline MapIter<K,V,CMP>& MapIter<K,V,CMP>::operator= (const MapChangeIter<K,V,CM
 }
 
 template<typename K, typename V, class CMP>
-inline MapIter<K,V,CMP>& MapIter<K,V,CMP>::operator= (const MapIter<K,V,CMP>& iter)
+inline MapIter<K,V,CMP>&
+    MapIter<K,V,CMP>::operator= (const MapIter<K,V,CMP>& iter)
 {
     p_Item_ = (map_.ViewData() == iter.map_.ViewData()) ? iter.p_Item_ : 0;
 
@@ -569,13 +580,15 @@ inline MapIter<K,V,CMP>& MapIter<K,V,CMP>::operator= (const MapIter<K,V,CMP>& it
 }
 
 template<typename K, typename V, class CMP>
-inline bool MapIter<K,V,CMP>::operator== (const MapChangeIter<K,V,CMP>& iter) const
+inline bool
+    MapIter<K,V,CMP>::operator== (const MapChangeIter<K,V,CMP>& iter) const
 {
     return (p_Item_ == iter.p_Item_);
 }
 
 template<typename K, typename V, class CMP>
-inline bool MapIter<K,V,CMP>::operator!= (const MapChangeIter<K,V,CMP>& iter) const
+inline bool
+    MapIter<K,V,CMP>::operator!= (const MapChangeIter<K,V,CMP>& iter) const
 {
     return (p_Item_ != iter.p_Item_);
 }
@@ -593,7 +606,8 @@ inline bool MapIter<K,V,CMP>::operator!= (const MapIter<K,V,CMP>& iter) const
 }
 
 template<typename K, typename V, class CMP>
-inline MapItem<K,V,CMP>::MapItem (const K& key, const V& value, MapItem<K,V,CMP>* p_Parent)
+inline MapItem<K,V,CMP>::MapItem (const K& key, const V& value,
+                                  MapItem<K,V,CMP>* p_Parent)
     : key_      (key)
     , value_    (value)
     , p_Left_   (0)
@@ -662,7 +676,8 @@ void CopyMapTree (MapItem<K,V,CMP>* p_Dest, const MapItem<K,V,CMP>* p_Source)
 {
     if (p_Source->p_Left_ != 0)
     {
-        p_Dest->p_Left_ = new(std::nothrow) MapItem<K,V,CMP> (*p_Source->p_Left_);
+        p_Dest->p_Left_ = new(std::nothrow)
+                              MapItem<K,V,CMP> (*p_Source->p_Left_);
 
         if (p_Dest->p_Left_ == 0)
         {
@@ -676,7 +691,8 @@ void CopyMapTree (MapItem<K,V,CMP>* p_Dest, const MapItem<K,V,CMP>* p_Source)
 
     if (p_Source->p_Right_ != 0)
     {
-        p_Dest->p_Right_ = new(std::nothrow) MapItem<K,V,CMP> (*p_Source->p_Right_);
+        p_Dest->p_Right_ = new(std::nothrow)
+                               MapItem<K,V,CMP> (*p_Source->p_Right_);
 
         if (p_Dest->p_Right_ == 0)
         {
@@ -778,7 +794,8 @@ inline MapStorage<K,V,CMP>* Map<K,V,CMP>::ModifyData ()
 }
 
 template<typename K, typename V, class CMP>
-inline MapStorage<K,V,CMP>* Map<K,V,CMP>::MakeCopyOfSharedData_ (const SharedData* p_Data) const
+inline MapStorage<K,V,CMP>*
+    Map<K,V,CMP>::MakeCopyOfSharedData_ (const SharedData* p_Data) const
 {
     const Storage* p_OldData = (const Storage*) p_Data;
           Storage* p_NewData = new(std::nothrow) Storage (*p_OldData);
@@ -816,7 +833,8 @@ inline uintsys Map<K,V,CMP>::NumItems () const
 }
 
 template<typename K, typename V, class CMP>
-inline const MapItem<K,V,CMP>* Map<K,V,CMP>::ParentOf_ (const MapItem<K,V,CMP>* p_Item)
+inline const MapItem<K,V,CMP>*
+    Map<K,V,CMP>::ParentOf_ (const MapItem<K,V,CMP>* p_Item)
 {
     return p_Item->Parent();
 }
@@ -903,8 +921,9 @@ MapItem<K,V,CMP>* Map<K,V,CMP>::FindItem_ (const K& key)
     return p_Item;
 }
 
-// LeftRotate_, RightRotate_, InsertFixUp_, DeleteFixUp_, CreateItem_, and Delete
-// based on algorithms from "Introduction to Algorithms" Second Edition
+// LeftRotate_, RightRotate_, InsertFixUp_, DeleteFixUp_,
+// CreateItem_, and Delete based on algorithms from
+// "Introduction to Algorithms" Second Edition
 
 template<typename K, typename V, class CMP>
 void Map<K,V,CMP>::LeftRotate_ (MapItem<K,V,CMP>* p_Item)
@@ -1392,7 +1411,8 @@ inline bool Map<K,V,CMP>::IsEmpty () const
 }
 
 template<typename K, typename V, class CMP>
-void Map<K,V,CMP>::DeleteFixUpLeft_ (MapItem<K,V,CMP>* p_Root, MapItem<K,V,CMP>*& p_Item,
+void Map<K,V,CMP>::DeleteFixUpLeft_ (MapItem<K,V,CMP>* p_Root,
+                                     MapItem<K,V,CMP>*& p_Item,
                                      MapItem<K,V,CMP>*& p_Parent)
 {
     Item* p_Sibling = p_Parent->Right();
@@ -1436,7 +1456,8 @@ void Map<K,V,CMP>::DeleteFixUpLeft_ (MapItem<K,V,CMP>* p_Root, MapItem<K,V,CMP>*
 }
 
 template<typename K, typename V, class CMP>
-void Map<K,V,CMP>::DeleteFixUpRight_ (MapItem<K,V,CMP>* p_Root, MapItem<K,V,CMP>*& p_Item,
+void Map<K,V,CMP>::DeleteFixUpRight_ (MapItem<K,V,CMP>* p_Root,
+                                      MapItem<K,V,CMP>*& p_Item,
                                       MapItem<K,V,CMP>*& p_Parent)
 {
     Item* p_Sibling = p_Parent->Left();
@@ -1480,7 +1501,8 @@ void Map<K,V,CMP>::DeleteFixUpRight_ (MapItem<K,V,CMP>* p_Root, MapItem<K,V,CMP>
 }
 
 template<typename K, typename V, class CMP>
-void Map<K,V,CMP>::DeleteFixUp_ (MapItem<K,V,CMP>* p_Item, MapItem<K,V,CMP>* p_Parent)
+void Map<K,V,CMP>::DeleteFixUp_ (MapItem<K,V,CMP>* p_Item,
+                                 MapItem<K,V,CMP>* p_Parent)
 {
     Item* p_Root = RootMod_();
 
@@ -1657,7 +1679,8 @@ const List<V> Map<K,V,CMP>::Values () const
 }
 
 template<typename K, typename V, class CMP>
-void Map<K,V,CMP>::AddKeyValue_ (MapType& map, const K& key, const V& value, ImportOptions options)
+void Map<K,V,CMP>::AddKeyValue_ (MapType& map, const K& key, const V& value,
+                                 ImportOptions options)
 {
     if (options.CanCreate())
     {
@@ -1678,7 +1701,8 @@ void Map<K,V,CMP>::AddKeyValue_ (MapType& map, const K& key, const V& value, Imp
 
 template<typename K, typename V, class CMP>
 template<class CONTAINER>
-void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options, MikesToolboxSimpleContainer)
+void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options,
+                            MikesToolboxSimpleContainer)
 {
     if (!c.IsEmpty())
     {
@@ -1706,7 +1730,8 @@ void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options, MikesTool
 
 template<typename K, typename V, class CMP>
 template<class CONTAINER>
-void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options, MikesToolboxKeyValueContainer)
+void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options,
+                            MikesToolboxKeyValueContainer)
 {
     if (!c.IsEmpty())
     {
@@ -1730,7 +1755,8 @@ void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options, MikesTool
 
 template<typename K, typename V, class CMP>
 template<class CONTAINER>
-void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options, StandardCPlusPlusSimpleContainer)
+void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options,
+                            StandardCPlusPlusSimpleContainer)
 {
     typename CONTAINER::const_iterator iter1 (c.begin());
     typename CONTAINER::const_iterator iter2 (c.end());
@@ -1756,7 +1782,8 @@ void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options, StandardC
 
 template<typename K, typename V, class CMP>
 template<class CONTAINER>
-void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options, StandardCPlusPlusKeyValueContainer)
+void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options,
+                            StandardCPlusPlusKeyValueContainer)
 {
     typename CONTAINER::const_iterator iter1 (c.begin());
     typename CONTAINER::const_iterator iter2 (c.end());
@@ -1778,7 +1805,8 @@ void Map<K,V,CMP>::Import_ (const CONTAINER& c, ImportOptions options, StandardC
 
 template<typename K, typename V, class CMP>
 template<class CONTAINER>
-inline void Map<K,V,CMP>::Import_ (const CONTAINER&, ImportOptions, UnknownTypeOfContainer)
+inline void Map<K,V,CMP>::Import_ (const CONTAINER&, ImportOptions,
+                                   UnknownTypeOfContainer)
 {
     // nothing good can come from doing anything here
 
@@ -1902,7 +1930,8 @@ inline bool MapItem<K,V,CMP>::IsChild () const
 }
 
 template<typename K, typename V, class CMP>
-void MapItem<K,V,CMP>::GetHeight (uintsys& u_Height, uintsys& u_BlackHeight) const
+void MapItem<K,V,CMP>::GetHeight (uintsys& u_Height,
+                                  uintsys& u_BlackHeight) const
 {
     u_Height      = 0;
     u_BlackHeight = 0;

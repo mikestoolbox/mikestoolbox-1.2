@@ -58,8 +58,9 @@ class LocalDate
 {
 public:
 
-    LocalDate (uintsys u_Year, uintsys u_Month, uintsys u_Day, uintsys u_Hour=0,
-               uintsys u_Minute=0, uintsys u_Second=0, intsys n_TZOffset=0);
+    LocalDate (uintsys u_Year, uintsys u_Month, uintsys u_Day,
+               uintsys u_Hour=0, uintsys u_Minute=0,
+               uintsys u_Second=0, intsys n_TZOffset=0);
     LocalDate (const DateParts& parts);
     LocalDate (const Date& date);
     LocalDate (time_t date);
@@ -73,7 +74,7 @@ public:
 
     static LocalDate    Now                     ();
 
-    uintsys             Year                    () const;  // starting with 1 A.D.
+    uintsys             Year                    () const;  // starting at 1 A.D.
     uintsys             Month                   () const;  // 1-12
     uintsys             Day                     () const;  // 1-31
     uintsys             Hour                    () const;  // 0-23
@@ -97,7 +98,7 @@ public:
     void                SetMinute               (uintsys u_Minute);
     void                SetSecond               (uintsys u_Second);
 
-    void                SetTimeZone             (const String& str_TimeZoneName);
+    void                SetTimeZone             (const String& str_TZName);
     void                SetTimeZone             (intsys n_MinutesEastOfGMT);
 
     Date                GreenwichMeanTime       () const;
@@ -109,10 +110,10 @@ public:
     void                AddMinutes              (intsys n_Minutes);
     void                AddSeconds              (double d_Seconds);
 
-    intsys              DaysMoreThan            (const LocalDate& date_Other) const;
-    double              SecondsMoreThan         (const LocalDate& date_Other) const;
+    intsys              DaysMoreThan            (const LocalDate& date) const;
+    double              SecondsMoreThan         (const LocalDate& date) const;
 
-//  String              Format                  (const String& str_Format) const;
+//  String              Format                  (const String& format) const;
     String              FormatGeneralizedTime   () const;
     String              FormatHTTP              () const;
     String              FormatRFC2822           () const;
@@ -137,8 +138,8 @@ public:
 
 private:
 
-    double              operator-               (const Date&);      // confusing as to the units
-    double              operator-               (const LocalDate&); // confusing as to the units
+    double operator- (const Date&);      // confusing as to the units
+    double operator- (const LocalDate&); // confusing as to the units
 
     Date    date_;          // adjusted by the offset
     intsys  n_TZOffset_;    // minutes east of GMT
@@ -149,7 +150,8 @@ private:
 namespace std {
 
 template<>
-void swap<mikestoolbox::LocalDate> (mikestoolbox::LocalDate& date1, mikestoolbox::LocalDate& date2);
+void swap<mikestoolbox::LocalDate> (mikestoolbox::LocalDate& date1,
+                                    mikestoolbox::LocalDate& date2);
 
 } // namespace std
 

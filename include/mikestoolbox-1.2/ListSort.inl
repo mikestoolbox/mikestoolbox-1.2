@@ -78,7 +78,8 @@ inline void ListData<T>::PutInOrder_ (Item* p1, Item* p2, const CMP& cmp)
 
 template<typename T>
 template<class CMP>
-inline void ListData<T>::PutInOrder_ (Item* p1, Item* p2, Item* p3, const CMP& cmp)
+inline void
+    ListData<T>::PutInOrder_ (Item* p1, Item* p2, Item* p3, const CMP& cmp)
 {
     PutInOrder_ (p1, p2, cmp);
     PutInOrder_ (p2, p3, cmp);
@@ -87,7 +88,8 @@ inline void ListData<T>::PutInOrder_ (Item* p1, Item* p2, Item* p3, const CMP& c
 
 template<typename T>
 template<class CMP>
-inline void ListData<T>::PutInOrder_ (Item* p1, Item* p2, Item* p3, Item* p4, const CMP& cmp)
+inline void ListData<T>::PutInOrder_ (Item* p1, Item* p2, Item* p3, Item* p4,
+                                      const CMP& cmp)
 {
     PutInOrder_ (p1, p2, cmp);
     PutInOrder_ (p3, p4, cmp);
@@ -98,7 +100,8 @@ inline void ListData<T>::PutInOrder_ (Item* p1, Item* p2, Item* p3, Item* p4, co
 
 template<typename T>
 template<class CMP>
-bool ListData<T>::SmallSort_ (Item* p1, Item* p2, uintsys u_NumItems, const CMP& cmp)
+bool ListData<T>::SmallSort_ (Item* p1, Item* p2, uintsys u_NumItems,
+                              const CMP& cmp)
 {
     switch (u_NumItems)
     {
@@ -114,7 +117,8 @@ bool ListData<T>::SmallSort_ (Item* p1, Item* p2, uintsys u_NumItems, const CMP&
 
 template<typename T>
 template<class CMP>
-void ListData<T>::Sort_ (Item* p_Start, Item* p_End, uintsys u_NumItems, const CMP& cmp)
+void ListData<T>::Sort_ (Item* p_Start, Item* p_End, uintsys u_NumItems,
+                         const CMP& cmp)
 {
     for (;;)
     {
@@ -181,7 +185,7 @@ inline void ListData<T>::Sort (const CMP& cmp)
     {
         Item* p_Item = p_Root_;
 
-        // annotate items with original order so we can achieve a stable quicksort
+        // annotate items with original order to achieve a stable quicksort
 
         p_Item->u_SortPos_ = 0;
 
@@ -195,6 +199,9 @@ inline void ListData<T>::Sort (const CMP& cmp)
         Sort_ (p_Root_, BEFORE(p_Root_), u_NumItems_, cmp);
     }
 }
+
+#undef AFTER
+#undef BEFORE
 
 } // namespace mikestoolbox
 

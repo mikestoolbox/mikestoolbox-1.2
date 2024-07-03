@@ -299,8 +299,9 @@ inline bool WindowsString::operator!= (const WCHAR* pz) const
 namespace std {
 
 template<>
-inline void swap<mikestoolbox::WindowsString> (mikestoolbox::WindowsString& str1,
-                                               mikestoolbox::WindowsString& str2)
+inline void
+    swap<mikestoolbox::WindowsString> (mikestoolbox::WindowsString& str1,
+                                       mikestoolbox::WindowsString& str2)
 {
     str1.Swap (str2);
 }

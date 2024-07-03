@@ -68,12 +68,14 @@ public:
     TcpListener*  TcpListen         (const SocketAddress& addr);
 
     TcpSocket*    TcpConnect        (const String& str_Destination);
-    TcpSocket*    TcpConnect        (const String& str_Destination, uint16 u_Port);
+    TcpSocket*    TcpConnect        (const String& str_Destination,
+                                     uint16 u_Port);
 
     UdpSocket*    UdpListen         (const SocketAddress& addr);
 
     UdpSocket*    UdpConnect        (const String& str_Destination);
-    UdpSocket*    UdpConnect        (const String& str_Destination, uint16 u_Port);
+    UdpSocket*    UdpConnect        (const String& str_Destination,
+                                     uint16 u_Port);
 
     uintsys       GetLastError      () const;
     void          ClearError        ();

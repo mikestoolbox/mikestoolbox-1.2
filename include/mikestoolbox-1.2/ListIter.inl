@@ -341,7 +341,8 @@ inline ListChangeIter<T>& ListChangeIter<T>::operator= (const ChangeIter& iter)
 {
     if (list_.ViewData() != iter.list_.ViewData())
     {
-        throw Exception ("ListChangeIter: Attempt to point into different List");
+        throw Exception
+            ("ListChangeIter: Attempt to point into different List");
     }
 
     p_Item_   = iter.p_Item_;

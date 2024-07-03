@@ -73,7 +73,8 @@ inline void Timer::Reset ()
     (void) Elapsed();
 }
 
-inline AutoPrintTimer::AutoPrintTimer (const String& str_Label, double d_Threshold)
+inline AutoPrintTimer::AutoPrintTimer (const String& str_Label,
+                                       double d_Threshold)
     : timer_       ()
     , str_Label_   (str_Label)
     , d_Threshold_ (d_Threshold)

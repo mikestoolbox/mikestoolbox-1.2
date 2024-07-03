@@ -54,7 +54,8 @@ const uint32 gu_32BitFowlerNollVoHashMult_ =             16777619U;
 const uint64 gu_64BitFowlerNollVoHashInit_ = 14695981039346656037ULL;
 const uint64 gu_64BitFowlerNollVoHashMult_ =        1099511628211ULL;
 
-inline uint32 FowlerNollVoHash32::ComputeHash (const uchar* ps_Chars, uintsys u_NumChars)
+inline uint32 FowlerNollVoHash32::ComputeHash (const uchar* ps_Chars,
+                                               uintsys u_NumChars)
 {
     uint32 u_Hash = gu_32BitFowlerNollVoHashInit_;
 
@@ -118,7 +119,8 @@ inline HashItem<K,V,H>::HashItem (const HashItem<K,V,H>& item)
 }
 
 template<typename K, typename V, typename H>
-inline HashItem<K,V,H>::HashItem (const K& key, const V& value, typename H::HashInt u_KeyHash)
+inline HashItem<K,V,H>::HashItem (const K& key, const V& value,
+                                  typename H::HashInt u_KeyHash)
     : key_       (key)
     , value_     (value)
     , u_KeyHash_ (u_KeyHash)
@@ -279,7 +281,8 @@ inline HashStorage<K,V,H>* Hash<K,V,H>::ModifyData ()
 }
 
 template<typename K, typename V, typename H>
-HashStorage<K,V,H>* Hash<K,V,H>::MakeCopyOfSharedData_ (const SharedData* p_Data) const
+HashStorage<K,V,H>*
+    Hash<K,V,H>::MakeCopyOfSharedData_ (const SharedData* p_Data) const
 {
     const Storage* p_OldStorage = (const Storage*) p_Data;
           Storage* p_NewStorage = new(std::nothrow) Storage (*p_OldStorage);
@@ -493,7 +496,8 @@ HashItem<K,V,H>* Hash<K,V,H>::FindItem_ (const K& key)
 }
 
 template<typename K, typename V, typename H>
-HashItem<K,V,H>* Hash<K,V,H>::CreateItem_ (const K& key, const V& value, uintsys u_Hash)
+HashItem<K,V,H>* Hash<K,V,H>::CreateItem_ (const K& key, const V& value,
+                                           uintsys u_Hash)
 {
     Storage* p_Storage = ModifyData();
 
@@ -824,7 +828,8 @@ double Hash<K,V,H>::Efficiency () const
     return d_PathLength;
 }
 
-inline String CreateHashDebugLine (const char* pz_Label, const String& str_Text)
+inline String CreateHashDebugLine (const char* pz_Label,
+                                   const String& str_Text)
 {
     String str_Line (Preallocate (str_Text.Length() + 20));
 
@@ -901,11 +906,16 @@ const StringList Hash<K,V,H>::Debug () const
     strl_Info.Append (CreateHashDebugLine ("Hash Key Type",   Typename<K>()));
     strl_Info.Append (CreateHashDebugLine ("Hash Value Type", Typename<V>()));
     strl_Info.Append (CreateHashDebugLine ("Hash Function",   Typename<H>()));
-    strl_Info.Append (CreateHashDebugLine ("Number Of Items", String(NumItems())));
-    strl_Info.Append (CreateHashDebugLine ("Filled Buckets",  String(u_FilledBuckets)));
-    strl_Info.Append (CreateHashDebugLine ("Total Buckets",   String(u_NumBuckets)));
-    strl_Info.Append (CreateHashDebugLine ("Maximum Depth",   String(u_KeyDepth)));
-    strl_Info.Append (CreateHashDebugLine ("Average Depth",   String(d_PathLength)));
+    strl_Info.Append (CreateHashDebugLine ("Number Of Items",
+                                           String(NumItems())));
+    strl_Info.Append (CreateHashDebugLine ("Filled Buckets",
+                                           String(u_FilledBuckets)));
+    strl_Info.Append (CreateHashDebugLine ("Total Buckets",
+                                           String(u_NumBuckets)));
+    strl_Info.Append (CreateHashDebugLine ("Maximum Depth",
+                                           String(u_KeyDepth)));
+    strl_Info.Append (CreateHashDebugLine ("Average Depth",
+                                           String(d_PathLength)));
 
     return strl_Info;
 }
@@ -957,7 +967,8 @@ inline void HashChangeIter<K,V,H>::MoveTo (const K& key)
 {
     p_Item_ = hash_.FindItem_ (key);
 
-    u_Bucket_ = p_Item_ ? (p_Item_->KeyHash() & hash_.ViewData()->u_HashMask_) : 0;
+    u_Bucket_ = p_Item_ ? (p_Item_->KeyHash() & hash_.ViewData()->u_HashMask_)
+                        : 0;
 }
 
 template<typename K, typename V, typename H>
@@ -1036,7 +1047,8 @@ inline const HashChangeIter<K,V,H> HashChangeIter<K,V,H>::operator++ (int)
 }
 
 template<typename K, typename V, typename H>
-inline HashChangeIter<K,V,H>& HashChangeIter<K,V,H>::operator= (const HashChangeIter<K,V,H>& iter)
+inline HashChangeIter<K,V,H>&
+    HashChangeIter<K,V,H>::operator= (const HashChangeIter<K,V,H>& iter)
 {
     if (hash_.ViewData() == iter.hash_.ViewData())
     {
@@ -1053,25 +1065,29 @@ inline HashChangeIter<K,V,H>& HashChangeIter<K,V,H>::operator= (const HashChange
 }
 
 template<typename K, typename V, typename H>
-inline bool HashChangeIter<K,V,H>::operator== (const HashChangeIter<K,V,H>& iter) const
+inline bool
+    HashChangeIter<K,V,H>::operator== (const HashChangeIter<K,V,H>& iter) const
 {
     return p_Item_ == iter.p_Item_;
 }
 
 template<typename K, typename V, typename H>
-inline bool HashChangeIter<K,V,H>::operator== (const HashIter<K,V,H>& iter) const
+inline bool
+    HashChangeIter<K,V,H>::operator== (const HashIter<K,V,H>& iter) const
 {
     return p_Item_ == iter.p_Item_;
 }
 
 template<typename K, typename V, typename H>
-inline bool HashChangeIter<K,V,H>::operator!= (const HashChangeIter<K,V,H>& iter) const
+inline bool
+    HashChangeIter<K,V,H>::operator!= (const HashChangeIter<K,V,H>& iter) const
 {
     return p_Item_ != iter.p_Item_;
 }
 
 template<typename K, typename V, typename H>
-inline bool HashChangeIter<K,V,H>::operator!= (const HashIter<K,V,H>& iter) const
+inline bool
+    HashChangeIter<K,V,H>::operator!= (const HashIter<K,V,H>& iter) const
 {
     return p_Item_ != iter.p_Item_;
 }
@@ -1130,7 +1146,8 @@ inline void HashIter<K,V,H>::MoveTo (const K& key)
 {
     p_Item_ = hash_.FindItem_ (key);
 
-    u_Bucket_ = p_Item_ ? (p_Item_->KeyHash() & hash_.ViewData()->u_HashMask_) : 0;
+    u_Bucket_ = p_Item_ ? (p_Item_->KeyHash() & hash_.ViewData()->u_HashMask_)
+                        : 0;
 }
 
 template<typename K, typename V, typename H>
@@ -1206,7 +1223,8 @@ inline const HashIter<K,V,H> HashIter<K,V,H>::operator++ (int)
 }
 
 template<typename K, typename V, typename H>
-inline HashIter<K,V,H>& HashIter<K,V,H>::operator= (const HashChangeIter<K,V,H>& iter)
+inline HashIter<K,V,H>&
+    HashIter<K,V,H>::operator= (const HashChangeIter<K,V,H>& iter)
 {
     if (hash_.ViewData() == iter.hash_.ViewData())
     {
@@ -1246,7 +1264,8 @@ inline bool HashIter<K,V,H>::operator== (const HashIter<K,V,H>& iter) const
 }
 
 template<typename K, typename V, typename H>
-inline bool HashIter<K,V,H>::operator== (const HashChangeIter<K,V,H>& iter) const
+inline bool
+    HashIter<K,V,H>::operator== (const HashChangeIter<K,V,H>& iter) const
 {
     return p_Item_ == iter.p_Item_;
 }
@@ -1258,7 +1277,8 @@ inline bool HashIter<K,V,H>::operator!= (const HashIter<K,V,H>& iter) const
 }
 
 template<typename K, typename V, typename H>
-inline bool HashIter<K,V,H>::operator!= (const HashChangeIter<K,V,H>& iter) const
+inline bool
+    HashIter<K,V,H>::operator!= (const HashChangeIter<K,V,H>& iter) const
 {
     return p_Item_ != iter.p_Item_;
 }
@@ -1370,7 +1390,8 @@ const List<V> Hash<K,V,H>::Values () const
 }
 
 template<typename K, typename V, typename H>
-void Hash<K,V,H>::AddKeyValue_ (HashType& hash, const K& key, const V& value, ImportOptions options)
+void Hash<K,V,H>::AddKeyValue_ (HashType& hash, const K& key, const V& value,
+                                ImportOptions options)
 {
     if (options.CanCreate())
     {
@@ -1391,7 +1412,8 @@ void Hash<K,V,H>::AddKeyValue_ (HashType& hash, const K& key, const V& value, Im
 
 template<typename K, typename V, typename H>
 template<typename CONTAINER>
-void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options, MikesToolboxSimpleContainer)
+void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options,
+                           MikesToolboxSimpleContainer)
 {
     uintsys u_Extra = c.NumItems() / 2;
 
@@ -1423,7 +1445,8 @@ void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options, MikesToolb
 
 template<typename K, typename V, typename H>
 template<typename CONTAINER>
-void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options, MikesToolboxKeyValueContainer)
+void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options,
+                           MikesToolboxKeyValueContainer)
 {
     uintsys u_Extra = c.NumItems();
 
@@ -1451,7 +1474,8 @@ void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options, MikesToolb
 
 template<typename K, typename V, typename H>
 template<typename CONTAINER>
-void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options, StandardCPlusPlusSimpleContainer)
+void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options,
+                           StandardCPlusPlusSimpleContainer)
 {
     typename CONTAINER::const_iterator iter1 (c.begin());
     typename CONTAINER::const_iterator iter2 (c.end());
@@ -1477,7 +1501,8 @@ void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options, StandardCP
 
 template<typename K, typename V, typename H>
 template<typename CONTAINER>
-void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options, StandardCPlusPlusKeyValueContainer)
+void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options,
+                           StandardCPlusPlusKeyValueContainer)
 {
     typename CONTAINER::const_iterator iter1 (c.begin());
     typename CONTAINER::const_iterator iter2 (c.end());
@@ -1499,7 +1524,8 @@ void Hash<K,V,H>::Import_ (const CONTAINER& c, ImportOptions options, StandardCP
 
 template<typename K, typename V, typename H>
 template<typename CONTAINER>
-void Hash<K,V,H>::Import_ (const CONTAINER&, ImportOptions, UnknownTypeOfContainer)
+void Hash<K,V,H>::Import_ (const CONTAINER&, ImportOptions,
+                           UnknownTypeOfContainer)
 {
     // nothing good can come from doing anything here
 

@@ -46,9 +46,14 @@
 
 namespace mikestoolbox {
 
-const uintsys RESOURCE_MUTABLE       = 1; // resource is always writable even if references > 1
-const uintsys RESOURCE_COPY_ON_WRITE = 2; // resource is copied before modifying if refs > 1
-const uintsys RESOURCE_NEW_ON_WRITE  = 3; // new resource created before modifying if refs > 1
+// resource is always writable even if references > 1
+const uintsys RESOURCE_MUTABLE       = 1;
+
+// resource is copied before modifying if refs > 1
+const uintsys RESOURCE_COPY_ON_WRITE = 2;
+
+// new resource created before modifying if refs > 1
+const uintsys RESOURCE_NEW_ON_WRITE  = 3;
 
 class AlwaysShared { };
 
@@ -108,7 +113,9 @@ protected:
           SharedData*   ModifyData   ();
 
     void                NewData      (); // create new SharedData, refs=1
-    void                ClearData    (); // create empty SharedData, refs might not equal 1
+
+    void                ClearData    (); // create empty SharedData,
+                                         // refs might not equal 1
 
     void                Swap         (SharedResource& resource);
 
@@ -120,7 +127,7 @@ private:
     uintsys IncrementRefs_ () const;
     uintsys DecrementRefs_ () const;
 
-    virtual SharedData* MakeCopyOfSharedData_ (const SharedData* p_OldData) const;
+    virtual SharedData* MakeCopyOfSharedData_ (const SharedData*) const;
     virtual SharedData* MakeEmptySharedData_  () const;
     virtual SharedData* MakeNewSharedData_    () const;
 

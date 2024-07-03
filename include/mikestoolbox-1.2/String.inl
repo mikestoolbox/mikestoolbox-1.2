@@ -71,7 +71,8 @@ inline bool String::ByteCompareEqual (const String& str_Other) const
     return ByteCompare (str_Other, u_Matches, u_Mismatches);
 }
 
-inline intsys StringCompare (const uchar* ps1, const uchar* ps2, uintsys u_NumChars, bool b_CaseSensitive)
+inline intsys StringCompare (const uchar* ps1, const uchar* ps2,
+                             uintsys u_NumChars, bool b_CaseSensitive)
 {
     intsys n_Return = 0;
 
@@ -107,12 +108,15 @@ inline intsys StringCompare (const uchar* ps1, const uchar* ps2, uintsys u_NumCh
     return n_Return;
 }
 
-inline intsys StringCompare (const char* ps1, const char* ps2, uintsys u_NumChars, bool b_CaseSensitive)
+inline intsys StringCompare (const char* ps1, const char* ps2,
+                             uintsys u_NumChars, bool b_CaseSensitive)
 {
-    return StringCompare ((const uchar*)ps1, (const uchar*)ps2, u_NumChars, b_CaseSensitive);
+    return StringCompare ((const uchar*)ps1, (const uchar*)ps2, 
+                          u_NumChars, b_CaseSensitive);
 }
 
-inline SubString::SubString (String& str_Reference, uintsys u_Offset, uintsys u_Length)
+inline SubString::SubString (String& str_Reference, uintsys u_Offset,
+                             uintsys u_Length)
     : str_Reference_ (str_Reference)
     , u_Offset_      (u_Offset)
     , u_Length_      (u_Length)
@@ -156,7 +160,8 @@ inline bool SubString::operator== (const String& str) const
     const char* ps1 = str.C();
     const char* ps2 = Start();
 
-    bool b_CaseSensitive = (str_Reference_.IsCaseSensitive() && str.IsCaseSensitive());
+    bool b_CaseSensitive = (str_Reference_.IsCaseSensitive() &&
+                            str.IsCaseSensitive());
 
     return (StringCompare (ps1, ps2, u_Length_, b_CaseSensitive) == 0);
 }
@@ -208,9 +213,11 @@ inline String::String (const String& str1, const String& str2)
     Append (str1, str2);
 }
 
-inline String::String (const String& str1, const String& str2, const String& str3)
+inline String::String (const String& str1, const String& str2,
+                       const String& str3)
     : mem_          ()
-    , b_IgnoreCase_ (str1.b_IgnoreCase_ || str2.b_IgnoreCase_ || str3.b_IgnoreCase_)
+    , b_IgnoreCase_ (str1.b_IgnoreCase_ || str2.b_IgnoreCase_ ||
+                     str3.b_IgnoreCase_)
 {
     Append (str1, str2, str3);
 }
@@ -218,8 +225,8 @@ inline String::String (const String& str1, const String& str2, const String& str
 inline String::String (const String& str1, const String& str2,
                        const String& str3, const String& str4)
     : mem_          ()
-    , b_IgnoreCase_ (str1.b_IgnoreCase_ || str2.b_IgnoreCase_ || str3.b_IgnoreCase_ ||
-                     str4.b_IgnoreCase_)
+    , b_IgnoreCase_ (str1.b_IgnoreCase_ || str2.b_IgnoreCase_ ||
+                     str3.b_IgnoreCase_ || str4.b_IgnoreCase_)
 {
     Append (str1, str2, str3, str4);
 }
@@ -486,7 +493,8 @@ inline void String::Append (const String& str1, const String& str2)
     Append (str2);
 }
 
-inline void String::Append (const String& str1, const String& str2, const String& str3)
+inline void String::Append (const String& str1, const String& str2,
+                            const String& str3)
 {
     Reserve (Length() + str1.Length() + str2.Length() + str3.Length());
 
@@ -495,10 +503,11 @@ inline void String::Append (const String& str1, const String& str2, const String
     Append (str3);
 }
 
-inline void String::Append (const String& str1, const String& str2, const String& str3,
-                            const String& str4)
+inline void String::Append (const String& str1, const String& str2,
+                            const String& str3, const String& str4)
 {
-    Reserve (Length() + str1.Length() + str2.Length() + str3.Length() + str4.Length());
+    Reserve (Length() + str1.Length() + str2.Length() +
+                        str3.Length() + str4.Length());
 
     Append (str1);
     Append (str2);
@@ -932,12 +941,14 @@ inline intsys String::Compare (const char* pz, bool b_CaseSensitive) const
     return Compare (str, b_CaseSensitive);
 }
 
-inline bool String::Contains (const String& str, const Index& offset, bool b_Case) const
+inline bool String::Contains (const String& str, const Index& offset,
+                              bool b_Case) const
 {
     return (FindFirst (str, offset, b_Case));
 }
 
-inline bool String::Contains (const char* pz, const Index& offset, bool b_Case) const
+inline bool
+    String::Contains (const char* pz, const Index& offset, bool b_Case) const
 {
     String str (pz);
 
@@ -996,14 +1007,16 @@ inline void String::EraseFront (uintsys u_NumChars)
     mem_.EraseFront (u_NumChars);
 }
 
-inline StringIter String::FindFirst (const char* pz, const Index& offset, bool b_Case) const
+inline StringIter
+    String::FindFirst (const char* pz, const Index& offset, bool b_Case) const
 {
     String str (pz);
 
     return FindFirst (str, offset, b_Case);
 }
 
-inline StringIter String::FindLast (const char* pz, const Index& offset, bool b_Case) const
+inline StringIter
+    String::FindLast (const char* pz, const Index& offset, bool b_Case) const
 {
     String str (pz);
 
@@ -1300,14 +1313,16 @@ inline void String::Reserve (uintsys u_NumChars)
     mem_.Reserve (u_NumChars);
 }
 
-inline const StringList String::Split (const char* pz_Pattern, uintsys u_MaxStrings, bool b_Case) const
+inline const StringList String::Split (const char* pz_Pattern,
+                                       uintsys u_MaxStrings, bool b_Case) const
 {
     String str_Pattern (pz_Pattern);
 
     return Split (str_Pattern, u_MaxStrings, b_Case);
 }
 
-inline const StringList String::Split (char c_SplitChar, uintsys u_MaxStrings, bool b_Case) const
+inline const StringList String::Split (char c_SplitChar, uintsys u_MaxStrings,
+                                       bool b_Case) const
 {
     String str_Pattern (c_SplitChar);
 
@@ -1344,7 +1359,8 @@ inline bool String::EndsWith (char c, bool b_Case) const
 
 inline intsys String::Replace (const PerlRegex& rex_Pattern,
                                      const String& str_Replace,
-                                     bool b_GlobalSearchReplace, intsys n_Offset)
+                                     bool b_GlobalSearchReplace,
+                                     intsys n_Offset)
 {
     StringList strl_Matches;
 
@@ -1352,25 +1368,32 @@ inline intsys String::Replace (const PerlRegex& rex_Pattern,
                     b_GlobalSearchReplace, n_Offset);
 }
 
-inline intsys String::Replace (const PerlRegex& rex_Pattern, const char* pz_Replace,
-                                     bool b_GlobalSearchReplace, intsys n_Offset)
+inline intsys String::Replace (const PerlRegex& rex_Pattern,
+                               const char* pz_Replace,
+                               bool b_GlobalSearchReplace,
+                               intsys n_Offset)
 {
     String str_Replace (pz_Replace);
 
     return Replace (rex_Pattern, str_Replace, b_GlobalSearchReplace, n_Offset);
 }
 
-inline intsys String::Replace (const PerlRegex& rex_Pattern, const char* pz_Replace,
-                                     StringList& strl_Substrings, bool b_GlobalSearchReplace,
-                                     intsys n_Offset)
+inline intsys String::Replace (const PerlRegex& rex_Pattern,
+                               const char* pz_Replace,
+                               StringList& strl_Substrings,
+                               bool b_GlobalSearchReplace,
+                               intsys n_Offset)
 {
     String str_Replace (pz_Replace);
 
-    return Replace (rex_Pattern, str_Replace, strl_Substrings, b_GlobalSearchReplace, n_Offset);
+    return Replace (rex_Pattern, str_Replace, strl_Substrings,
+                    b_GlobalSearchReplace, n_Offset);
 }
 
-inline intsys String::Replace (const String& str_Pattern, const String& str_Replace,
-                               StringList& strl_Substrings, bool b_GlobalSearchReplace,
+inline intsys String::Replace (const String& str_Pattern,
+                               const String& str_Replace,
+                               StringList& strl_Substrings,
+                               bool b_GlobalSearchReplace,
                                intsys n_Offset, bool b_Case)
 {
     if (b_IgnoreCase_ || !str_Pattern.IsCaseSensitive())
@@ -1384,54 +1407,66 @@ inline intsys String::Replace (const String& str_Pattern, const String& str_Repl
 
     PerlRegex rex_Pattern (str_Pattern.C(), options);
 
-    return Replace (rex_Pattern, str_Replace, strl_Substrings, b_GlobalSearchReplace, n_Offset);
+    return Replace (rex_Pattern, str_Replace, strl_Substrings,
+                    b_GlobalSearchReplace, n_Offset);
 }
 
 inline intsys String::Replace (const String& str_Pattern,
-                                     const String& str_Replace,
-                                     bool b_GlobalSearchReplace, intsys n_Offset, bool b_Case)
+                               const String& str_Replace,
+                               bool b_GlobalSearchReplace,
+                               intsys n_Offset, bool b_Case)
 {
     StringList strl_Matches;
 
-    return Replace (str_Pattern, str_Replace, strl_Matches, b_GlobalSearchReplace, n_Offset, b_Case);
+    return Replace (str_Pattern, str_Replace, strl_Matches,
+                    b_GlobalSearchReplace, n_Offset, b_Case);
 }
 
-inline intsys String::Replace (const char* pz_Pattern, const String& str_Replace,
-                                     bool b_GlobalSearchReplace, intsys n_Offset,
-                                     bool b_Case)
+inline intsys String::Replace (const char* pz_Pattern,
+                               const String& str_Replace,
+                               bool b_GlobalSearchReplace,
+                               intsys n_Offset, bool b_Case)
 {
     String str_Pattern (pz_Pattern);
 
-    return Replace (str_Pattern, str_Replace, b_GlobalSearchReplace, n_Offset, b_Case);
+    return Replace (str_Pattern, str_Replace, b_GlobalSearchReplace,
+                    n_Offset, b_Case);
 }
 
-inline intsys String::Replace (const char* pz_Pattern, const String& str_Replace,
-                                     StringList& strl_Substrings, bool b_GlobalSearchReplace,
-                                     intsys n_Offset, bool b_Case)
+inline intsys String::Replace (const char* pz_Pattern,
+                               const String& str_Replace,
+                               StringList& strl_Substrings,
+                               bool b_GlobalSearchReplace,
+                               intsys n_Offset, bool b_Case)
 {
     String str_Pattern (pz_Pattern);
 
-    return Replace (str_Pattern, str_Replace, strl_Substrings, b_GlobalSearchReplace, n_Offset);
+    return Replace (str_Pattern, str_Replace, strl_Substrings,
+                    b_GlobalSearchReplace, n_Offset);
 }
 
-inline intsys String::Replace (const char* pz_Pattern, const char* pz_Replace,
-                                     bool b_GlobalSearchReplace, intsys n_Offset,
-                                     bool b_Case)
-{
-    String str_Pattern (pz_Pattern);
-    String str_Replace (pz_Replace);
-
-    return Replace (str_Pattern, str_Replace, b_GlobalSearchReplace, n_Offset, b_Case);
-}
-
-inline intsys String::Replace (const char* pz_Pattern, const char* pz_Replace,
-                                     StringList& strl_Substrings, bool b_GlobalSearchReplace,
-                                     intsys n_Offset, bool b_Case)
+inline intsys String::Replace (const char* pz_Pattern,
+                               const char* pz_Replace,
+                               bool b_GlobalSearchReplace,
+                               intsys n_Offset, bool b_Case)
 {
     String str_Pattern (pz_Pattern);
     String str_Replace (pz_Replace);
 
-    return Replace (str_Pattern, str_Replace, strl_Substrings, b_GlobalSearchReplace, n_Offset);
+    return Replace (str_Pattern, str_Replace, b_GlobalSearchReplace,
+                    n_Offset, b_Case);
+}
+
+inline intsys String::Replace (const char* pz_Pattern, const char* pz_Replace,
+                               StringList& strl_Substrings,
+                               bool b_GlobalSearchReplace,
+                               intsys n_Offset, bool b_Case)
+{
+    String str_Pattern (pz_Pattern);
+    String str_Replace (pz_Replace);
+
+    return Replace (str_Pattern, str_Replace, strl_Substrings,
+                    b_GlobalSearchReplace, n_Offset);
 }
 
 inline void String::StripLeadingZeros ()
@@ -2015,7 +2050,8 @@ inline StringIter::StringIter (const String& str)
     // nothing
 }
 
-inline StringIter::StringIter (const StringIter& iter, const uchar* ps, uintsys u_Length)
+inline StringIter::StringIter (const StringIter& iter, const uchar* ps,
+                               uintsys u_Length)
     : str_     (iter.str_)
     , p_Start_ (ps)
     , p_End_   (ps+u_Length)
@@ -2111,7 +2147,8 @@ inline StringIter::operator String () const
     return String();
 }
 
-inline intsys StringIter::Match (const PerlRegex& regex, PerlRegexMatches& matches) const
+inline intsys
+    StringIter::Match (const PerlRegex& regex, PerlRegexMatches& matches) const
 {
     if (IsValid())
     {
@@ -2348,7 +2385,8 @@ inline bool StringIter::operator== (const String& str) const
 
     bool b_Case = str.IsCaseSensitive();
 
-    return (StringCompare (p_Char_, str.PointerToFirstByte(), u_Length, b_Case) == 0);
+    return (StringCompare (p_Char_, str.PointerToFirstByte(),
+                           u_Length, b_Case) == 0);
 }
 
 inline bool StringIter::operator!= (const String& str) const
@@ -2544,7 +2582,8 @@ inline void StringBitIter::SetLittleEndian ()
     pmf_ExtractBits_ = &StringBitIter::ExtractBitsLittleEndian_;
 }
 
-inline bool StringBitIter::ExtractBits (uintsys u_NumBits, uintsys& u, ParseError& error)
+inline bool StringBitIter::ExtractBits (uintsys u_NumBits, uintsys& u,
+                                        ParseError& error)
 {
     return (this->*pmf_ExtractBits_) (u_NumBits, u, error);
 }
@@ -2559,7 +2598,8 @@ inline StringBitIter::operator bool () const
 namespace std {
 
 template<>
-inline void swap<mikestoolbox::String> (mikestoolbox::String& str1, mikestoolbox::String& str2)
+inline void swap<mikestoolbox::String> (mikestoolbox::String& str1,
+                                        mikestoolbox::String& str2)
 {
     str1.Swap (str2);
 }

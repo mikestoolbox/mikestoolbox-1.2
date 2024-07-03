@@ -58,8 +58,12 @@ class DateParts
 {
 public:
 
-    DateParts (uintsys u_Year, uintsys u_Month, uintsys u_Day, uintsys u_Hour=0,
-               uintsys u_Minute=0, uintsys u_Second=0);
+    DateParts (uintsys u_Year,
+               uintsys u_Month,
+               uintsys u_Day,
+               uintsys u_Hour=0,
+               uintsys u_Minute=0,
+               uintsys u_Second=0);
     DateParts (const Date& date);
     DateParts (time_t date);
     DateParts (const struct timeval* p_Time);

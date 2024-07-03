@@ -73,11 +73,13 @@ public:
     uchar*              Allocate            (uintsys u_NumBytes);
     void                Append              (const HeapMemory& mem);
     TCM2 void           Append              (const MEM2& mem);
-    void                Append              (const uchar* ps, uintsys u_Length);
+    void                Append              (const uchar* ps,
+                                             uintsys u_Length);
     void                Clear               ();
     void                Destroy             ();
     uchar*              EditInPlace         ();
-    void                Erase               (const Index& offset, uintsys u_NumBytes);
+    void                Erase               (const Index& offset,
+                                             uintsys u_NumBytes);
     void                EraseEnd            (uintsys u_NumBytes);
     void                EraseFront          (uintsys u_NumBytes);
     uchar*              Expand              (uintsys u_NumCharsBefore,
@@ -159,14 +161,17 @@ public:
     uchar*              Allocate            (uintsys u_NumBytes);
     void                Append              (const Type& mem);
     TCM2 void           Append              (const MEM2& mem);
-    void                Append              (const uchar* ps, uintsys u_Length);
+    void                Append              (const uchar* ps,
+                                             uintsys u_Length);
     void                Clear               ();
     void                Destroy             ();
     uchar*              EditInPlace         ();
-    void                Erase               (const Index& offset, uintsys u_NumBytes);
+    void                Erase               (const Index& offset,
+                                             uintsys u_NumBytes);
     void                EraseEnd            (uintsys u_NumBytes);
     void                EraseFront          (uintsys u_NumBytes);
-    uchar*              Expand              (uintsys u_NumCharsBefore, uintsys u_NumCharsAfter);
+    uchar*              Expand              (uintsys u_NumCharsBefore,
+                                             uintsys u_NumCharsAfter);
     void                Prepend             (const Type& mem);
     TCM2 void           Prepend             (const MEM2& mem);
     void                Reserve             (uintsys u_NumBytes);
