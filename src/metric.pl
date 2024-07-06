@@ -81,11 +81,11 @@ sub by_class
     }
 }
 
-opendir DIR, "../include/mikestoolbox";
+opendir DIR, "../include/mikestoolbox-1.2";
 push @files, readdir DIR;
 closedir DIR;
 
-grep s:^:../include/mikestoolbox/:o, @files;
+grep s:^:../include/mikestoolbox-1.2/:o, @files;
 
 opendir DIR, ".";
 push @files, readdir DIR;
