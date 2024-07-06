@@ -61,7 +61,8 @@ namespace mikestoolbox {
 
 void StartupWindowsSockets ();
 
-bool BerkeleySocket::CreateSocket (intsys n_Family, intsys n_Type, intsys n_Protocol)
+bool BerkeleySocket::CreateSocket (intsys n_Family, intsys n_Type,
+                                   intsys n_Protocol)
 {
     StartupWindowsSockets();
 
@@ -143,9 +144,11 @@ bool BerkeleySocket::Shutdown (intsys n_How)
     return (shutdown (h_Socket_, n_How) == 0);
 }
 
-intsys BerkeleySocket::Recv (void* p_Buffer, uintsys u_BufferSize, intsys n_Flags)
+intsys BerkeleySocket::Recv (void* p_Buffer, uintsys u_BufferSize,
+                             intsys n_Flags)
 {
-    intsys n_Return = recv (h_Socket_, reinterpret_cast<char*>(p_Buffer), u_BufferSize, n_Flags);
+    intsys n_Return = recv (h_Socket_, reinterpret_cast<char*>(p_Buffer),
+                            u_BufferSize, n_Flags);
 
     if (SOCKET_OP_FAILED(n_Return))
     {
@@ -155,13 +158,13 @@ intsys BerkeleySocket::Recv (void* p_Buffer, uintsys u_BufferSize, intsys n_Flag
     return n_Return;
 }
 
-intsys BerkeleySocket::RecvFrom (void* p_Buffer, uintsys u_BufferSize, intsys n_Flags,
-                                 SocketAddress& addr_Peer)
+intsys BerkeleySocket::RecvFrom (void* p_Buffer, uintsys u_BufferSize,
+                                 intsys n_Flags, SocketAddress& addr_Peer)
 {
     socklen_t n_Length = addr_Peer.Capacity();
 
-    intsys n_Return = recvfrom (h_Socket_, reinterpret_cast<char*>(p_Buffer), u_BufferSize,
-                                n_Flags, addr_Peer, &n_Length);
+    intsys n_Return = recvfrom (h_Socket_, reinterpret_cast<char*>(p_Buffer),
+                                u_BufferSize, n_Flags, addr_Peer, &n_Length);
 
     if (SOCKET_OP_FAILED(n_Return))
     {
@@ -171,9 +174,11 @@ intsys BerkeleySocket::RecvFrom (void* p_Buffer, uintsys u_BufferSize, intsys n_
     return n_Return;
 }
 
-intsys BerkeleySocket::Send (const void* p_Buffer, uintsys u_BufferSize, intsys n_Flags)
+intsys BerkeleySocket::Send (const void* p_Buffer, uintsys u_BufferSize,
+                             intsys n_Flags)
 {
-    intsys n_Return = send (h_Socket_, reinterpret_cast<const char*>(p_Buffer), u_BufferSize, n_Flags);
+    intsys n_Return = send (h_Socket_, reinterpret_cast<const char*>(p_Buffer),
+                            u_BufferSize, n_Flags);
 
     if (SOCKET_OP_FAILED(n_Return))
     {
@@ -186,8 +191,10 @@ intsys BerkeleySocket::Send (const void* p_Buffer, uintsys u_BufferSize, intsys 
 intsys BerkeleySocket::SendTo (const void* p_Buffer, uintsys u_BufferSize,
                                intsys n_Flags, const SocketAddress& addr_Dest)
 {
-    intsys n_Return = sendto (h_Socket_, reinterpret_cast<const char*>(p_Buffer), u_BufferSize,
-                              n_Flags, addr_Dest, addr_Dest.Length());
+    intsys n_Return = sendto (h_Socket_,
+                              reinterpret_cast<const char*>(p_Buffer),
+                              u_BufferSize, n_Flags, addr_Dest,
+                              addr_Dest.Length());
 
     if (SOCKET_OP_FAILED(n_Return))
     {
@@ -218,7 +225,8 @@ bool BerkeleySocket::EnableBroadcast (bool b_Enable)
 {
     intsys yes = b_Enable ? 1 : 0;
 
-    return (setsockopt (h_Socket_, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<const char*>(&yes),
+    return (setsockopt (h_Socket_, SOL_SOCKET, SO_BROADCAST,
+                        reinterpret_cast<const char*>(&yes),
                         sizeof(yes)) == 0);
 }
 
@@ -226,7 +234,8 @@ bool BerkeleySocket::EnableKeepAlive (bool b_Enable)
 {
     intsys yes = b_Enable ? 1 : 0;
 
-    return (setsockopt (h_Socket_, SOL_SOCKET, SO_KEEPALIVE, reinterpret_cast<const char*>(&yes),
+    return (setsockopt (h_Socket_, SOL_SOCKET, SO_KEEPALIVE,
+                        reinterpret_cast<const char*>(&yes),
                         sizeof(yes)) == 0);
 }
 
@@ -237,19 +246,22 @@ bool BerkeleySocket::EnableLingerOption (bool b_Enable, intsys n_LingerTime)
     Linger.l_onoff  = b_Enable ? 1 : 0;
     Linger.l_linger = n_LingerTime;
 
-    return (setsockopt (h_Socket_, SOL_SOCKET, SO_LINGER, reinterpret_cast<const char*>(&Linger),
+    return (setsockopt (h_Socket_, SOL_SOCKET, SO_LINGER,
+                        reinterpret_cast<const char*>(&Linger),
                         sizeof(Linger)) == 0);
 }
 
 bool BerkeleySocket::SetRecvBufferSize (intsys n_Size)
 {
-    return (setsockopt (h_Socket_, SOL_SOCKET, SO_RCVBUF, reinterpret_cast<const char*>(&n_Size),
+    return (setsockopt (h_Socket_, SOL_SOCKET, SO_RCVBUF,
+                        reinterpret_cast<const char*>(&n_Size),
                         sizeof(n_Size)) == 0);
 }
 
 bool BerkeleySocket::SetSendBufferSize (intsys n_Size)
 {
-    return (setsockopt (h_Socket_, SOL_SOCKET, SO_SNDBUF, reinterpret_cast<const char*>(&n_Size),
+    return (setsockopt (h_Socket_, SOL_SOCKET, SO_SNDBUF,
+                        reinterpret_cast<const char*>(&n_Size),
                         sizeof(n_Size)) == 0);
 }
 
@@ -257,7 +269,8 @@ bool BerkeleySocket::ReuseAddress (bool b_Reuse)
 {
     intsys yes = b_Reuse ? 1 : 0;
 
-    return (setsockopt (h_Socket_, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&yes),
+    return (setsockopt (h_Socket_, SOL_SOCKET, SO_REUSEADDR,
+                        reinterpret_cast<const char*>(&yes),
                         sizeof(yes)) == 0);
 }
 
@@ -266,7 +279,8 @@ bool BerkeleySocket::ReusePort (bool b_Reuse)
 #ifdef SO_REUSEPORT
     intsys yes = b_Reuse ? 1 : 0;
 
-    return (setsockopt (h_Socket_, SOL_SOCKET, SO_REUSEPORT, reinterpret_cast<const char*>(&yes),
+    return (setsockopt (h_Socket_, SOL_SOCKET, SO_REUSEPORT,
+                        reinterpret_cast<const char*>(&yes),
                         sizeof(yes)) == 0);
 #else
     return false;
@@ -279,7 +293,8 @@ intsys BerkeleySocket::GetType () const
 
     socklen_t n_Length = sizeof(n_Type);
 
-    getsockopt (h_Socket_, SOL_SOCKET, SO_TYPE, reinterpret_cast<char*>(&n_Type), &n_Length);
+    getsockopt (h_Socket_, SOL_SOCKET, SO_TYPE,
+                reinterpret_cast<char*>(&n_Type), &n_Length);
 
     return n_Type;
 }
@@ -288,14 +303,17 @@ bool BerkeleySocket::EnableTcpNoDelay (bool b_Enable)
 {
     intsys yes = b_Enable ? 1 : 0;
 
-    return setsockopt (h_Socket_, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<const char*>(&yes),
+    return setsockopt (h_Socket_, IPPROTO_TCP, TCP_NODELAY,
+                       reinterpret_cast<const char*>(&yes),
                        sizeof(yes)) == 0;
 }
 
-intsys BerkeleySocket::Select (intsys n_Max, fd_set* set_Read, fd_set* set_Write, fd_set* set_Error,
-                            struct timeval* tv_Timeout)
+intsys BerkeleySocket::Select (intsys n_Max, fd_set* set_Read,
+                               fd_set* set_Write, fd_set* set_Error,
+                               struct timeval* tv_Timeout)
 {
-    intsys n_Return = select (n_Max, set_Read, set_Write, set_Error, tv_Timeout);
+    intsys n_Return = select (n_Max, set_Read, set_Write, set_Error,
+                              tv_Timeout);
 
     if (SOCKET_OP_FAILED (n_Return))
     {

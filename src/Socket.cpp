@@ -75,7 +75,8 @@ bool Socket::Close_ ()
     return socket_.Close();
 }
 
-static intsys CreateFD_SET (fd_set& set, const SocketList& list, bool& b_Canceled)
+static intsys CreateFD_SET (fd_set& set, const SocketList& list,
+                            bool& b_Canceled)
 {
     if (b_Canceled)
     {
@@ -187,7 +188,8 @@ static void RemoveUnsetSockets (fd_set& set, SocketList& list)
     }
 }
 
-bool Socket::Select (SocketList& ReadSockets, SocketList& WriteSockets, double d_Timeout)
+bool Socket::Select (SocketList& ReadSockets, SocketList& WriteSockets,
+                     double d_Timeout)
 {
     intsys n_Return = -1;
 
@@ -224,9 +226,11 @@ bool Socket::Select (SocketList& ReadSockets, SocketList& WriteSockets, double d
             break;
         }
 
-        CreateTimevalMax2Seconds (date_Exp.SecondsMoreThan (date_Now), tv_Timeout);
+        CreateTimevalMax2Seconds (date_Exp.SecondsMoreThan (date_Now),
+                                  tv_Timeout);
 
-        n_Return = BerkeleySocket::Select (n_Max+1, &set_Read, &set_Write, 0, &tv_Timeout);
+        n_Return = BerkeleySocket::Select (n_Max+1, &set_Read, &set_Write, 0,
+                                           &tv_Timeout);
 
         if (n_Return != 0)
         {
@@ -529,9 +533,11 @@ bool Socket::IsConnected (double d_Timeout) const
 
             errno = 0;
 
-            CreateTimevalMax2Seconds (date_Exp.SecondsMoreThan (date_Now), tv_Timeout);
+            CreateTimevalMax2Seconds (date_Exp.SecondsMoreThan (date_Now),
+                                      tv_Timeout);
 
-            intsys n_Return = BerkeleySocket::Select (max, &ReadSet, &WriteSet, 0, &tv_Timeout);
+            intsys n_Return = BerkeleySocket::Select (max, &ReadSet, &WriteSet,
+                                                      0, &tv_Timeout);
 
             if (n_Return > 0)
             {
@@ -684,7 +690,8 @@ intsys Socket::RecvFrom_ (void* p_Buffer, uintsys u_BufferSize, intsys n_Flags,
         return -1;
     }
 
-    intsys n_Return = socket_.RecvFrom (p_Buffer, u_BufferSize, n_Flags, addr_Peer);
+    intsys n_Return = socket_.RecvFrom (p_Buffer, u_BufferSize, n_Flags,
+                                        addr_Peer);
 
     if (n_Return < 0)
     {
@@ -703,7 +710,8 @@ intsys Socket::RecvFrom_ (void* p_Buffer, uintsys u_BufferSize, intsys n_Flags,
     return n_Return;
 }
 
-intsys Socket::Send_ (const void* p_Buffer, uintsys u_BufferSize, intsys n_Flags)
+intsys Socket::Send_ (const void* p_Buffer, uintsys u_BufferSize,
+                      intsys n_Flags)
 {
     if (!IsWritable())
     {
@@ -769,7 +777,8 @@ intsys Socket::SendTo_ (const void* p_Buffer, uintsys u_BufferSize,
         return -1;
     }
 
-    intsys n_Return = socket_.SendTo (p_Buffer, u_BufferSize, n_Flags, addr_Dest);
+    intsys n_Return = socket_.SendTo (p_Buffer, u_BufferSize, n_Flags,
+                                      addr_Dest);
 
     if (n_Return < 0)
     {
@@ -884,7 +893,8 @@ TcpSocket::TcpSocket (SOCKET h_Socket)
     // nothing
 }
 
-static bool AddressInRange (const SocketAddress& address, const List<IpAddressRange>& list_Range)
+static bool AddressInRange (const SocketAddress& address,
+                            const List<IpAddressRange>& list_Range)
 {
     if (list_Range.IsEmpty())
     {
@@ -915,7 +925,8 @@ bool TcpListener::IsAddressBlocked (const SocketAddress& addr) const
         return AddressInRange (addr, list_BlockedIps_);
     }
 
-    return !AddressInRange (addr, list_AllowedIps_) || AddressInRange (addr, list_BlockedIps_);
+    return !AddressInRange (addr, list_AllowedIps_) ||
+            AddressInRange (addr, list_BlockedIps_);
 }
 
 bool TcpListener::SetSocketOptions_ (TcpSocket* p_Socket)
@@ -927,7 +938,8 @@ bool TcpListener::SetSocketOptions_ (TcpSocket* p_Socket)
 
     return ((!b_KeepAlive_ || p_Socket->EnableKeepAlive())        &&
             (!b_NoDelay_   || p_Socket->EnableTcpNoDelayOption()) &&
-            (!b_Linger_    || p_Socket->EnableLingerOption (b_Linger_, n_LingerTime_)));
+            (!b_Linger_    || p_Socket->EnableLingerOption (b_Linger_,
+                                                            n_LingerTime_)));
 }
 
 TcpSocket* TcpListener::Accept ()
@@ -986,7 +998,8 @@ TcpSocket* TcpListener::Accept ()
 
     p_Socket->addr_Peer_ = address;
 
-    if (!(p_Socket->GetSockName_() && p_Socket->Unblock_() && SetSocketOptions_ (p_Socket)))
+    if (!(p_Socket->GetSockName_() && p_Socket->Unblock_() &&
+          SetSocketOptions_ (p_Socket)))
     {
         SetLastError_ (p_Socket->GetLastError());
 
@@ -1102,7 +1115,8 @@ intsys TcpSocket::ReadData_ (double d_Timeout)
     }
 }
 
-bool TcpSocket::ReadData (uintsys u_NumBytes, String& str_Data, double d_Timeout)
+bool TcpSocket::ReadData (uintsys u_NumBytes, String& str_Data,
+                          double d_Timeout)
 {
     if (u_NumBytes == 0)
     {
@@ -1229,7 +1243,8 @@ bool TcpSocket::ReadMultiLine (StringList& strl_Lines, double d_Timeout)
 
 bool TcpSocket::IsReadBufferFull_ () const
 {
-    return (u_MaxReadAhead_ == 0) || (strl_ReadBuffer_.Size() >= u_MaxReadAhead_);
+    return (u_MaxReadAhead_ == 0) ||
+           (strl_ReadBuffer_.Size() >= u_MaxReadAhead_);
 }
 
 bool TcpSocket::PartialFlush_ (uintsys u_MaxSends, double d_Timeout)
@@ -1416,7 +1431,8 @@ bool UdpSocket::Socket_ (intsys n_Family)
     return Socket::CreateUDPSocket_ (n_Family);
 }
 
-bool UdpSocket::ReadData (String& str_Data, SocketAddress& addr_Peer, double d_Timeout)
+bool UdpSocket::ReadData (String& str_Data, SocketAddress& addr_Peer,
+                          double d_Timeout)
 {
     if (d_Timeout < 0.0)
     {
@@ -1479,7 +1495,8 @@ bool UdpSocket::SendData (const String& str_Data, double d_Timeout)
     return (n_Return == (intsys)u_Length);
 }
 
-bool UdpSocket::SendDataTo (const String& str_Data, const SocketAddress& addr_Peer,
+bool UdpSocket::SendDataTo (const String& str_Data,
+                            const SocketAddress& addr_Peer,
                             double d_Timeout)
 {
     if (d_Timeout < 0)
@@ -1494,7 +1511,8 @@ bool UdpSocket::SendDataTo (const String& str_Data, const SocketAddress& addr_Pe
         return false;
     }
 
-    intsys n_Return = Socket::SendTo_ ((const void*)str_Data.C(), str_Data.Length(), 0, addr_Peer);
+    intsys n_Return = Socket::SendTo_ ((const void*)str_Data.C(),
+                                       str_Data.Length(), 0, addr_Peer);
 
     return (n_Return >= 0) && ((uintsys)n_Return == str_Data.Length());
 }

@@ -66,7 +66,8 @@ bool DoubleFormat::b_DefaultDecimal_     = false;
 
 const char* const gpz_Hex    = "0123456789abcdef";
 const char* const gpz_HEX    = "0123456789ABCDEF";
-const char* const gpz_Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+const char* const gpz_Base64 =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 const uintsys MAX_UNICODE_CODE_POINT = 0x10FFFF;
 
@@ -81,8 +82,12 @@ const uintsys   Date::u_SecondsPerDay_ = 24 * 60 * 60;
 const Date      Date::date_UNIX_Epoch_ (1970, 1, 1);
 
 const uintsys   DateParts::u_SecondsPerDay_ = 24 * 60 * 60;
-const PerlRegex DateParts::regex_Http1_   ("(\\d+)[ -](\\w+)[ -](\\d+) (\\d+):(\\d+)(:(\\d+))?");
-const PerlRegex DateParts::regex_Http2_   ("(\\w+) (\\d+) (\\d+):(\\d+)(:(\\d+))? (\\d+)");
+
+const PerlRegex DateParts::regex_Http1_
+                    ("(\\d+)[ -](\\w+)[ -](\\d+) (\\d+):(\\d+)(:(\\d+))?");
+
+const PerlRegex DateParts::regex_Http2_
+                    ("(\\w+) (\\d+) (\\d+):(\\d+)(:(\\d+))? (\\d+)");
 
 const String  DateParts::str_Mon_ ("Mon");
 const String  DateParts::str_Tue_ ("Tue");
@@ -107,10 +112,13 @@ const String  DateParts::str_Dec_ ("Dec");
 
 const String  DateParts::str_GMT_ ("GMT");
 
-const PerlRegex Network::regex_ConnectString_    ("^((([a-zA-Z0-9]+):)?//)?"   // protocol
-                                                  "\\[?([a-zA-Z0-9.-]+)\\]?"   // host
-                                                  "(:(\\d+))?/?$");            // port
-const PerlRegex Network::regex_IPv4_             ("^\\[?(\\d+\\.\\d+\\.\\d+\\.\\d+)\\]?$");
+const PerlRegex Network::regex_ConnectString_
+                    ("^((([a-zA-Z0-9]+):)?//)?"   // protocol
+                     "\\[?([a-zA-Z0-9.-]+)\\]?"   // host
+                     "(:(\\d+))?/?$");            // port
+
+const PerlRegex Network::regex_IPv4_
+                    ("^\\[?(\\d+\\.\\d+\\.\\d+\\.\\d+)\\]?$");
 
 } // namespace mikestoolbox
 

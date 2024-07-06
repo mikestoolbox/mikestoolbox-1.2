@@ -49,35 +49,38 @@
 
 namespace mikestoolbox {
 
-PerlRegex::PerlRegex (const String& str_Pattern, const PerlRegexOptions& options)
+PerlRegex::PerlRegex (const String& str_Pattern,
+                      const PerlRegexOptions& options)
     : SharedResource (RESOURCE_NEW_ON_WRITE, new(std::nothrow) PerlRegexData)
 {
-    int n_Options = (options.b_AnchoredPattern_ ? PCRE_ANCHORED  : 0)                   |
-                    (options.b_CaseSensitive_   ? 0              : PCRE_CASELESS)       |
-                    (options.b_DollarNewline_   ? 0              : PCRE_DOLLAR_ENDONLY) |
-                    (options.b_DotAll_          ? PCRE_DOTALL    : 0)                   |
-                    (options.b_Extended_        ? PCRE_EXTENDED  : 0)                   |
-                    (options.b_FirstLine_       ? PCRE_FIRSTLINE : 0)                   |
-                    (options.b_Greedy_          ? 0              : PCRE_UNGREEDY)       |
-                    (options.b_Multiline_       ? PCRE_MULTILINE : 0)                   |
-                    (options.b_UTF8_            ? PCRE_UTF8      : 0)                   |
-                     options.n_Newline_;
+    int n_Options = (options.b_AnchoredPattern_ ? PCRE_ANCHORED  : 0)
+                  | (options.b_CaseSensitive_   ? 0 : PCRE_CASELESS)
+                  | (options.b_DollarNewline_   ? 0 : PCRE_DOLLAR_ENDONLY)
+                  | (options.b_DotAll_          ? PCRE_DOTALL    : 0)
+                  | (options.b_Extended_        ? PCRE_EXTENDED  : 0)
+                  | (options.b_FirstLine_       ? PCRE_FIRSTLINE : 0)
+                  | (options.b_Greedy_          ? 0 : PCRE_UNGREEDY)
+                  | (options.b_Multiline_       ? PCRE_MULTILINE : 0)
+                  | (options.b_UTF8_            ? PCRE_UTF8      : 0)
+                  |  options.n_Newline_;
 
     PerlRegexData* p_Data = ModifyData();
 
-    p_Data->pcre_ = pcre_compile (str_Pattern.C(),                // the Perl-style regex
-                                  n_Options,                      // compile options
-                                  &p_Data->pz_CompileError_,      // text error message
-                                  &p_Data->n_CompileErrorOffset_, // location of the error
-                                  0);                             // character mapping table
+    p_Data->pcre_ = pcre_compile
+                    (str_Pattern.C(),                // the Perl-style regex
+                     n_Options,                      // compile options
+                     &p_Data->pz_CompileError_,      // text error message
+                     &p_Data->n_CompileErrorOffset_, // location of the error
+                     0);                             // character mapping table
 
     if (options.b_Study_ && p_Data->pcre_)
     {
         const char* pz_ErrorMessage = 0;
 
-        p_Data->pcre_extra_ = pcre_study (p_Data->pcre_,     // compiled pattern
-                                          0,                 // options (none defined)
-                                          &pz_ErrorMessage); // returned error message
+        p_Data->pcre_extra_ = pcre_study
+                              (p_Data->pcre_,     // compiled pattern
+                               0,                 // options (none defined)
+                               &pz_ErrorMessage); // returned error message
     }
 }
 
@@ -88,42 +91,45 @@ PerlRegex::PerlRegex (const String& str_Pattern)
 
     PerlRegexData* p_Data = ModifyData();
 
-    p_Data->pcre_ = pcre_compile (str_Pattern.C(),                // the Perl-style regex
-                                  n_Options,                      // compile options
-                                  &p_Data->pz_CompileError_,      // text error message
-                                  &p_Data->n_CompileErrorOffset_, // location of the error
-                                  0);                             // character mapping table
+    p_Data->pcre_ = pcre_compile
+                    (str_Pattern.C(),                // the Perl-style regex
+                     n_Options,                      // compile options
+                     &p_Data->pz_CompileError_,      // text error message
+                     &p_Data->n_CompileErrorOffset_, // location of the error
+                     0);                             // character mapping table
 }
 
 PerlRegex::PerlRegex (const char* pz_Pattern, const PerlRegexOptions& options)
     : SharedResource (RESOURCE_NEW_ON_WRITE, new(std::nothrow) PerlRegexData)
 {
-    int n_Options = (options.b_AnchoredPattern_ ? PCRE_ANCHORED  : 0)                   |
-                    (options.b_CaseSensitive_   ? 0              : PCRE_CASELESS)       |
-                    (options.b_DollarNewline_   ? 0              : PCRE_DOLLAR_ENDONLY) |
-                    (options.b_DotAll_          ? PCRE_DOTALL    : 0)                   |
-                    (options.b_Extended_        ? PCRE_EXTENDED  : 0)                   |
-                    (options.b_FirstLine_       ? PCRE_FIRSTLINE : 0)                   |
-                    (options.b_Greedy_          ? 0              : PCRE_UNGREEDY)       |
-                    (options.b_Multiline_       ? PCRE_MULTILINE : 0)                   |
-                    (options.b_UTF8_            ? PCRE_UTF8      : 0)                   |
-                     options.n_Newline_;
+    int n_Options = (options.b_AnchoredPattern_ ? PCRE_ANCHORED  : 0)
+                  | (options.b_CaseSensitive_   ? 0 : PCRE_CASELESS)
+                  | (options.b_DollarNewline_   ? 0 : PCRE_DOLLAR_ENDONLY)
+                  | (options.b_DotAll_          ? PCRE_DOTALL    : 0)
+                  | (options.b_Extended_        ? PCRE_EXTENDED  : 0)
+                  | (options.b_FirstLine_       ? PCRE_FIRSTLINE : 0)
+                  | (options.b_Greedy_          ? 0 : PCRE_UNGREEDY)
+                  | (options.b_Multiline_       ? PCRE_MULTILINE : 0)
+                  | (options.b_UTF8_            ? PCRE_UTF8      : 0)
+                  |  options.n_Newline_;
 
     PerlRegexData* p_Data = ModifyData();
 
-    p_Data->pcre_ = pcre_compile (pz_Pattern,                     // the Perl-style regex
-                                  n_Options,                      // compile options
-                                  &p_Data->pz_CompileError_,      // text error message
-                                  &p_Data->n_CompileErrorOffset_, // location of the error
-                                  0);                             // character mapping table
+    p_Data->pcre_ = pcre_compile
+                    (pz_Pattern,                     // the Perl-style regex
+                     n_Options,                      // compile options
+                     &p_Data->pz_CompileError_,      // text error message
+                     &p_Data->n_CompileErrorOffset_, // location of the error
+                     0);                             // character mapping table
 
     if (options.b_Study_ && p_Data->pcre_)
     {
         const char* pz_ErrorMessage = 0;
 
-        p_Data->pcre_extra_ = pcre_study (p_Data->pcre_,     // compiled pattern
-                                          0,                 // options (none defined)
-                                          &pz_ErrorMessage); // returned error message
+        p_Data->pcre_extra_ = pcre_study
+                              (p_Data->pcre_,     // compiled pattern
+                               0,                 // options (none defined)
+                               &pz_ErrorMessage); // returned error message
     }
 }
 
@@ -134,14 +140,16 @@ PerlRegex::PerlRegex (const char* pz_Pattern)
 
     PerlRegexData* p_Data = ModifyData();
 
-    p_Data->pcre_ = pcre_compile (pz_Pattern,                     // the Perl-style regex
-                                  n_Options,                      // compile options
-                                  &p_Data->pz_CompileError_,      // text error message
-                                  &p_Data->n_CompileErrorOffset_, // location of the error
-                                  0);                             // character mapping table
+    p_Data->pcre_ = pcre_compile
+                    (pz_Pattern,                     // the Perl-style regex
+                     n_Options,                      // compile options
+                     &p_Data->pz_CompileError_,      // text error message
+                     &p_Data->n_CompileErrorOffset_, // location of the error
+                     0);                             // character mapping table
 }
 
-intsys PerlRegex::Match (const char* ps, uintsys u_Length, const PerlRegexOptions& options,
+intsys PerlRegex::Match (const char* ps, uintsys u_Length,
+                         const PerlRegexOptions& options,
                          PerlRegexMatches& matches) const
 {
     const PerlRegexData* p_Data = ViewData();
@@ -154,14 +162,15 @@ intsys PerlRegex::Match (const char* ps, uintsys u_Length, const PerlRegexOption
     int n_Options = (options.b_AnchoredMatch_ ? PCRE_ANCHORED : 0) |
                      options.n_Newline_;
 
-    int n_Result = pcre_exec (p_Data->pcre_,          // compiled pattern
-                              p_Data->pcre_extra_,    // studied info
-                              ps,                     // string to match
-                              u_Length,               // length of string to match
-                              options.n_Offset_,      // where to start matching
-                              n_Options,              // options
-                              matches.an_Substrings_, // substring matches
-                              303);                   // substring array size
+    int n_Result = pcre_exec
+                   (p_Data->pcre_,          // compiled pattern
+                    p_Data->pcre_extra_,    // studied info
+                    ps,                     // string to match
+                    u_Length,               // length of string to match
+                    options.n_Offset_,      // where to start matching
+                    n_Options,              // options
+                    matches.an_Substrings_, // substring matches
+                    303);                   // substring array size
 
     if (n_Result < 0)
     {

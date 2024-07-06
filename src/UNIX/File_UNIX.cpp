@@ -279,7 +279,9 @@ bool File::CopyTo (File& file, int n_Flags) const
 
     if (h_OldFile.IsOpen())
     {
-        UnixFileHandle h_NewFile (open (file.Name().C(), n_OpenFlags, S_IRUSR|S_IWUSR));
+        UnixFileHandle h_NewFile (open (file.Name().C(),
+                                        n_OpenFlags,
+                                        S_IRUSR|S_IWUSR));
 
         if (h_NewFile.IsOpen())
         {

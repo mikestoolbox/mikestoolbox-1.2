@@ -52,8 +52,9 @@ inline uintsys OptimumStringSize (uintsys u_MinCapacity)
 {
     if (u_MinCapacity > (1UL<<30))
     {
-        uintsys u_NewCapacity = ((u_MinCapacity & 0x0F) ? ((u_MinCapacity & (~0x0F)) + 0x10)
-                                                        : u_MinCapacity);
+        uintsys u_NewCapacity = ((u_MinCapacity & 0x0F)
+                              ? ((u_MinCapacity & (~0x0F)) + 0x10)
+                              : u_MinCapacity);
 
         if (u_NewCapacity < u_MinCapacity)
         {
@@ -122,7 +123,8 @@ uchar* HeapMemory::Expand (uintsys u_NumCharsBefore, uintsys u_NumCharsAfter)
 
         if (p_Memory_ != 0)
         {
-            std::memcpy (p_NewMemory + u_NumCharsBefore, PointerToFirstByte(), u_Length_);
+            std::memcpy (p_NewMemory + u_NumCharsBefore,
+                         PointerToFirstByte(), u_Length_);
 
             ZeroMemory (p_Memory_, u_Capacity_);    // destroy old memory
 
@@ -153,7 +155,8 @@ uchar* HeapMemory::Expand (uintsys u_NumCharsBefore, uintsys u_NumCharsAfter)
         return p_Memory_ + u_Offset_;
     }
 
-    std::memmove (p_Memory_ + u_NumCharsBefore, PointerToFirstByte(), u_Length_);
+    std::memmove (p_Memory_ + u_NumCharsBefore,
+                  PointerToFirstByte(), u_Length_);
 
     u_Offset_ = 0;
     u_Length_ = u_TotalChars;

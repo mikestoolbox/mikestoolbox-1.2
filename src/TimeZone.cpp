@@ -342,7 +342,8 @@ intsys DecodeTimeZoneName (const String& str_Zone)       // NO_METRIC
     BOT     UTC−04     Bolivia Time
     BRT     UTC−03     Brasilia Time
     BST     UTC+06     Bangladesh Standard Time
-    BST     UTC+01     British Summer Time (British Standard Time from Feb 1968 to Oct 1971)
+    BST     UTC+01     British Summer Time (British Standard Time from
+                           Feb 1968 to Oct 1971)
     BTT     UTC+06     Bhutan Time
     CAT     UTC+02     Central Africa Time
     CCT     UTC+06:30  Cocos Islands Time

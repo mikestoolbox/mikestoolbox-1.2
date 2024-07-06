@@ -181,7 +181,8 @@ static const char* apz_ErrorMessages[] = {
     "Unknown CRL signature algorithm"
 };
 
-static const uintsys u_NumberOfErrors = sizeof (apz_ErrorMessages) / sizeof (apz_ErrorMessages[0]);
+static const uintsys u_NumberOfErrors = sizeof (apz_ErrorMessages)
+                                      / sizeof (apz_ErrorMessages[0]);
 
 String getErrorString (uintsys u_ErrorCode)
 {

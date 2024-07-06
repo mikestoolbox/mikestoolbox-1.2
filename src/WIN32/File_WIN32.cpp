@@ -56,7 +56,8 @@ bool File::IsDirectory () const
 
     if (GetFileAttributesEx (str_Name_, GetFileExInfoStandard, &wfad))
     {
-        return (wfad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? true : false;
+        return (wfad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                    ? true : false;
     }
 
     return false;
@@ -76,7 +77,8 @@ bool File::Exists () const
 {
     WIN32_FILE_ATTRIBUTE_DATA wfad;
 
-    return GetFileAttributesEx (str_Name_, GetFileExInfoStandard, &wfad) ? true : false;
+    return GetFileAttributesEx (str_Name_, GetFileExInfoStandard, &wfad)
+               ? true : false;
 }
 
 bool File::IsExecutable () const
@@ -319,7 +321,8 @@ String GetDirectory ()
 
     String str_Directory;
 
-    TCHAR* ps_NewBuffer = (TCHAR*) str_Directory.Allocate (dw_Result*sizeof(TCHAR));
+    TCHAR* ps_NewBuffer =
+               (TCHAR*) str_Directory.Allocate (dw_Result*sizeof(TCHAR));
 
     dw_Length = GetCurrentDirectory (dw_Result, ps_NewBuffer);
 
@@ -379,7 +382,8 @@ bool File::Append (const String& str_Contents, int n_Flags)
     DWORD dw_Written     = 0;
     DWORD dw_Total       = 0;
 
-    while (WriteFile (handle, (const void*) ps_Contents, dw_NeedToWrite, &dw_Written, 0))
+    while (WriteFile (handle, (const void*) ps_Contents, dw_NeedToWrite,
+                      &dw_Written, 0))
     {
         ps_Contents    += dw_Written;
         dw_NeedToWrite -= dw_Written;
@@ -398,7 +402,8 @@ bool File::Append (const String& str_Contents, int n_Flags)
         return true;
     }
 
-    if (SetFilePointer (handle, dw_OriginalLength, 0, FILE_BEGIN) != INVALID_SET_FILE_POINTER)
+    if (SetFilePointer (handle, dw_OriginalLength, 0, FILE_BEGIN)
+           != INVALID_SET_FILE_POINTER)
     {
         SetEndOfFile (handle);
     }
@@ -433,7 +438,8 @@ bool File::Read (String& str_Contents) const
     DWORD dw_BytesRead  = 0;
     DWORD dw_TotalRead  = 0;
 
-    while (ReadFile (handle, (void*) (ps_Buffer + dw_TotalRead), dw_NeedToRead, &dw_BytesRead, 0))
+    while (ReadFile (handle, (void*) (ps_Buffer + dw_TotalRead),
+                     dw_NeedToRead, &dw_BytesRead, 0))
     {
         dw_NeedToRead -= dw_BytesRead;
         dw_TotalRead  += dw_BytesRead;
@@ -504,7 +510,8 @@ bool File::Write (const String& str_Contents, int n_Flags)
     DWORD dw_Written     = 0;
     DWORD dw_Total       = 0;
 
-    while (WriteFile (handle, (const void*) ps_Contents, dw_NeedToWrite, &dw_Written, 0))
+    while (WriteFile (handle, (const void*) ps_Contents, dw_NeedToWrite,
+                      &dw_Written, 0))
     {
         ps_Contents    += dw_Written;
         dw_NeedToWrite -= dw_Written;

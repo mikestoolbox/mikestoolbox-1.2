@@ -106,14 +106,16 @@ uint16 SocketAddress::GetPort () const
     {
         case AF_INET:
         {
-            const struct sockaddr_in* psin = (const struct sockaddr_in*) &ss_Address_;
+            const struct sockaddr_in* psin =
+                (const struct sockaddr_in*) &ss_Address_;
 
             return ntohs (psin->sin_port);
         }
 
         case AF_INET6:
         {
-            const struct sockaddr_in6* psin6 = (const struct sockaddr_in6*) &ss_Address_;
+            const struct sockaddr_in6* psin6 =
+                (const struct sockaddr_in6*) &ss_Address_;
 
             return ntohs (psin6->sin6_port);
         }
@@ -277,9 +279,11 @@ bool SocketAddress::GetAddress (String& str_Address) const
 
             const char* pz_Address = 0;
 
-            const struct sockaddr_in* psin = (const struct sockaddr_in*) &ss_Address_;
+            const struct sockaddr_in* psin =
+                (const struct sockaddr_in*) &ss_Address_;
 
-            pz_Address = inet_ntop (AF_INET, &psin->sin_addr, ac_Address, INET_ADDRSTRLEN);
+            pz_Address = inet_ntop (AF_INET, &psin->sin_addr, ac_Address,
+                                    INET_ADDRSTRLEN);
 
             if (pz_Address)
             {
@@ -295,9 +299,11 @@ bool SocketAddress::GetAddress (String& str_Address) const
 
             const char* pz_Address = 0;
 
-            const struct sockaddr_in6* psin6 = (const struct sockaddr_in6*) &ss_Address_;
+            const struct sockaddr_in6* psin6 =
+                (const struct sockaddr_in6*) &ss_Address_;
 
-            pz_Address = inet_ntop (AF_INET6, &psin6->sin6_addr, ac_Address, INET6_ADDRSTRLEN);
+            pz_Address = inet_ntop (AF_INET6, &psin6->sin6_addr, ac_Address,
+                                    INET6_ADDRSTRLEN);
 
             if (pz_Address)
             {
@@ -502,8 +508,11 @@ bool IpAddressRange::Contains (const SocketAddress& addr) const
         return false;
     }
 
-    const struct sockaddr_in* p_Address_in = (const struct sockaddr_in*) p_Address;
-    const struct sockaddr_in* p_IpRange_in = (const struct sockaddr_in*) p_IpRange;
+    const struct sockaddr_in* p_Address_in =
+                (const struct sockaddr_in*) p_Address;
+
+    const struct sockaddr_in* p_IpRange_in =
+                (const struct sockaddr_in*) p_IpRange;
 
     uintsys u_Address_in = ntohl (p_Address_in->sin_addr.s_addr);
     uintsys u_IpRange_in = ntohl (p_IpRange_in->sin_addr.s_addr);

@@ -361,7 +361,8 @@ bool StringListByteIter::Extract (StringList& strl_Rest)
     return true;
 }
 
-bool StringListByteIter::Extract (uintsys u_NumBytes, StringList& strl_Content, ParseError& error)
+bool StringListByteIter::Extract (uintsys u_NumBytes, StringList& strl_Content,
+                                  ParseError& error)
 {
     strl_Content.Clear();
 
@@ -425,7 +426,8 @@ bool StringListByteIter::Extract (uintsys u_NumBytes, StringList& strl_Content, 
     return true;
 }
 
-bool StringListByteIter::Extract (uintsys u_Length, String& str_Content, ParseError& error)
+bool StringListByteIter::Extract (uintsys u_Length, String& str_Content,
+                                  ParseError& error)
 {
     str_Content.Clear();
 
@@ -484,7 +486,8 @@ bool StringListByteIter::Extract (uintsys u_Length, String& str_Content, ParseEr
     return true;
 }
 
-bool StringListByteIter::ExtractUpTo (uchar uc_End, String& str_Content, ParseError& error)
+bool StringListByteIter::ExtractUpTo (uchar uc_End, String& str_Content,
+                                      ParseError& error)
 {
     Backup<StringListByteIter> backup (*this);
 
@@ -628,8 +631,10 @@ static bool ReadUpToChar (StringIter& iter, char c_Sentinel, String& str)
     return false;
 }
 
-bool StringList::ParseGrepMatch_ (const String& str_Specification, String& str_Pattern,
-                                  bool& b_IgnoreCase, bool& b_InvertMatch)
+bool StringList::ParseGrepMatch_ (const String& str_Specification,
+                                  String& str_Pattern,
+                                  bool& b_IgnoreCase,
+                                  bool& b_InvertMatch)
 {
     b_IgnoreCase  = false;
     b_InvertMatch = false;
@@ -689,8 +694,11 @@ bool StringList::ParseGrepMatch_ (const String& str_Specification, String& str_P
     return true;
 }
 
-bool StringList::ParseGrepSubst_ (const String& str_Specification, String& str_Pattern,
-                                  bool& b_IgnoreCase, String& str_Replace, bool& b_GlobalReplace,
+bool StringList::ParseGrepSubst_ (const String& str_Specification,
+                                  String& str_Pattern,
+                                  bool& b_IgnoreCase,
+                                  String& str_Replace,
+                                  bool& b_GlobalReplace,
                                   bool& b_InvertMatch)
 {
     b_IgnoreCase    = false;
@@ -753,7 +761,8 @@ bool StringList::ParseGrepSubst_ (const String& str_Specification, String& str_P
     return true;
 }
 
-bool StringList::ParseGrepFiles_ (const String& str_Specification, char& c_FileType,
+bool StringList::ParseGrepFiles_ (const String& str_Specification,
+                                  char& c_FileType,
                                   bool& b_InvertMatch)
 {
     b_InvertMatch = false;
@@ -820,7 +829,8 @@ static bool CheckFileType (const String& str_File, char c_Type)
     return false;
 }
 
-const StringList StringList::GrepFiles_ (char c_FileType, bool b_InvertMatch) const
+const StringList StringList::GrepFiles_ (char c_FileType,
+                                         bool b_InvertMatch) const
 {
     StringListIter iter (*this);
 
@@ -839,12 +849,14 @@ const StringList StringList::GrepFiles_ (char c_FileType, bool b_InvertMatch) co
     return strl_Matches;
 }
 
-const StringList StringList::GrepMatch_ (const String& str_Pattern, bool b_IgnoreCase,
+const StringList StringList::GrepMatch_ (const String& str_Pattern,
+                                         bool b_IgnoreCase,
                                          bool b_InvertMatch) const
 {
     StringListIter iter (*this);
 
-    PerlRegex rex_Pattern (str_Pattern.C(), PerlRegexOptions().CaseSensitive(!b_IgnoreCase));
+    PerlRegex rex_Pattern (str_Pattern.C(),
+                           PerlRegexOptions().CaseSensitive(!b_IgnoreCase));
 
     StringList strl_Matches;
 
@@ -861,13 +873,16 @@ const StringList StringList::GrepMatch_ (const String& str_Pattern, bool b_Ignor
     return strl_Matches;
 }
 
-const StringList StringList::GrepSubst_ (const String& str_Pattern, bool b_IgnoreCase,
-                                         const String& str_Replace, bool b_GlobalReplace,
+const StringList StringList::GrepSubst_ (const String& str_Pattern,
+                                         bool b_IgnoreCase,
+                                         const String& str_Replace,
+                                         bool b_GlobalReplace,
                                          bool b_InvertMatch)
 {
     StringListChangeIter iter (*this);
 
-    PerlRegex rex_Pattern (str_Pattern.C(), PerlRegexOptions().CaseSensitive(!b_IgnoreCase));
+    PerlRegex rex_Pattern (str_Pattern.C(),
+                           PerlRegexOptions().CaseSensitive(!b_IgnoreCase));
 
     StringList strl_Matches;
 
@@ -875,7 +890,8 @@ const StringList StringList::GrepSubst_ (const String& str_Pattern, bool b_Ignor
     {
         String& str (*iter); ++iter;
 
-        if (b_InvertMatch ^ (str.Replace (rex_Pattern, str_Replace, b_GlobalReplace) >= 0))
+        if (b_InvertMatch ^ (str.Replace (rex_Pattern, str_Replace,
+                                          b_GlobalReplace) >= 0))
         {
             strl_Matches.Append (str);
         }

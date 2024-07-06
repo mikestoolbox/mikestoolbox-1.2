@@ -119,7 +119,8 @@ int inet_pton (int family, const char* strptr, void* addrptr)
     return -1;
 }
 
-const char* inet_ntop (int family, const void* addrptr, char* strptr, size_t len)
+const char* inet_ntop (int family, const void* addrptr, char* strptr,
+                       size_t len)
 {
     const unsigned char* p_Address = (const unsigned char*) addrptr;
 

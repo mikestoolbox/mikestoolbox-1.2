@@ -78,7 +78,8 @@ TcpListener* Network::TcpListen (const SocketAddress& address)
     return 0;
 }
 
-static bool AddressInRange (const SocketAddress& address, const List<IpAddressRange>& list_Range)
+static bool AddressInRange (const SocketAddress& address,
+                            const List<IpAddressRange>& list_Range)
 {
     if (list_Range.IsEmpty())
     {
@@ -109,7 +110,8 @@ bool Network::IsAddressBlocked (const SocketAddress& addr) const
         return AddressInRange (addr, list_BlockedIps_);
     }
 
-    return !AddressInRange (addr, list_AllowedIps_) || AddressInRange (addr, list_BlockedIps_);
+    return !AddressInRange (addr, list_AllowedIps_) ||
+            AddressInRange (addr, list_BlockedIps_);
 }
 
 class AddressInfo
@@ -123,7 +125,8 @@ public:
 
     void                Clear           ();
 
-    bool                Lookup          (const String& str_Host, const String& str_Port);
+    bool                Lookup          (const String& str_Host,
+                                         const String& str_Port);
 
     void                Next            ();
 

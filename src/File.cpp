@@ -83,7 +83,8 @@ StringList File::Head (uintsys u_NumLines) const
 
     if (ifs.is_open())
     {
-        while (ifs.good() && !ifs.eof() && (strl_Lines.NumItems() < u_NumLines) &&
+        while (ifs.good() && !ifs.eof() &&
+              (strl_Lines.NumItems() < u_NumLines) &&
                str_Line.ReadLine (ifs))
         {
             strl_Lines.Append (str_Line);

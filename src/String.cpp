@@ -114,7 +114,8 @@ static const uchar auc_UTF8Length[256] = {
 // a comparison function that should not be possible for the compiler to
 // optimize to memcmp and thus lose its constant-time behavior
 
-bool String::ByteCompare (const String& str_Other, uintsys& u_Matches, uintsys& u_Mismatches) const
+bool String::ByteCompare (const String& str_Other, uintsys& u_Matches,
+                          uintsys& u_Mismatches) const
 {
     uintsys u_Length1 = Length();
     uintsys u_Length2 = str_Other.Length();
@@ -375,7 +376,8 @@ static inline bool AsciiDigitToBinary (uchar& uc, ParseError& error)
     return true;
 }
 
-static inline bool AppendBase10Digit (uintsys u_Digit, uintsys& u_Number, ParseError& error)
+static inline bool AppendBase10Digit (uintsys u_Digit, uintsys& u_Number, 
+                                      ParseError& error)
 {
     uintsys u_Temp = (u_Number * 10) + u_Digit;
 
@@ -391,7 +393,8 @@ static inline bool AppendBase10Digit (uintsys u_Digit, uintsys& u_Number, ParseE
     return true;
 }
 
-bool StringIter::ParseNumber (uintsys u_Digits, uintsys& u_Result, ParseError& error)
+bool StringIter::ParseNumber (uintsys u_Digits, uintsys& u_Result,
+                              ParseError& error)
 {
     StringIter iter (*this);
 
@@ -463,7 +466,8 @@ bool StringIter::ParseHexNibble (uchar& uc_Result, ParseError& error)
 
     uchar uc_Nibble = 0;
 
-    if (ExtractByte (uc_Nibble, error) && AsciiHexDigitToBinary (uc_Nibble, error))
+    if (ExtractByte (uc_Nibble, error) &&
+        AsciiHexDigitToBinary (uc_Nibble, error))
     {
         uc_Result = uc_Nibble;
 
@@ -482,8 +486,10 @@ bool StringIter::ParseHexByte (uchar& uc_Result, ParseError& error)
     uchar uc_High = 0;
     uchar uc_Low  = 0;
 
-    if (ExtractByte (uc_High, error) && AsciiHexDigitToBinary (uc_High, error) &&
-        ExtractByte (uc_Low,  error) && AsciiHexDigitToBinary (uc_Low,  error))
+    if (ExtractByte (uc_High, error) &&
+        AsciiHexDigitToBinary (uc_High, error) &&
+        ExtractByte (uc_Low,  error) &&
+        AsciiHexDigitToBinary (uc_Low,  error))
     {
         uc_Result = (uc_High << 4) | uc_Low;
 
@@ -747,8 +753,8 @@ static inline uintsys MakeLowBitMask (uintsys u_NumBits)
     return u_Mask >> (32 - u_NumBits);
 }
 
-static inline bool ExtractBytes (StringIter& iter, uintsys u_NumBytes, uintsys& u,
-                                 ParseError& error)
+static inline bool ExtractBytes (StringIter& iter, uintsys u_NumBytes,
+                                 uintsys& u, ParseError& error)
 {
     u = 0;
 
@@ -766,7 +772,8 @@ static inline bool ExtractBytes (StringIter& iter, uintsys u_NumBytes, uintsys& 
     return false;
 }
 
-bool StringBitIter::ExtractBitsBigEndian_ (uintsys u_NumBits, uintsys& u, ParseError& error)
+bool StringBitIter::ExtractBitsBigEndian_ (uintsys u_NumBits, uintsys& u,
+                                           ParseError& error)
 {
     u = 0;
 
@@ -825,7 +832,8 @@ static inline uintsys SwapEndianness (uintsys u_NumBytes, uintsys u)
     throw Exception ("SwapEndianness: can't swap more than 4 bytes");
 }
 
-bool StringBitIter::ExtractBitsLittleEndian_ (uintsys u_NumBits, uintsys& u, ParseError& error)
+bool StringBitIter::ExtractBitsLittleEndian_ (uintsys u_NumBits, uintsys& u,
+                                              ParseError& error)
 {
     u = 0;
 
@@ -900,7 +908,8 @@ SubString& SubString::operator= (const String& str_Replace)
         uintsys u_OriginalLength = u_ReferenceLength;
         uintsys u_ExtraChars     = u_ReplaceLength - u_Length_;
 
-        uchar* ps_Dest = str_Reference_.mem_.Expand (0, u_ExtraChars) + u_Offset_;
+        uchar* ps_Dest = str_Reference_.mem_.Expand (0, u_ExtraChars)
+                       + u_Offset_;
 
         std::memmove (ps_Dest + u_ReplaceLength, ps_Dest + u_Length_,
                       u_OriginalLength - u_Offset_ - u_Length_);
@@ -1079,10 +1088,11 @@ const String String::Base64Decode () const
     return str_Result;
 }
 
-static uintsys Base64ResultSize (uintsys u_BytesToEncode, uintsys& u_OutputLineLength,
+static uintsys Base64ResultSize (uintsys u_BytesToEncode,
+                                 uintsys& u_OutputLineLength,
                                  const char* pz_EOL)
 {
-    u_OutputLineLength &= (MAX_UINTSYS << 2);   // lines must be multiple of 4 bytes
+    u_OutputLineLength &= (MAX_UINTSYS << 2); // must be multiple of 4 bytes
 
     u_OutputLineLength  = (u_OutputLineLength == 0) ? 76 : u_OutputLineLength;
 
@@ -1137,7 +1147,8 @@ static inline void AppendBase64Group8 (uintsys u_Group, String& str)
     str.Append ((const uchar*)auc, 4);
 }
 
-const String String::Base64Encode (uintsys u_LineLength, const char* pz_EOL) const
+const String String::Base64Encode (uintsys u_LineLength,
+                                   const char* pz_EOL) const
 {
     if (IsEmpty())
     {
@@ -1206,7 +1217,8 @@ intsys String::Compare (const String& str, bool b_CaseSensitive) const
         const uchar* p_This = PointerToFirstByte();
         const uchar* p_That = str.PointerToFirstByte();
 
-        intsys n_Compare = StringCompare (p_This, p_That, u_CharsToCompare, b_CaseSensitive);
+        intsys n_Compare = StringCompare (p_This, p_That, u_CharsToCompare,
+                                          b_CaseSensitive);
 
         if (n_Compare != 0)
         {
@@ -1302,7 +1314,8 @@ uintsys String::Count (uchar uc) const
     return u_Count;
 }
 
-StringIter String::FindFirst (const String& str, const Index& offset, bool b_Case) const
+StringIter String::FindFirst (const String& str, const Index& offset,
+                              bool b_Case) const
 {
     uintsys u_Offset = 0;
 
@@ -1335,7 +1348,8 @@ StringIter String::FindFirst (const String& str, const Index& offset, bool b_Cas
 
     for (uintsys u=0; u<u_NumTries; ++u)
     {
-        if (StringCompare (p_NextSearch++, p_SearchString, u_SearchLength, b_Case) == 0)
+        if (StringCompare (p_NextSearch++, p_SearchString, u_SearchLength,
+                           b_Case) == 0)
         {
             return StringIter (*this, u_Offset + u);
         }
@@ -1361,7 +1375,8 @@ StringIter String::FindFirst (char c, const Index& offset, bool b_Case) const
 
         for (uintsys u=u_Offset; u<u_Length; ++u)
         {
-            if (mikestoolbox::ByteCompare (*p_NextSearch++, (uchar)c, b_Case) == 0)
+            if (mikestoolbox::ByteCompare (*p_NextSearch++,
+                                           (uchar)c, b_Case) == 0)
             {
                 return StringIter (*this, u);
             }
@@ -1371,7 +1386,8 @@ StringIter String::FindFirst (char c, const Index& offset, bool b_Case) const
     return StringIter();
 }
 
-StringIter String::FindLast (const String& str, const Index& offset, bool b_Case) const
+StringIter String::FindLast (const String& str, const Index& offset,
+                             bool b_Case) const
 {
     uintsys u_Offset = 0;
 
@@ -1410,7 +1426,8 @@ StringIter String::FindLast (const String& str, const Index& offset, bool b_Case
 
     for (uintsys u=0; u<u_NumTries; ++u)
     {
-        if (StringCompare (p_NextSearch--, p_SearchString, u_SearchLength, b_Case) == 0)
+        if (StringCompare (p_NextSearch--, p_SearchString, u_SearchLength,
+                           b_Case) == 0)
         {
             return StringIter (*this, u_Offset - u);
         }
@@ -1434,7 +1451,8 @@ StringIter String::FindLast (char c, const Index& offset, bool b_Case) const
 
         for (uintsys u=0; u<=u_Offset; ++u)
         {
-            if (mikestoolbox::ByteCompare (*p_NextSearch--, (uchar)c, b_Case) == 0)
+            if (mikestoolbox::ByteCompare (*p_NextSearch--, (uchar)c,
+                                           b_Case) == 0)
             {
                 return StringIter (*this, u_Offset - u);
             }
@@ -1851,7 +1869,8 @@ const StringList String::ShellParse (ParseError& error) const
     return strl;
 }
 
-const StringList String::Split (const String& str_Pattern, uintsys u_MaxStrings, bool b_Case) const
+const StringList String::Split (const String& str_Pattern,
+                                uintsys u_MaxStrings, bool b_Case) const
 {
     if (str_Pattern.IsEmpty())
     {
@@ -2006,7 +2025,8 @@ static char ToEscapeChar (char c)
     return c;
 }
 
-bool Interpolate (const String& str_Pattern, const StringList& strl_SubStrings, String& str_Result)
+bool Interpolate (const String& str_Pattern, const StringList& strl_SubStrings,
+                  String& str_Result)
 {
     ParseError error;
 
@@ -2069,8 +2089,11 @@ bool Interpolate (const String& str_Pattern, const StringList& strl_SubStrings, 
     return true;
 }
 
-intsys String::Replace (const PerlRegex& rex_Pattern, const String& str_Replace,
-                        StringList& strl_Substrings, bool b_GlobalSearchReplace, intsys n_Offset)
+intsys String::Replace (const PerlRegex& rex_Pattern,
+                        const String& str_Replace,
+                        StringList& strl_Substrings,
+                        bool b_GlobalSearchReplace,
+                        intsys n_Offset)
 {
     strl_Substrings.Clear();
 

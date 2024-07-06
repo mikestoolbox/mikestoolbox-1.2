@@ -170,8 +170,13 @@ intsys BerkeleySocket::Send (const StringList& strl_Data, int n_Flags)
 
     DWORD dw_BytesSent = 0;
 
-    int n_Return = WSASend (h_Socket_, message.GetBuffers(), message.NumBuffers(),
-                            &dw_BytesSent, n_Flags, 0, 0);
+    int n_Return = WSASend (h_Socket_,
+                            message.GetBuffers(),
+                            message.NumBuffers(),
+                            &dw_BytesSent,
+                            n_Flags,
+                            0,
+                            0);
 
     if (n_Return != 0)
     {

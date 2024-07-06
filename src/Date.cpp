@@ -83,7 +83,8 @@ static uintsys DaysBeforeJan1 (uintsys u_Year)
     uintsys u_Centuries   = (u_Year < 1800) ? 0 : (u_Year / 100 - 17);
     uintsys u_QuadCentury = (u_Year < 2000) ? 0 : (u_Year / 400 -  4);
 
-    return (u_NormalDays + u_LeapDays + u_QuadCentury) - (u_Correction + u_Centuries);
+    return (u_NormalDays + u_LeapDays + u_QuadCentury) -
+           (u_Correction + u_Centuries);
 }
 
 #define MONTH_28(X) X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
@@ -97,8 +98,9 @@ static uintsys DaysBeforeJan1 (uintsys u_Year)
 #define DAYS_31 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
 
 static const uintsys au_MonthNonLeap[365] = {
-    MONTH_31(1), MONTH_28(2), MONTH_31(3), MONTH_30(4),  MONTH_31(5),  MONTH_30(6),
-    MONTH_31(7), MONTH_31(8), MONTH_30(9), MONTH_31(10), MONTH_30(11), MONTH_31(12)
+    MONTH_31(1),  MONTH_28(2), MONTH_31(3), MONTH_30(4), MONTH_31(5),
+    MONTH_30(6),  MONTH_31(7), MONTH_31(8), MONTH_30(9), MONTH_31(10),
+    MONTH_30(11), MONTH_31(12)
 };
 
 static const uintsys au_DayNonLeap[365] = {
@@ -107,8 +109,9 @@ static const uintsys au_DayNonLeap[365] = {
 };
 
 static const uintsys au_MonthLeap[366] = {
-    MONTH_31(1), MONTH_29(2), MONTH_31(3), MONTH_30(4),  MONTH_31(5),  MONTH_30(6),
-    MONTH_31(7), MONTH_31(8), MONTH_30(9), MONTH_31(10), MONTH_30(11), MONTH_31(12)
+    MONTH_31(1),  MONTH_29(2), MONTH_31(3), MONTH_30(4), MONTH_31(5),
+    MONTH_30(6),  MONTH_31(7), MONTH_31(8), MONTH_30(9), MONTH_31(10),
+    MONTH_30(11), MONTH_31(12)
 };
 
 static const uintsys au_DayLeap[366] = {
@@ -117,16 +120,18 @@ static const uintsys au_DayLeap[366] = {
 };
 
 static const uintsys au_Month1752[355] = {
-    MONTH_31(1), MONTH_29(2), MONTH_31(3), MONTH_30(4),  MONTH_31(5),  MONTH_30(6),
-    MONTH_31(7), MONTH_31(8),
-    9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,    // 19 days in September 1752
+    MONTH_31(1), MONTH_29(2), MONTH_31(3), MONTH_30(4), MONTH_31(5),
+    MONTH_30(6), MONTH_31(7), MONTH_31(8),
+    // 19 days in September 1752
+    9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
     MONTH_31(10), MONTH_30(11), MONTH_31(12)
 };
 
 static const uintsys au_Day1752[355] = {
     DAYS_31, DAYS_29, DAYS_31, DAYS_30, DAYS_31, DAYS_30,
     DAYS_31, DAYS_31,
-    1, 2, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,  // September 1752
+    // September 1752
+    1, 2, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
     DAYS_31, DAYS_30, DAYS_31
 };
 
@@ -142,7 +147,8 @@ static const uintsys u_FourYears     =   4 * u_OneYear    + 1;
 static const uintsys u_OneCentury    =  25 * u_FourYears  - 1;
 static const uintsys u_FourCenturies =   4 * u_OneCentury + 1;
 
-static void FindMonthAndDay (uintsys u_YearDay, uintsys u_Year, uintsys& u_Month, uintsys& u_Day)
+static void FindMonthAndDay (uintsys u_YearDay, uintsys u_Year,
+                             uintsys& u_Month, uintsys& u_Day)
 {
     if (u_Year == 1752)
     {
@@ -183,7 +189,8 @@ static inline void Bar (uintsys& u1, uintsys& u2)
     }
 }
 
-static void DaysToCalendar (uintsys u_TotalDays, uintsys& u_Year, uintsys& u_Month, uintsys& u_Day)
+static void DaysToCalendar (uintsys u_TotalDays, uintsys& u_Year,
+                            uintsys& u_Month, uintsys& u_Day)
 {
     if (u_TotalDays <= 1)
     {
@@ -306,12 +313,15 @@ static inline uintsys DayOfTheNonLeapYear (uintsys u_Month, uintsys u_Day)
     return 0;
 }
 
-static inline uintsys Year1752Correction (uintsys u_Year, uintsys u_Month, uintsys u_Day)
+static inline uintsys Year1752Correction (uintsys u_Year, uintsys u_Month,
+                                          uintsys u_Day)
 {
-    return ((u_Year == 1752) && ((u_Month > 9) || ((u_Month == 9) && (u_Day >= 14)))) ? 11 : 0;
+    return ((u_Year == 1752) && ((u_Month > 9) ||
+           ((u_Month == 9) && (u_Day >= 14)))) ? 11 : 0;
 }
 
-static inline uintsys DaysSinceJesus (uintsys u_Year, uintsys u_Month, uintsys u_Day)
+static inline uintsys DaysSinceJesus (uintsys u_Year, uintsys u_Month,
+                                      uintsys u_Day)
 {
     return DaysBeforeJan1 (u_Year)
          + (IsLeapYear (u_Year) ? DayOfTheLeapYear    (u_Month, u_Day)
@@ -319,13 +329,14 @@ static inline uintsys DaysSinceJesus (uintsys u_Year, uintsys u_Month, uintsys u
          - Year1752Correction (u_Year, u_Month, u_Day);
 }
 
-static inline uintsys Milliseconds (uintsys u_Hours, uintsys u_Minutes, uintsys u_Seconds)
+static inline uintsys Milliseconds (uintsys u_Hours, uintsys u_Minutes,
+                                    uintsys u_Seconds)
 {
     return ((u_Hours * 60 + u_Minutes) * 60 + u_Seconds) * 1000;
 }
 
-Date::Date (uintsys u_Year, uintsys u_Month, uintsys u_Day, uintsys u_Hour, uintsys u_Minute,
-            uintsys u_Second)
+Date::Date (uintsys u_Year, uintsys u_Month, uintsys u_Day, uintsys u_Hour,
+            uintsys u_Minute, uintsys u_Second)
     : u_Days_   (DaysSinceJesus (u_Year, u_Month,  u_Day))
     , u_Millis_ (Milliseconds   (u_Hour, u_Minute, u_Second))
 {
@@ -497,8 +508,8 @@ void Date::AddSeconds (double d_Seconds)
     }
 }
 
-DateParts::DateParts (uintsys u_Year, uintsys u_Month, uintsys u_Day, uintsys u_Hour,
-                      uintsys u_Minute, uintsys u_Second)
+DateParts::DateParts (uintsys u_Year, uintsys u_Month,  uintsys u_Day,
+                      uintsys u_Hour, uintsys u_Minute, uintsys u_Second)
     : u_Year_     (u_Year)
     , u_Month_    (u_Month)
     , u_Day_      (u_Day)
@@ -655,7 +666,8 @@ String Date::FormatRFC2822 () const
 
 bool Date::operator== (const Date& date) const
 {
-    return (DaysMoreThan (date) == 0) && (AbsoluteValue (SecondsMoreThan (date)) < 0.5);
+    return (DaysMoreThan (date) == 0) &&
+           (AbsoluteValue (SecondsMoreThan (date)) < 0.5);
 }
 
 String DateParts::DayOfWeekText_ (uintsys u_DayOfWeek)
@@ -815,7 +827,7 @@ bool DateParts::FromGeneralizedTime (const String& str_Date)
             return false;
         }
 
-        iter.ParseNumber (2, u_TZ, error);      // timezone offset (optional minutes)
+        iter.ParseNumber (2, u_TZ, error); // timezone offset (optional minutes)
     }
 
     if (iter)
@@ -1163,8 +1175,9 @@ void DateParts::Swap (DateParts& parts)
     swap (u_Second_,    parts.u_Second_);
 }
 
-LocalDate::LocalDate (uintsys u_Year, uintsys u_Month, uintsys u_Day, uintsys u_Hour,
-                      uintsys u_Minute, uintsys u_Second, intsys n_TZOffset)
+LocalDate::LocalDate (uintsys u_Year, uintsys u_Month, uintsys u_Day,
+                      uintsys u_Hour, uintsys u_Minute, uintsys u_Second,
+                      intsys n_TZOffset)
     : date_       (u_Year, u_Month, u_Day, u_Hour, u_Minute, u_Second)
     , n_TZOffset_ (0)
 {
