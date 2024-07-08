@@ -164,13 +164,15 @@ int main (int, char** argv)
             str22.Insert ("xyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxy", -1);
 
             check (str19 == "abcabcabcabc");
-            check (str22 == "abcabcabcabxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyc");
+            check (str22 ==
+                   "abcabcabcabxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyc");
 
             String str23 (str22);
 
             str23.Segment (1, str23.Length() - 4) = "FF";
 
-            check (str22 == "abcabcabcabxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyc");
+            check (str22 ==
+                   "abcabcabcabxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyxyc");
             check (str23 == "aFFxyc");
         }
 

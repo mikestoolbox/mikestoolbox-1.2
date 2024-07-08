@@ -88,14 +88,15 @@ static uintsys DaysBeforeJan1 (uintsys u_Year)
 }
 
 #define MONTH_28(X) X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
-#define MONTH_29(X) X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
-#define MONTH_30(X) X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
-#define MONTH_31(X) X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X,X
+#define MONTH_29(X) MONTH_28(X),X
+#define MONTH_30(X) MONTH_29(X),X
+#define MONTH_31(X) MONTH_30(X),X
 
-#define DAYS_28 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
-#define DAYS_29 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29
-#define DAYS_30 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30
-#define DAYS_31 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
+#define DAYS_28 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,\
+                16,17,18,19,20,21,22,23,24,25,26,27,28
+#define DAYS_29 DAYS_28,29
+#define DAYS_30 DAYS_29,30
+#define DAYS_31 DAYS_30,31
 
 static const uintsys au_MonthNonLeap[365] = {
     MONTH_31(1),  MONTH_28(2), MONTH_31(3), MONTH_30(4), MONTH_31(5),
@@ -1298,6 +1299,15 @@ bool LocalDate::FromRFC2822 (const String& str_Date)
 
     return false;
 }
+
+#undef MONTH_28
+#undef MONTH_29
+#undef MONTH_30
+#undef MONTH_31
+#undef DAYS_28
+#undef DAYS_29
+#undef DAYS_30
+#undef DAYS_31
 
 } // namespace mikestoolbox
 

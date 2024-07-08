@@ -89,13 +89,22 @@ inline Tester::~Tester ()
             std::cout << str_Correct << " of ";
         }
 
-        std::cout << str_Count << " tests succeeded (";
-        std::cout << str_Name_ << ")" << std::endl;
+        std::cout << str_Count
+                  << " tests succeeded ("
+                  << str_Name_
+                  << ")"
+                  << std::endl;
     }
     else
     {
-        std::cout << "Abnormal exit after " << u_Count_ << " tests (";
-        std::cout << str_Name_ << " - " << u_Correct_ << " correct)" << std::endl;
+        std::cout << "Abnormal exit after "
+                  << u_Count_
+                  << " tests ("
+                  << str_Name_
+                  << " - "
+                  << u_Correct_
+                  << " correct)"
+                  << std::endl;
     }
 }
 

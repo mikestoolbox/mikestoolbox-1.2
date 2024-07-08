@@ -49,7 +49,10 @@
 #define PLATFORM_OSX
 #endif
 
-#if defined(unix) || defined(__unix) || defined(__unix__) || defined(PLATFORM_OSX)
+#if defined(unix)     || \
+    defined(__unix)   || \
+    defined(__unix__) || \
+    defined(PLATFORM_OSX)
 #define PLATFORM_UNIX
 #endif
 

@@ -68,7 +68,8 @@ LIBTOOL     = libtool -static -o $(library) -
 ARCHIVE     = ar rc  $(library)
 RANLIB      = ranlib $(library)
 
-headers     = $(wildcard ../include/mikestoolbox-1.2/*.*) ../include/mikestoolbox-1.2.h
+headers     = $(wildcard ../include/mikestoolbox-1.2/*.*)
+headers    += ../include/mikestoolbox-1.2.h
 
 library_cpp = $(wildcard *.cpp)
 unix_cpp    = $(wildcard UNIX/*.cpp)
