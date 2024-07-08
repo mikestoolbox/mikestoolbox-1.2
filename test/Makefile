@@ -53,7 +53,7 @@ endif
 CXX         = c++
 LINK        = c++
 
-OPTIMIZE    = -O2
+OPTIMIZE    = -g -O2
 WARNINGS    = -Wall # -ansi # -Weverything
 ERRORS      = # -ferror-limit=5 -pedantic-errors
 PROFILE     = # -fprofile-instr-generate
