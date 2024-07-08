@@ -123,7 +123,9 @@ int main (int, char** argv)
     check (Sep_14_1752.Month()     ==    9);
     check (Sep_14_1752.Day()       ==   14);
     check (Sep_14_1752.IsThursday());
-    check (Sep_14_1752.DaysMoreThan (Sep_2_1752) == 1);     // weird leap year correction
+
+    // weird leap year correction:
+    check (Sep_14_1752.DaysMoreThan (Sep_2_1752) == 1);
 
     check (Dec_31_1752.Year()      == 1752);
     check (Dec_31_1752.Month()     ==   12);
