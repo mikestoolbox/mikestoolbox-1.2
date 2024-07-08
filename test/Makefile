@@ -111,7 +111,7 @@ over: clean
 
 o: $(objects)
 
-test: $(targets)
+test: $(objects) $(targets)
 	$(command)
 
 $(objects): Makefile
