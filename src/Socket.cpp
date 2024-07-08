@@ -169,7 +169,7 @@ static void MarkSocketsTimedOut (const SocketList& list)
     }
 }
 
-static void RemoveUnsetSockets (fd_set& set, SocketList& list)
+static void RemoveUnsetSockets (const fd_set& set, SocketList& list)
 {
     ListChangeIter<Socket*> iter (list);
 
@@ -229,7 +229,8 @@ bool Socket::Select (SocketList& ReadSockets, SocketList& WriteSockets,
         CreateTimevalMax2Seconds (date_Exp.SecondsMoreThan (date_Now),
                                   tv_Timeout);
 
-        n_Return = BerkeleySocket::Select (n_Max+1, &set_Read, &set_Write, 0,
+        n_Return = BerkeleySocket::Select (n_Max+1, &set_Read,
+                                           &set_Write, 0,
                                            &tv_Timeout);
 
         if (n_Return != 0)
@@ -536,8 +537,9 @@ bool Socket::IsConnected (double d_Timeout) const
             CreateTimevalMax2Seconds (date_Exp.SecondsMoreThan (date_Now),
                                       tv_Timeout);
 
-            intsys n_Return = BerkeleySocket::Select (max, &ReadSet, &WriteSet,
-                                                      0, &tv_Timeout);
+            intsys n_Return = BerkeleySocket::Select (max, &ReadSet,
+                                                      &WriteSet, 0,
+                                                      &tv_Timeout);
 
             if (n_Return > 0)
             {

@@ -486,9 +486,9 @@ bool StringIter::ParseHexByte (uchar& uc_Result, ParseError& error)
     uchar uc_High = 0;
     uchar uc_Low  = 0;
 
-    if (ExtractByte (uc_High, error) &&
+    if (ExtractByte           (uc_High, error) &&
         AsciiHexDigitToBinary (uc_High, error) &&
-        ExtractByte (uc_Low,  error) &&
+        ExtractByte           (uc_Low,  error) &&
         AsciiHexDigitToBinary (uc_Low,  error))
     {
         uc_Result = (uc_High << 4) | uc_Low;

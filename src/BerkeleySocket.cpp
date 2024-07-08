@@ -211,7 +211,8 @@ intsys BerkeleySocket::GetPendingError () const
     socklen_t n_Length = sizeof(n_Error);
 
     intsys n_Return = getsockopt (h_Socket_, SOL_SOCKET, SO_ERROR,
-                               reinterpret_cast<char*>(&n_Error), &n_Length);
+                                  reinterpret_cast<char*>(&n_Error),
+                                  &n_Length);
 
     if (n_Return < 0)
     {

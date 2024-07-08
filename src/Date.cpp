@@ -667,7 +667,7 @@ String Date::FormatRFC2822 () const
 bool Date::operator== (const Date& date) const
 {
     return (DaysMoreThan (date) == 0) &&
-           (AbsoluteValue (SecondsMoreThan (date)) < 0.5);
+            (AbsoluteValue (SecondsMoreThan (date)) < 0.5);
 }
 
 String DateParts::DayOfWeekText_ (uintsys u_DayOfWeek)
