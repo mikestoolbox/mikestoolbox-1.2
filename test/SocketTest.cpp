@@ -116,7 +116,9 @@ int main (int, char** argv)
         }
         else
         {
-            std::cout << "Network error: " << network.GetLastError() << std::endl;
+            std::cout << "Network error: "
+                      << network.GetLastError()
+                      << std::endl;
         }
 
         if (p_Client)
@@ -171,12 +173,16 @@ int main (int, char** argv)
         }
         else
         {
-            std::cout << "UDP connect failed: " << network.GetLastError() << std::endl;
+            std::cout << "UDP connect failed: "
+                      << network.GetLastError()
+                      << std::endl;
         }
     }
     else
     {
-        std::cout << "Network error: " << network.GetLastError() << std::endl;
+        std::cout << "Network error: "
+                  << network.GetLastError()
+                  << std::endl;
     }
 
     check.Done();

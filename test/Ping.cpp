@@ -60,13 +60,16 @@ int main (int, char**)
 
         try
         {
-            PointerHolder<TcpSocket> sock (network.TcpConnect (str_Host, u_Port));
+            PointerHolder<TcpSocket> sock (network.TcpConnect (str_Host,
+                                                               u_Port));
 
             Date date;
 
             if (sock.IsNull())
             {
-                std::cout << "Retrying at " << date.FormatRFC2822() << std::endl;
+                std::cout << "Retrying at "
+                          << date.FormatRFC2822()
+                          << std::endl;
 
                 millisleep (10000);
             }
@@ -74,7 +77,9 @@ int main (int, char**)
             {
                 sock = 0;
 
-                std::cout << "Connection made at " << Date::Now().FormatRFC2822() << std::endl;
+                std::cout << "Connection made at "
+                          << Date::Now().FormatRFC2822()
+                          << std::endl;
 
                 millisleep (30000);
             }
