@@ -1,5 +1,6 @@
 *.o
 *.a
+*.exe
 prog/Base64Decode
 prog/Base64Encode
 test/DateTest
