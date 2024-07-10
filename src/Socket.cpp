@@ -177,7 +177,7 @@ static void RemoveUnsetSockets (const fd_set& set, SocketList& list)
     {
         Socket* p_Socket = *iter;
 
-        if (!FD_ISSET (p_Socket->GetHandle(), &set))
+        if (!FD_ISSET (p_Socket->GetHandle(), const_cast<fd_set*> (&set)))
         {
             list.Erase (iter);
         }
