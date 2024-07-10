@@ -39,114 +39,23 @@
 */
 
 //+---------------------------------------------------------------------------
-//  File:       Date.cpp
+//  File:       UNIX/Date_UNIX.cpp
 //
-//  Synopsis:   Windows implementation of Date and LocalDate objects
+//  Synopsis:   UNIX implementation of date/time
 //----------------------------------------------------------------------------
 
 #include "mikestoolbox-1.2.h"
 
-#ifdef PLATFORM_WINDOWS
+#ifdef PLATFORM_UNIX
 
 namespace mikestoolbox {
 
 Date Date::Now ()
-{
-    SYSTEMTIME time_Now;
-
-    GetSystemTime (&time_Now);
-
-    return Date (&time_Now);
-}
-
-Date::Date (const FILETIME* p_Time)
-    : u_Days_   (1)
-    , u_Millis_ (0)
-{
-    if (p_Time != 0)
-    {
-        SYSTEMTIME systime;
-
-        if (FileTimeToSystemTime (p_Time, &systime) != 0)
-        {
-            Date date (&systime);
-
-            operator= (date);
-        }
-    }
-}
-
-Date::Date (const LPSYSTEMTIME p_Time)
-    : u_Days_   (1)
-    , u_Millis_ (0)
-{
-    if (p_Time != 0)
-    {
-        Date date (p_Time->wYear,
-                   p_Time->wMonth,
-                   p_Time->wDay,
-                   p_Time->wHour,
-                   p_Time->wMinute,
-                   p_Time->wSecond);
-
-        operator= (date);
-
-        u_Millis_ += p_Time->wMilliseconds;
-    }
-}
-
-DateParts::DateParts (const FILETIME* p_Time)
-    : u_Year_     (1)
-    , u_Month_    (1)
-    , u_Day_      (1)
-    , u_Hour_     (0)
-    , u_Minute_   (0)
-    , u_Second_   (0)
-{
-    if (p_Time != 0)
-    {
-        SYSTEMTIME systime;
-
-        if (FileTimeToSystemTime (p_Time, &systime) != 0)
-        {
-            Date date (&systime);
-
-            operator= (date);
-        }
-    }
-}
-
-DateParts::DateParts (const LPSYSTEMTIME p_Time)
-    : u_Year_     (1)
-    , u_Month_    (1)
-    , u_Day_      (1)
-    , u_Hour_     (0)
-    , u_Minute_   (0)
-    , u_Second_   (0)
-{
-    if (p_Time != 0)
-    {
-        Date date (p_Time);
-
-        operator= (date);
-    }
-}
-
-LocalDate::LocalDate (const FILETIME* p_Time)
-    : date_       (p_Time)
-    , n_TZOffset_ (0)
-{
-    // nothing
-}
-
-LocalDate::LocalDate (const LPSYSTEMTIME p_Time)
-    : date_       (p_Time)
-    , n_TZOffset_ (0)
-{
-    // nothing
+{   
+    return Date (time(0));
 }
 
 } // namespace mikestoolbox
 
-#endif // PLATFORM_WINDOWS
+#endif // PLATFORM_UNIX
 

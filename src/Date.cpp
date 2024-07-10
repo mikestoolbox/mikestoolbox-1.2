@@ -402,11 +402,6 @@ Date::Date ()
     AddSeconds (t);
 }
 
-Date Date::Now ()
-{
-    return Date (time(0));
-}
-
 intsys Date::DaysMoreThan (const Date& date) const
 {
     if (operator< (date))
