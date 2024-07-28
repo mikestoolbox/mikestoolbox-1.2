@@ -55,6 +55,7 @@ const uintsys RESOURCE_COPY_ON_WRITE = 2;
 // new resource created before modifying if refs > 1
 const uintsys RESOURCE_NEW_ON_WRITE  = 3;
 
+class SharedResource;
 class AlwaysShared { };
 
 //+---------------------------------------------------------------------------
