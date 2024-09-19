@@ -1,3 +1,15 @@
+
+CUSTOM LICENSES ARE UNAVAILABLE UNTIL FURTHER NOTICE - USE GPLv3
+
+
+CUSTOM LICENSES ARE UNAVAILABLE UNTIL FURTHER NOTICE - USE GPLv3
+
+
+CUSTOM LICENSES ARE UNAVAILABLE UNTIL FURTHER NOTICE - USE GPLv3
+
+
+CUSTOM LICENSES ARE UNAVAILABLE UNTIL FURTHER NOTICE - USE GPLv3
+
 /*
   The mikestoolbox-1.2 software package is distributed under the GNU
   General Public License, version 3, with the full text available in
@@ -20,6 +32,10 @@
       - An offer of compensation paid from the anticipated
             revenue streams
 */
+
+CUSTOM LICENSES ARE UNAVAILABLE UNTIL FURTHER NOTICE - USE GPLv3
+
+CUSTOM LICENSES ARE UNAVAILABLE UNTIL FURTHER NOTICE - USE GPLv3
 
 /*
   Copyright (C) 2002-2024 Michael S. D'Errico.  All Rights Reserved.
