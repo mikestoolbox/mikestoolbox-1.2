@@ -535,6 +535,15 @@ HashItem<K,V,H>* Hash<K,V,H>::CreateItem_ (const K& key, const V& value,
 
         p_Item = new(std::nothrow) Item (key, value, u_Hash);
 
+//+++-- Must check for allocation failure -------- 2025-03-22 --------
+
+        if (p_Item == 0)
+        {
+            throw Exception ("Hash: Out of memory");
+        }
+
+//--------------------------------------------------------------------
+
         p_Item->p_Next_ = p_Storage->pp_Buckets_[u_Bucket];
 
         p_Storage->pp_Buckets_[u_Bucket] = p_Item;
