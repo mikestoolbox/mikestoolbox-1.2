@@ -46,6 +46,41 @@
 
 namespace mikestoolbox {
 
+inline uintsys ToFourDigitYear (uintsys u_Year)
+{
+    return (u_Year <   50) ? (u_Year + 2000) :
+           (u_Year < 1000) ? (u_Year + 1900) : u_Year;
+}
+
+inline TwoDigitYear::TwoDigitYear (uintsys u_Year)
+    : year_ (ToFourDigitYear (u_Year))
+{
+    // nothing
+}
+
+inline TwoDigitYear::operator uintsys () const
+{
+    return year_;
+}
+
+inline FourDigitYear::FourDigitYear (uintsys u_Year)
+    : year_ (u_Year)
+{
+    if (year_ == 0)
+    {
+        year_ = 1;
+    }
+    else if (year_ > 9999)
+    {
+        year_ = 9999;
+    }
+}
+
+inline FourDigitYear::operator uintsys () const
+{
+    return year_;
+}
+
 inline uintsys Date::Year () const
 {
     DateParts parts (*this);

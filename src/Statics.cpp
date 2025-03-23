@@ -79,7 +79,7 @@ const StringList gstrl_EmptyStringListToInitializeEmptyListBaseClass;
 double AutoPrintTimer::d_DefaultThreshold_ = 0.0;
 
 const uintsys   Date::u_SecondsPerDay_ = 24 * 60 * 60;
-const Date      Date::date_UNIX_Epoch_ (1970, 1, 1);
+const Date      Date::date_UNIX_Epoch_ (FourDigitYear (1970), 1, 1);
 
 const uintsys   DateParts::u_SecondsPerDay_ = 24 * 60 * 60;
 

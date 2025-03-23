@@ -336,9 +336,18 @@ static inline uintsys Milliseconds (uintsys u_Hours, uintsys u_Minutes,
     return ((u_Hours * 60 + u_Minutes) * 60 + u_Seconds) * 1000;
 }
 
-Date::Date (uintsys u_Year, uintsys u_Month, uintsys u_Day, uintsys u_Hour,
-            uintsys u_Minute, uintsys u_Second)
-    : u_Days_   (DaysSinceJesus (u_Year, u_Month,  u_Day))
+Date::Date (TwoDigitYear year, uintsys u_Month, uintsys u_Day,
+            uintsys u_Hour, uintsys u_Minute, uintsys u_Second)
+    : u_Days_   (DaysSinceJesus (year, u_Month,  u_Day))
+    , u_Millis_ (Milliseconds   (u_Hour, u_Minute, u_Second))
+{
+    u_Days_   += u_Millis_ / (u_SecondsPerDay_ * 1000);
+    u_Millis_ %= (u_SecondsPerDay_ * 1000);
+}
+
+Date::Date (FourDigitYear year, uintsys u_Month, uintsys u_Day,
+            uintsys u_Hour, uintsys u_Minute, uintsys u_Second)
+    : u_Days_   (DaysSinceJesus (year, u_Month,  u_Day))
     , u_Millis_ (Milliseconds   (u_Hour, u_Minute, u_Second))
 {
     u_Days_   += u_Millis_ / (u_SecondsPerDay_ * 1000);
@@ -366,7 +375,7 @@ Date::Date (const struct tm* p_Time)
 {
     if (p_Time != 0)
     {
-        Date date (p_Time->tm_year + 1900,
+        Date date (FourDigitYear (p_Time->tm_year + 1900),
                    p_Time->tm_mon + 1,
                    p_Time->tm_mday,
                    p_Time->tm_hour,
@@ -504,9 +513,25 @@ void Date::AddSeconds (double d_Seconds)
     }
 }
 
-DateParts::DateParts (uintsys u_Year, uintsys u_Month,  uintsys u_Day,
+DateParts::DateParts (TwoDigitYear year, uintsys u_Month, uintsys u_Day,
                       uintsys u_Hour, uintsys u_Minute, uintsys u_Second)
-    : u_Year_     (u_Year)
+    : u_Year_     (year)
+    , u_Month_    (u_Month)
+    , u_Day_      (u_Day)
+    , u_Hour_     (u_Hour)
+    , u_Minute_   (u_Minute)
+    , u_Second_   (u_Second)
+{
+    // normalize the values presented
+
+    Date date (*this);
+
+    operator= (date);
+}
+
+DateParts::DateParts (FourDigitYear year, uintsys u_Month, uintsys u_Day,
+                      uintsys u_Hour, uintsys u_Minute, uintsys u_Second)
+    : u_Year_     (year)
     , u_Month_    (u_Month)
     , u_Day_      (u_Day)
     , u_Hour_     (u_Hour)
@@ -573,7 +598,7 @@ DateParts::DateParts (const struct tm* p_Time)
 {
     if (p_Time != 0)
     {
-        DateParts parts (p_Time->tm_year + 1900,
+        DateParts parts (FourDigitYear (p_Time->tm_year + 1900),
                          p_Time->tm_mon + 1,
                          p_Time->tm_mday,
                          p_Time->tm_hour,
@@ -959,12 +984,6 @@ bool DateParts::FromHTTP (const String& str_Date)
     return false;
 }
 
-static inline uintsys ToFourDigitYear (uintsys u_Year)
-{
-    return (u_Year <   50) ? (u_Year + 2000) :
-           (u_Year < 1000) ? (u_Year + 1900) : u_Year;
-}
-
 bool DateParts::FromRFC2822 (const String& str_Date)
 {
     PerlRegexMatches matches;
@@ -1018,7 +1037,7 @@ void DateParts::AddYears (intsys n_Years)
 
         if (u_Year_ > 9999)
         {
-            operator= (DateParts(9999,12,31));
+            operator= (DateParts(FourDigitYear(9999),12,31));
         }
     }
 }
@@ -1064,7 +1083,7 @@ void DateParts::AddMonths (intsys n_Months)
 
             if (u_Year_ > 9999)
             {
-                operator= (DateParts(9999,12,31));
+                operator= (DateParts(FourDigitYear(9999),12,31));
             }
         }
     }
@@ -1110,7 +1129,7 @@ void DateParts::SetYear (uintsys u_Year)
 {
     if (u_Year > 9999)
     {
-        operator= (DateParts(9999,12,31));
+        operator= (DateParts(FourDigitYear(9999),12,31));
     }
     else if (u_Year < 1)
     {
@@ -1171,10 +1190,19 @@ void DateParts::Swap (DateParts& parts)
     swap (u_Second_,    parts.u_Second_);
 }
 
-LocalDate::LocalDate (uintsys u_Year, uintsys u_Month, uintsys u_Day,
+LocalDate::LocalDate (TwoDigitYear year, uintsys u_Month, uintsys u_Day,
                       uintsys u_Hour, uintsys u_Minute, uintsys u_Second,
                       intsys n_TZOffset)
-    : date_       (u_Year, u_Month, u_Day, u_Hour, u_Minute, u_Second)
+    : date_       (year, u_Month, u_Day, u_Hour, u_Minute, u_Second)
+    , n_TZOffset_ (0)
+{
+    SetTimeZone (n_TZOffset);
+}
+
+LocalDate::LocalDate (FourDigitYear year, uintsys u_Month, uintsys u_Day,
+                      uintsys u_Hour, uintsys u_Minute, uintsys u_Second,
+                      intsys n_TZOffset)
+    : date_       (year, u_Month, u_Day, u_Hour, u_Minute, u_Second)
     , n_TZOffset_ (0)
 {
     SetTimeZone (n_TZOffset);

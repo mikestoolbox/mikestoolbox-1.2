@@ -160,7 +160,7 @@ Date File::DateModified () const
         return Date (stat_Buf.st_mtime);
     }
 
-    return Date (1, 1, 1);
+    return Date (FourDigitYear (1970), 1, 1);
 }
 
 String File::BaseName () const

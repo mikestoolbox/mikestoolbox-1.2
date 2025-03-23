@@ -50,6 +50,32 @@ namespace mikestoolbox {
 
 class DateParts;
 
+class TwoDigitYear
+{
+public:
+
+    explicit TwoDigitYear (uintsys u_Year);
+
+    operator uintsys () const;
+
+private:
+
+    uintsys year_;
+};
+
+class FourDigitYear
+{
+public:
+
+    explicit FourDigitYear (uintsys u_Year);
+
+    operator uintsys () const;
+
+private:
+
+    uintsys year_;
+};
+
 //+---------------------------------------------------------------------------
 //  Class:      Date
 //
@@ -62,16 +88,30 @@ friend class DateParts;
 
 public:
 
-    Date (uintsys u_Year, uintsys u_Month, uintsys u_Day, uintsys u_Hour=0,
-          uintsys u_Minute=0, uintsys u_Second=0);
-    Date (const DateParts& parts);
-    Date (time_t date);
-    Date (const struct tm* p_Time);
-    Date (const struct timeval* p_Time);
+    Date (FourDigitYear year,
+          uintsys       u_Month,
+          uintsys       u_Day,
+          uintsys       u_Hour=0,
+          uintsys       u_Minute=0,
+          uintsys       u_Second=0);
+
+    Date (TwoDigitYear year,
+          uintsys      u_Month,
+          uintsys      u_Day,
+          uintsys      u_Hour=0,
+          uintsys      u_Minute=0,
+          uintsys      u_Second=0);
+
+    explicit Date (const DateParts& parts);
+    explicit Date (time_t date);
+    explicit Date (const struct tm* p_Time);
+    explicit Date (const struct timeval* p_Time);
+
 #ifdef PLATFORM_WINDOWS
-    Date (const FILETIME* p_Time);
-    Date (const LPSYSTEMTIME p_Time);
+    explicit Date (const FILETIME* p_Time);
+    explicit Date (const LPSYSTEMTIME p_Time);
 #endif
+
     Date ();
 
     static Date   Now                     ();

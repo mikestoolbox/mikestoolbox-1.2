@@ -58,20 +58,30 @@ class DateParts
 {
 public:
 
-    DateParts (uintsys u_Year,
+    DateParts (TwoDigitYear year,
                uintsys u_Month,
                uintsys u_Day,
                uintsys u_Hour=0,
                uintsys u_Minute=0,
                uintsys u_Second=0);
-    DateParts (const Date& date);
-    DateParts (time_t date);
-    DateParts (const struct timeval* p_Time);
-    DateParts (const struct tm* p_Time);
+
+    DateParts (FourDigitYear year,
+               uintsys u_Month,
+               uintsys u_Day,
+               uintsys u_Hour=0,
+               uintsys u_Minute=0,
+               uintsys u_Second=0);
+
+    explicit DateParts (const Date& date);
+    explicit DateParts (time_t date);
+    explicit DateParts (const struct timeval* p_Time);
+    explicit DateParts (const struct tm* p_Time);
+
 #ifdef PLATFORM_WINDOWS
-    DateParts (const FILETIME* p_Time);
-    DateParts (const LPSYSTEMTIME p_Time);
+    explicit DateParts (const FILETIME* p_Time);
+    explicit DateParts (const LPSYSTEMTIME p_Time);
 #endif
+
     DateParts ();
 
     uintsys       Year                    () const;  // starting with 1 A.D.

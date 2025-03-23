@@ -58,18 +58,33 @@ class LocalDate
 {
 public:
 
-    LocalDate (uintsys u_Year, uintsys u_Month, uintsys u_Day,
-               uintsys u_Hour=0, uintsys u_Minute=0,
-               uintsys u_Second=0, intsys n_TZOffset=0);
-    LocalDate (const DateParts& parts);
-    LocalDate (const Date& date);
-    LocalDate (time_t date);
-    LocalDate (const struct tm* p_Time);
-    LocalDate (const struct timeval* p_Time);
+    LocalDate (FourDigitYear year,
+               uintsys u_Month,
+               uintsys u_Day,
+               uintsys u_Hour=0,
+               uintsys u_Minute=0,
+               uintsys u_Second=0,
+               intsys n_TZOffset=0);
+
+    LocalDate (TwoDigitYear year,
+               uintsys u_Month,
+               uintsys u_Day,
+               uintsys u_Hour=0,
+               uintsys u_Minute=0,
+               uintsys u_Second=0,
+               intsys n_TZOffset=0);
+
+    explicit LocalDate (const DateParts& parts);
+    explicit LocalDate (const Date& date);
+    explicit LocalDate (time_t date);
+    explicit LocalDate (const struct tm* p_Time);
+    explicit LocalDate (const struct timeval* p_Time);
+
 #ifdef PLATFORM_WINDOWS
-    LocalDate (const FILETIME* p_Time);
-    LocalDate (const LPSYSTEMTIME p_Time);
+    explicit LocalDate (const FILETIME* p_Time);
+    explicit LocalDate (const LPSYSTEMTIME p_Time);
 #endif
+
     LocalDate ();
 
     static LocalDate    Now                     ();

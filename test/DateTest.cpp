@@ -55,11 +55,11 @@ int main (int, char** argv)
 
     Date ddd ((struct tm*)0);
 
-    Date Jan_1_0001 (   1, 1, 1);
-    Date Jan_1_0002 (   2, 1, 1);
-    Date Jan_1_0003 (   3, 1, 1);
-    Date Jan_1_0004 (   4, 1, 1);
-    Date Jan_1_0005 (   5, 1, 1);
+    Date Jan_1_0001 (FourDigitYear (1), 1, 1);
+    Date Jan_1_0002 (FourDigitYear (2), 1, 1);
+    Date Jan_1_0003 (FourDigitYear (3), 1, 1);
+    Date Jan_1_0004 (FourDigitYear (4), 1, 1);
+    Date Jan_1_0005 (FourDigitYear (5), 1, 1);
 
     check (Jan_1_0001.Year()  == 1);
     check (Jan_1_0001.Month() == 1);
@@ -86,15 +86,15 @@ int main (int, char** argv)
     check (Jan_1_0005.Day()   == 1);
     check (Jan_1_0005.IsThursday());
 
-    Date Jan_1_1751  (1751,  1,  1);
-    Date Dec_31_1751 (1751, 12, 31);
-    Date Jan_1_1752  (1752,  1,  1);
-    Date Sep_2_1752  (1752,  9,  2);
-    Date Sep_14_1752 (1752,  9, 14);
-    Date Dec_31_1752 (1752, 12, 31);
-    Date Jan_1_1753  (1753,  1,  1);
-    Date Dec_31_1753 (1753, 12, 31);
-    Date Jan_1_1754  (1754,  1,  1);
+    Date Jan_1_1751  (FourDigitYear (1751),  1,  1);
+    Date Dec_31_1751 (FourDigitYear (1751), 12, 31);
+    Date Jan_1_1752  (FourDigitYear (1752),  1,  1);
+    Date Sep_2_1752  (FourDigitYear (1752),  9,  2);
+    Date Sep_14_1752 (FourDigitYear (1752),  9, 14);
+    Date Dec_31_1752 (FourDigitYear (1752), 12, 31);
+    Date Jan_1_1753  (FourDigitYear (1753),  1,  1);
+    Date Dec_31_1753 (FourDigitYear (1753), 12, 31);
+    Date Jan_1_1754  (FourDigitYear (1754),  1,  1);
 
     check (Jan_1_1751.Year()       == 1751);
     check (Jan_1_1751.Month()      ==    1);
@@ -152,7 +152,7 @@ int main (int, char** argv)
     check (Jan_1_1754.IsTuesday());
     check (Jan_1_1754.DaysMoreThan (Dec_31_1753) == 1);
 
-    Date Jan_1_1970 (1970, 1, 1);
+    Date Jan_1_1970 (FourDigitYear (1970), 1, 1);
 
     check (Jan_1_1970.Year()  == 1970);
     check (Jan_1_1970.Month() == 1);
@@ -240,8 +240,8 @@ void PrintDates (const Date& date1, const Date& date2)
 
 bool TestDateAndParts ()
 {
-    Date date1 (1, 1, 1);
-    Date date3 (9999, 12, 31);
+    Date date1 (FourDigitYear (1), 1, 1);
+    Date date3 (FourDigitYear (9999), 12, 31);
 
     do
     {
@@ -265,9 +265,9 @@ bool TestDateAndParts ()
 
 bool TestGeneralizedTime ()
 {
-    Date date1 (1, 1, 1);
+    Date date1 (FourDigitYear (1), 1, 1);
     Date date2;
-    Date date3 (9999, 12, 31);
+    Date date3 (FourDigitYear (9999), 12, 31);
 
     do
     {
@@ -289,9 +289,9 @@ bool TestGeneralizedTime ()
 
 bool TestUTCTime ()
 {
-    Date date1 (1950,  1,  1);
+    Date date1 (FourDigitYear (1950),  1,  1);
     Date date2;
-    Date date3 (2049, 12, 31);
+    Date date3 (FourDigitYear (2049), 12, 31);
 
     do
     {
@@ -313,9 +313,9 @@ bool TestUTCTime ()
 
 bool TestRFC2822Time ()
 {
-    Date date1 (1000,  1,  1);
+    Date date1 (FourDigitYear (1000),  1,  1);
     Date date2;
-    Date date3 (9999, 12, 31);
+    Date date3 (FourDigitYear (9999), 12, 31);
 
     do
     {
